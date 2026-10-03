@@ -6,7 +6,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.Feature
 
 @Entity(tableName = "classes")
 data class ClassEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val name: String,
     val hitDice: Int
