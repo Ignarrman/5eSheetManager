@@ -6,7 +6,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 data class Rogue(
     override val name: String = "Rogue",
     override val hitDice: Int = 8,
-    override val features: Map<Int, Feature>,
+    override val features: Map<Int, List<Feature>>,
     val sneakAttack: Map<Int, SneakAttackProgression>
 ) : PlayerClass(name, hitDice, features)
 

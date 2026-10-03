@@ -6,7 +6,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 data class Artificer(
     override val name: String = "Artificer",
     override val hitDice: Int = 8,
-    override val features: Map<Int, Feature>,
+    override val features: Map<Int, List<Feature>>,
     val infusions: Map<Int, InfusionProgression>
 ) : PlayerClass(name, hitDice, features)
 

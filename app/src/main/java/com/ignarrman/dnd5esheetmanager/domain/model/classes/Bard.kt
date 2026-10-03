@@ -6,7 +6,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 data class Bard(
     override val name: String = "Bard",
     override val hitDice: Int = 8,
-    override val features: Map<Int, Feature>,
+    override val features: Map<Int, List<Feature>>,
     val bardicInspiration: Map<Int, BardicInspirationProgression>
 ) : PlayerClass(name, hitDice, features)
 
