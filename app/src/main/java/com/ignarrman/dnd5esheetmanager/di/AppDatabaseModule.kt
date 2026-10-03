@@ -1,7 +1,8 @@
-package com.ignarrman.dnd5esheetmanager.data.local
+package com.ignarrman.dnd5esheetmanager.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
