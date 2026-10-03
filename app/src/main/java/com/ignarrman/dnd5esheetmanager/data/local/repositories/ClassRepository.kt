@@ -10,8 +10,9 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Barbarian
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Bard
+import javax.inject.Inject
 
-class ClassRepository(
+class ClassRepository @Inject constructor(
     private val classDao: ClassDao,
     private val featureDao: FeatureDao,
     private val barbarianProgressionDao: BarbarianProgressionDao,
