@@ -6,4 +6,6 @@ data class Wizard(
     override val name: String = "Wizard",
     override val hitDice: Int = 6,
     override val features: Map<Int, List<Feature>>,
-) : PlayerClass(name, hitDice, features)
+    val cantripProgression: Map<Int, CantripProgression>,
+    val spellSlotProgression: Map<Int, SpellSlotProgression>
+    ) : PlayerClass(name, hitDice, features)

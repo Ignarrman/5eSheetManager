@@ -7,6 +7,8 @@ data class Artificer(
     override val name: String = "Artificer",
     override val hitDice: Int = 8,
     override val features: Map<Int, List<Feature>>,
+    val cantripProgression: Map<Int, CantripProgression>,
+    val spellSlotProgression: Map<Int, SpellSlotProgression>,
     val infusions: Map<Int, InfusionProgression>
 ) : PlayerClass(name, hitDice, features)
 

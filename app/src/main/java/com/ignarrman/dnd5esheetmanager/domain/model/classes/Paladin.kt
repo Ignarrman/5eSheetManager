@@ -8,6 +8,7 @@ data class Paladin(
     override val name: String = "Paladin",
     override val hitDice: Int = 10,
     override val features: Map<Int, List<Feature>>,
+    val spellSlotProgression: Map<Int, SpellSlotProgression>,
     val layOnHands: Map<Int, LayOnHandsProgression>
 ) : PlayerClass(name, hitDice, features)
 
