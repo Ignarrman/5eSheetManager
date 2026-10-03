@@ -1,4 +1,4 @@
-package com.ignarrman.dnd5esheetmanager.data.local.daos.classesDao
+package com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao
 
 import androidx.room.Dao
 import androidx.room.Query
