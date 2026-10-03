@@ -2,6 +2,7 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BarbarianProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 
 object BarbarianReferenceData {
 
@@ -170,6 +171,69 @@ object BarbarianReferenceData {
             id = 1012L,
             name = "Primal Champion",
             description = "Improves the barbarian's Strength and Constitution maximums and scores."
+        )
+    )
+
+    val featureRelations = listOf(
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1001L,
+            level = 1
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1002L,
+            level = 1
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1003L,
+            level = 2
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1004L,
+            level = 2
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1005L,
+            level = 5
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1006L,
+            level = 5
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1007L,
+            level = 7
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1008L,
+            level = 9
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1009L,
+            level = 11
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1010L,
+            level = 15
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1011L,
+            level = 18
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 1012L,
+            level = 20
         )
     )
 }

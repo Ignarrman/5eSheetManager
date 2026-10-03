@@ -25,6 +25,11 @@ class ReferenceDataSeeder @Inject constructor(
                         BardReferenceData.features
             )
 
+            database.classDao().insertFeatures(
+                BarbarianReferenceData.featureRelations +
+                        BardReferenceData.featureRelations
+            )
+
             database.barbarianProgressionDao().insertAll(
                 BarbarianReferenceData.progression
             )

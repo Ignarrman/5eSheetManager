@@ -2,6 +2,7 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BardicInspirationProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
@@ -280,6 +281,54 @@ object BardReferenceData {
             id = 2009L,
             name = "Superior Inspiration",
             description = "Restores Bardic Inspiration when the bard begins an encounter without any uses remaining."
+        )
+    )
+
+    val featureRelations = listOf(
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2001L,
+            level = 1
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2002L,
+            level = 1
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2003L,
+            level = 2
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2004L,
+            level = 2
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2005L,
+            level = 3
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2006L,
+            level = 5
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2007L,
+            level = 6
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2008L,
+            level = 10
+        ),
+        ClassFeatureCrossRef(
+            classId = CLASS_ID,
+            featureId = 2009L,
+            level = 20
         )
     )
 }
