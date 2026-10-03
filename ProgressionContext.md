@@ -557,6 +557,237 @@ The database schema can evolve independently from the domain model.
 
 ---
 
+# Reference Data Persistence
+
+The initial reference-data persistence layer has now been implemented using Room.
+
+Reference data currently includes:
+
+* Classes
+* Class features
+* Class-feature relationships
+* Class-specific numeric progressions
+* Bardic Inspiration progression
+* Spellcasting information
+* Cantrip progression
+* Spells-known progression
+* Spell-slot progression
+
+The current persistence architecture is:
+
+```text
+Domain
+   ↑
+Mapper
+   ↑
+Repository
+   ↑
+DAO
+   ↑
+Room / SQLite
+```
+
+The domain remains independent from Room-specific entities.
+
+## Reference Data Seeding
+
+Static reference data is populated through a dedicated:
+
+```kotlin
+ReferenceDataSeeder
+```
+
+The seeder is executed from the application layer rather than from a screen or ViewModel.
+
+This keeps database initialization independent from the UI lifecycle.
+
+The seeder performs all reference-data operations inside a Room transaction.
+
+Conceptually:
+
+```text
+Application startup
+       ↓
+ReferenceDataSeeder
+       ↓
+Check reference-data version
+       ↓
+Version unchanged?
+   ├── Yes → do nothing
+   └── No
+        ↓
+   Delete reference data
+        ↓
+   Insert current reference data
+        ↓
+   Update stored reference-data version
+```
+
+The reference-data tables are deliberately separated from future character-owned data.
+
+The seeder must never delete or modify character data.
+
+---
+
+# Reference Data Versioning
+
+Reference data has its own version independent from the Room database schema version.
+
+For example:
+
+```kotlin
+const val REFERENCE_DATA_VERSION = 1
+```
+
+This version represents the version of the **content** being inserted into the reference-data tables.
+
+It is intentionally different from:
+
+```kotlin
+@Database(
+    entities = [...],
+    version = 1
+)
+```
+
+The Room database version represents the **database schema** and is responsible for schema migrations.
+
+The reference-data version represents the **static data contained in the database**.
+
+Therefore:
+
+```text
+AppDatabase.version
+    → Room schema version
+    → Tables, columns, keys, relationships, indexes
+    → Room migrations
+
+REFERENCE_DATA_VERSION
+    → Reference-data content version
+    → Classes, features, progressions, spells, etc.
+    → ReferenceDataSeeder
+```
+
+Changing reference data does not necessarily require changing the Room schema version.
+
+For example, changing a class progression value can require:
+
+```kotlin
+REFERENCE_DATA_VERSION = 2
+```
+
+without requiring:
+
+```kotlin
+AppDatabase.version = 2
+```
+
+provided that the database schema itself has not changed.
+
+---
+
+# Reference Data Metadata
+
+The current reference-data version is stored in Room through dedicated metadata:
+
+```kotlin
+ReferenceDataMetadataEntity
+```
+
+with:
+
+```kotlin
+ReferenceDataMetadataDao
+```
+
+The metadata identifies the stored reference-data version.
+
+The seeder compares the stored version with the version defined by the application.
+
+If they match, no work is performed.
+
+If they differ, the reference data is rebuilt.
+
+This avoids relying on the number of rows in a table as an indication that the database has already been seeded.
+
+---
+
+# Reference Data Replacement
+
+When the reference-data version changes, the existing reference data is removed before the new version is inserted.
+
+Only reference-data tables are affected.
+
+The intermediate `class_features` table is also explicitly cleared because it contains relationships between reference-data entities.
+
+The deletion order respects the relationships between the tables:
+
+```text
+Dependent data
+    ↓
+Junction / relationship data
+    ↓
+Parent reference data
+```
+
+The complete operation is performed inside a single transaction.
+
+Therefore, if the new reference data cannot be inserted completely, the previous transaction is rolled back instead of leaving the database partially populated.
+
+This replacement strategy is intentionally limited to reference data.
+
+Character data will remain persistent across reference-data updates.
+
+---
+
+# Current Persistence Status
+
+The following persistence infrastructure is now established:
+
+* Room database configuration
+* Reference-data entities
+* Reference-data DAOs
+* Class/feature junction table
+* Class-specific progression tables
+* Spellcasting persistence
+* Persistence-to-domain mappers
+* Class repository
+* Hilt database dependency injection
+* Application-level reference-data seeding
+* Reference-data metadata and versioning
+* Transactional reference-data replacement
+
+The current implementation is intentionally focused on the reference-data side of the application.
+
+Character persistence has not yet been implemented.
+
+---
+
+# Next Development Step
+
+The next major persistence task is to design the **character data model**.
+
+This should remain separate from reference data.
+
+Reference data answers:
+
+```text
+"What information exists in the game?"
+```
+
+Character data answers:
+
+```text
+"What has the player written or selected for this character?"
+```
+
+The character model should therefore store the player's actual state without assuming that every piece of reference data automatically applies to the character.
+
+The existing principle remains:
+
+> **Reference data describes what is available. Character data describes what the player has chosen or entered.**
+
+
 # Guiding Principle
 
 The project should always favor:
