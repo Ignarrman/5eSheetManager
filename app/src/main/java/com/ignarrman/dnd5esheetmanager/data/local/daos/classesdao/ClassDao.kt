@@ -13,4 +13,5 @@ interface ClassDao {
 
     @Query(" SELECT * FROM class_features WHERE classId = :classId ORDER BY level")
     suspend fun getFeaturesFromClass(classId: Long): List<ClassFeatureCrossRef>
+
 }
