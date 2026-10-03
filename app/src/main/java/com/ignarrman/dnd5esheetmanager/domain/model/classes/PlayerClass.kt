@@ -8,7 +8,6 @@ open class PlayerClass(
     open val hitDice: Int,
     open val features: Map<Int, List<Feature>>,
     open val fightingStyles: List<FightingStyle> = emptyList(),
-    open val eldritchInvocations: List<EldritchInvocation> =emptyList(),
     open val spellcasting: Spellcasting = Spellcasting.NonCaster
 )
 

@@ -9,13 +9,12 @@ data class Warlock(
     override val hitDice: Int = 8,
     override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
-    override val eldritchInvocations: List<EldritchInvocation>,
+     val eldritchInvocations: List<EldritchInvocation>,
     val eldritchInvocationsKnown: Map<Int, Int>,
 ) : PlayerClass(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    eldritchInvocations = eldritchInvocations,
     features = features
 )
 
