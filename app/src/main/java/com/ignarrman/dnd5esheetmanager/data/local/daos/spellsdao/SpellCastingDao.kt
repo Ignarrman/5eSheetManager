@@ -42,4 +42,16 @@ interface SpellcastingDao {
     suspend fun insertSpellSlots(
         spellSlots: List<SpellSlotProgressionEntity>
     )
+
+    @Query("DELETE FROM spell_slot_progression")
+    suspend fun deleteAllSpellSlots()
+
+    @Query("DELETE FROM spells_known_progression")
+    suspend fun deleteAllSpellsKnown()
+
+    @Query("DELETE FROM cantrip_progression")
+    suspend fun deleteAllCantrips()
+
+    @Query("DELETE FROM spellcasting")
+    suspend fun deleteAllSpellcasting()
 }

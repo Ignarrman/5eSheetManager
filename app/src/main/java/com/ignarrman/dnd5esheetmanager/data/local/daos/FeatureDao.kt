@@ -13,4 +13,7 @@ interface FeatureDao {
 
     @Insert
     suspend fun insertAll(features: List<FeatureEntity>)
+
+    @Query("DELETE FROM features")
+    suspend fun deleteAll()
 }

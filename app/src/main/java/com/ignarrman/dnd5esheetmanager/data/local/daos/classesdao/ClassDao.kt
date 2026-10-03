@@ -21,4 +21,10 @@ interface ClassDao {
     @Insert
     suspend fun insertFeatures(relations: List<ClassFeatureCrossRef>)
 
+    @Query("DELETE FROM class_features")
+    suspend fun deleteAllFeatures()
+
+    @Query("DELETE FROM classes")
+    suspend fun deleteAll()
+
 }

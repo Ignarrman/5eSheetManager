@@ -15,4 +15,7 @@ interface BarbarianProgressionDao {
     suspend fun insertAll(
         progression: List<BarbarianProgressionEntity>
     )
+
+    @Query("DELETE FROM barbarian_progression")
+    suspend fun deleteAll()
 }
