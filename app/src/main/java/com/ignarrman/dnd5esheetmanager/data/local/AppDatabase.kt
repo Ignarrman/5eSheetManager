@@ -1,10 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.data.local
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
@@ -41,23 +38,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun barbarianProgressionDao(): BarbarianProgressionDao
     abstract fun bardicInspirationProgressionDao(): BardicInspirationProgressionDao
     abstract fun spellcastingDao(): SpellcastingDao
-
-    companion object {
-        fun create(context: Context): AppDatabase =
-            Room.databaseBuilder(
-                context,
-                AppDatabase::class.java,
-                "dnd5e.db"
-            )
-                .addCallback(
-                    object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-
-                            // Seed aquí
-                        }
-                    }
-                )
-                .build()
-    }
 }

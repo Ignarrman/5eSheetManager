@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ClassDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,5 +46,17 @@ object AppDatabaseModule {
             database: AppDatabase
         ): BarbarianProgressionDao =
             database.barbarianProgressionDao()
+
+        @Provides
+        fun provideBardicInspirationProgressionDao(
+            database: AppDatabase
+        ): BardicInspirationProgressionDao =
+            database.bardicInspirationProgressionDao()
+
+        @Provides
+        fun provideSpellcastingDao(
+            database: AppDatabase
+        ): SpellcastingDao =
+            database.spellcastingDao()
     }
 }
