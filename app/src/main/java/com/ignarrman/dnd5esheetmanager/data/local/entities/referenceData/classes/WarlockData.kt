@@ -15,15 +15,25 @@ data class WarlockData(
     val cantripProgression: List<CantripProgressionEntity>,
     val spellSlotProgression: List<SpellSlotProgressionEntity>,
     val spellsKnownProgression: List<SpellsKnownProgressionEntity>,
-    val eldritchInvocations: List<EldritchInvocationProgressionEntity>
+    val eldritchInvocations: List<EldritchInvocationsEntity>,
+    val eldritchInvocationsKnown: List<EldritchInvocationsKnownProgressionEntity>
 )
 
 @Entity(
     tableName = "eldritch_invocations_progression",
     primaryKeys = ["level"]
 )
-data class EldritchInvocationProgressionEntity(
+data class EldritchInvocationsEntity(
     val level: Int,
     val name: String,
     val description: String
+)
+
+@Entity(
+    tableName = "eldritch_invocations_known_progression",
+    primaryKeys = ["level"]
+)
+data class EldritchInvocationsKnownProgressionEntity(
+    val level: Int,
+    val known: Int
 )

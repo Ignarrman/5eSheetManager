@@ -9,8 +9,8 @@ data class Warlock(
     override val hitDice: Int = 8,
     override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
-     val eldritchInvocations: List<EldritchInvocation>,
-    val eldritchInvocationsKnown: Map<Int, Int>,
+    val eldritchInvocations: List<EldritchInvocation>,
+    val eldritchInvocationsKnown: Map<Int, EldritchInvocationsKnownProgression>,
 ) : PlayerClass(
     name = name,
     hitDice = hitDice,
@@ -21,4 +21,8 @@ data class Warlock(
 data class EldritchInvocation(
     val name: String,
     val description: String
+)
+
+data class EldritchInvocationsKnownProgression(
+    val known: Int
 )

@@ -10,6 +10,7 @@ data class RangerData(
     val classEntity: ClassEntity,
     val featureRelations: List<ClassFeatureCrossRef>,
     val features: List<FeatureEntity>,
+    val fightingStyleCrossRef: List<ClassFightingStyleCrossRef>,
     val fightingStyles: List<FightingStyleEntity>,
     val fighterProgression: List<FighterProgressionEntity>,
     val spellcasting: SpellcastingEntity,
