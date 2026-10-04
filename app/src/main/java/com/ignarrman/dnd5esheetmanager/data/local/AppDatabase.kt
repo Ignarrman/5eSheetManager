@@ -15,6 +15,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.FighterProgres
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.LayOnHandsProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MetamagicDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SneakAttackProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SorceryPointProgressionDao
@@ -35,6 +36,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.LayOnHandsProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.MetamagicEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.MonkProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SneakAttackProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorceryPointProgressionEntity
@@ -63,6 +65,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         MonkProgressionEntity::class,
         SneakAttackProgressionEntity::class,
         SorceryPointProgressionEntity::class,
+        MetamagicEntity::class,
         WildShapeProgressionEntity::class,
         EldritchInvocationsEntity::class,
         EldritchInvocationsKnownProgressionEntity::class,
@@ -92,6 +95,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun monkProgressionDao(): MonkProgressionDao
     abstract fun sneakAttackProgressionDao(): SneakAttackProgressionDao
     abstract fun sorceryPointProgressionDao(): SorceryPointProgressionDao
+    abstract fun metamagicDao(): MetamagicDao
     abstract fun wildShapeProgressionDao(): WildShapeProgressionDao
     abstract fun eldritchInvocationsProgressionDao(): EldritchInvocationsProgressionDao
     abstract fun eldritchInvocationsKnownProgressionDao(): EldritchInvocationsKnownProgressionDao

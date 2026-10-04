@@ -27,6 +27,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.classes.FighterProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Infusion
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.InfusionProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.LayOnHandsProgression
+import com.ignarrman.dnd5esheetmanager.domain.model.classes.Metamagic
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Monk
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.MonkProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Paladin
@@ -529,12 +530,17 @@ fun SorcererData.toDomain(): Sorcerer {
             )
         }
 
+    val metamagicList = metamagicList.map {
+        Metamagic( name = it.name, description = it.description )
+    }
+
     return Sorcerer(
         name = classEntity.name,
         hitDice = classEntity.hitDice,
         features = featuresByLevel,
         spellcasting = spellcastingByLevel,
-        sorceryPoints = sorceryPointProgressionByLevel
+        sorceryPoints = sorceryPointProgressionByLevel,
+        metamagics = metamagicList
     )
 
 }

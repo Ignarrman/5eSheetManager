@@ -1,6 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
@@ -15,7 +16,8 @@ data class SorcererData(
     val cantripProgression: List<CantripProgressionEntity>,
     val spellSlotProgression: List<SpellSlotProgressionEntity>,
     val spellsKnownProgression: List<SpellsKnownProgressionEntity>,
-    val sorceryPointProgression: List<SorceryPointProgressionEntity>
+    val sorceryPointProgression: List<SorceryPointProgressionEntity>,
+    val metamagicList: List<MetamagicEntity>
 )
 
 @Entity(
@@ -25,4 +27,11 @@ data class SorcererData(
 data class SorceryPointProgressionEntity(
     val level: Int,
     val points: Int
+)
+
+@Entity(tableName = "metamagics")
+data class MetamagicEntity(
+    @PrimaryKey val id: Long,
+    val name: String,
+    val description: String
 )
