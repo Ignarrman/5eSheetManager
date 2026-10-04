@@ -1,4 +1,4 @@
-package com.ignarrman.dnd5esheetmanager.data.local.mappers
+package com.ignarrman.dnd5esheetmanager.data.mappers
 
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity

@@ -9,7 +9,8 @@ data class Artificer(
     override val hitDice: Int = 8,
     override val spellcasting: Spellcasting,
     override val features: Map<Int, List<Feature>>,
-    val infusions: Map<Int, InfusionProgression>
+    val infusions: List<Infusion>,
+    val infusionsProgression: Map<Int, InfusionProgression>
 ) : PlayerClass(
     name = name,
     hitDice = hitDice,
@@ -20,4 +21,9 @@ data class Artificer(
 data class InfusionProgression(
     val known: Int,
     val active: Int
+)
+
+data class Infusion(
+    val name: String,
+    val description: String
 )

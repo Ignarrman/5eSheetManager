@@ -6,6 +6,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.Referen
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.BarbarianReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.BardReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.ClassReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.clearClassesReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.insertClassesReferenceData
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,54 +51,16 @@ class ReferenceDataSeeder @Inject constructor(
         database.spellcastingDao().deleteAllCantrips()
         database.spellcastingDao().deleteAllSpellcasting()
 
-        database.bardicInspirationProgressionDao().deleteAll()
+        clearClassesReferenceData(database = database)
 
-        database.barbarianProgressionDao().deleteAll()
-
-        database.classDao().deleteAllFeatures()
         database.featureDao().deleteAll()
 
-        database.classDao().deleteAll()
+
     }
 
     private suspend fun insertReferenceData() {
 
-        database.classDao().insertAll(
-            ClassReferenceData.classes
-        )
+        insertClassesReferenceData(database = database)
 
-        database.featureDao().insertAll(
-            BarbarianReferenceData.features +
-                    BardReferenceData.features
-        )
-
-        database.classDao().insertFeatures(
-            BarbarianReferenceData.featureRelations +
-                    BardReferenceData.featureRelations
-        )
-
-        database.barbarianProgressionDao().insertAll(
-            BarbarianReferenceData.progression
-        )
-
-        database.bardicInspirationProgressionDao().insertAll(
-            BardReferenceData.bardicInspiration
-        )
-
-        database.spellcastingDao().insertSpellcasting(
-            BardReferenceData.spellcasting
-        )
-
-        database.spellcastingDao().insertCantrips(
-            BardReferenceData.cantrips
-        )
-
-        database.spellcastingDao().insertSpellsKnown(
-            BardReferenceData.spellsKnown
-        )
-
-        database.spellcastingDao().insertSpellSlots(
-            BardReferenceData.spellSlots
-        )
     }
 }

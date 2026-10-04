@@ -1,6 +1,6 @@
 package com.ignarrman.dnd5esheetmanager.data.mappers
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ArtificierData
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ArtificerData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BarbarianData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BardData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClericData
@@ -13,7 +13,6 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorcererData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WarlockData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WizardData
-import com.ignarrman.dnd5esheetmanager.data.local.mappers.toDomain
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Artificer
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Barbarian
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Bard
@@ -25,6 +24,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.classes.EldritchInvocation
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.EldritchInvocationsKnownProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Fighter
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.FighterProgression
+import com.ignarrman.dnd5esheetmanager.domain.model.classes.Infusion
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.InfusionProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.LayOnHandsProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Monk
@@ -106,7 +106,7 @@ fun BardData.toDomain(): Bard {
     )
 }
 
-fun ArtificierData.toDomain(): Artificer {
+fun ArtificerData.toDomain(): Artificer {
 
     val featuresById =
         features.associateBy { it.id }
@@ -130,6 +130,11 @@ fun ArtificierData.toDomain(): Artificer {
         spellsKnownProgression = spellsKnownProgression
     )
 
+    val infusionsList =
+        infusions.map {
+            Infusion( name = it.name, description = it.description )
+        }
+
     val infusionsByLevel =
         infusionProgression.associate {
             it.level to InfusionProgression(
@@ -143,7 +148,8 @@ fun ArtificierData.toDomain(): Artificer {
         hitDice = classEntity.hitDice,
         features = featuresByLevel,
         spellcasting = spellcastingByLevel,
-        infusions = infusionsByLevel
+        infusions = infusionsList,
+        infusionsProgression = infusionsByLevel
     )
 
 }

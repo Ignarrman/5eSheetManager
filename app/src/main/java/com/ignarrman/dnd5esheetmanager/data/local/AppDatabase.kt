@@ -9,8 +9,10 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgr
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ChannelDivinityProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ClassDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.EldritchInvocationsKnownProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.EldritchInvocationsProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.FighterProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.LayOnHandsProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressionDao
@@ -27,8 +29,10 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFightingStyleCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.EldritchInvocationsEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.EldritchInvocationsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FighterProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.LayOnHandsProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.MonkProgressionEntity
@@ -53,6 +57,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         BardicInspirationProgressionEntity::class,
         ChannelDivinityProgressionEntity::class,
         FighterProgressionEntity::class,
+        InfusionEntity::class,
         InfusionProgressionEntity::class,
         LayOnHandsProgressionEntity::class,
         MonkProgressionEntity::class,
@@ -60,6 +65,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         SorceryPointProgressionEntity::class,
         WildShapeProgressionEntity::class,
         EldritchInvocationsEntity::class,
+        EldritchInvocationsKnownProgressionEntity::class,
 
         SpellcastingEntity::class,
         CantripProgressionEntity::class,
@@ -80,6 +86,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun bardicInspirationProgressionDao(): BardicInspirationProgressionDao
     abstract fun channelDivinityProgressionDao(): ChannelDivinityProgressionDao
     abstract fun fighterProgressionDao(): FighterProgressionDao
+    abstract fun infusionDao(): InfusionDao
     abstract fun infusionProgressionDao(): InfusionProgressionDao
     abstract fun layOnHandsProgressionDao(): LayOnHandsProgressionDao
     abstract fun monkProgressionDao(): MonkProgressionDao
@@ -87,6 +94,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun sorceryPointProgressionDao(): SorceryPointProgressionDao
     abstract fun wildShapeProgressionDao(): WildShapeProgressionDao
     abstract fun eldritchInvocationsProgressionDao(): EldritchInvocationsProgressionDao
+    abstract fun eldritchInvocationsKnownProgressionDao(): EldritchInvocationsKnownProgressionDao
 
     abstract fun spellcastingDao(): SpellcastingDao
     abstract fun referenceDataMetadataDao(): ReferenceDataMetadataDao
