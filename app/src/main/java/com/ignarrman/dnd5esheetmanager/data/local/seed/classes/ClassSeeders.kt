@@ -3,8 +3,19 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 
 suspend fun clearClassesReferenceData(database: AppDatabase){
+    database.wildShapeProgressionDao().deleteAll()
+    database.sorceryPointProgressionDao().deleteAll()
+    database.sneakAttackProgressionDao().deleteAll()
+    database.monkProgressionDao().deleteAll()
+    database.layOnHandsProgressionDao().deleteAll()
+    database.infusionProgressionDao().deleteAll()
+    database.fighterProgressionDao().deleteAll()
+    database.eldritchInvocationsKnownProgressionDao().deleteAll()
+    database.eldritchInvocationsProgressionDao().deleteAll()
+    database.channelDivinityProgressionDao().deleteAll()
     database.bardicInspirationProgressionDao().deleteAll()
-
+    database.barbarianProgressionDao().deleteAll()
+    database.bardicInspirationProgressionDao().deleteAll()
     database.barbarianProgressionDao().deleteAll()
 
     database.classDao().deleteAllFeatures()
