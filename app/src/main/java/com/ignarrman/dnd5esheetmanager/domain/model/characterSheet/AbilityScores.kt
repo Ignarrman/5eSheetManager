@@ -1,4 +1,4 @@
-package com.ignarrman.dnd5esheetmanager.domain.model
+package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 
 enum class AbilityScores(
     val statName: String

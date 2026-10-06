@@ -2,6 +2,7 @@ package com.ignarrman.dnd5esheetmanager.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.ReferenceDataMetadataDao
@@ -20,7 +21,11 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressio
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SneakAttackProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SorceryPointProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.WildShapeProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.featsdao.FeatDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.races.RaceDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.backgrounds.BackgroundEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.ReferenceDataMetadataEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BarbarianProgressionEntity
@@ -41,7 +46,10 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SneakAttackProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorceryPointProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WildShapeProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.feats.FeatEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
@@ -51,6 +59,9 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         ClassEntity::class,
         FeatureEntity::class,
         ClassFeatureCrossRef::class,
+        BackgroundEntity::class,
+        RaceEntity::class,
+        FeatEntity::class,
 
         FightingStyleEntity::class,
         ClassFightingStyleCrossRef::class,
@@ -74,6 +85,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         CantripProgressionEntity::class,
         SpellSlotProgressionEntity::class,
         SpellsKnownProgressionEntity::class,
+        SpellEntity::class,
 
         ReferenceDataMetadataEntity::class
     ],
@@ -83,8 +95,10 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun classDao(): ClassDao
     abstract fun featureDao(): FeatureDao
+    abstract fun backgroundDao(): BackgroundDao
+    abstract fun raceDao(): RaceDao
+    abstract fun featDao(): FeatDao
     abstract fun fightingStyleDao(): FightingStyleDao
-
     abstract fun barbarianProgressionDao(): BarbarianProgressionDao
     abstract fun bardicInspirationProgressionDao(): BardicInspirationProgressionDao
     abstract fun channelDivinityProgressionDao(): ChannelDivinityProgressionDao
@@ -99,7 +113,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun wildShapeProgressionDao(): WildShapeProgressionDao
     abstract fun eldritchInvocationsProgressionDao(): EldritchInvocationsProgressionDao
     abstract fun eldritchInvocationsKnownProgressionDao(): EldritchInvocationsKnownProgressionDao
-
     abstract fun spellcastingDao(): SpellcastingDao
+    abstract fun spellDao(): SpellDao
     abstract fun referenceDataMetadataDao(): ReferenceDataMetadataDao
 }

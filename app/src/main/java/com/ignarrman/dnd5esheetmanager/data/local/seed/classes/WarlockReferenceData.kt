@@ -1,74 +1,29 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.EldritchInvocationsEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.EldritchInvocationsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object WarlockReferenceData {
 
     const val CLASS_ID = 12L
+    const val FEATURE_STARTING_ID = 12001L
 
-    val features = listOf(
-        FeatureEntity(
-            id = 12001L,
-            name = "Otherworldly Patron",
-            description = "You have struck a bargain with an otherworldly being of your choice."
-        ),
-        FeatureEntity(
-            id = 12002L,
-            name = "Pact Magic",
-            description = "Your arcane research and the magic bestowed on you by your patron have given you facility with spells."
-        ),
-        FeatureEntity(
-            id = 12003L,
-            name = "Eldritch Invocations",
-            description = "In your study of occult lore, you have unearthed eldritch invocations, fragments of forbidden knowledge that imbue you with an abiding magical ability."
-        ),
-        FeatureEntity(
-            id = 12004L,
-            name = "Pact Boon",
-            description = "Your otherworldly patron bestows a gift upon you for your loyal service."
-        ),
-        FeatureEntity(
-            id = 12005L,
-            name = "Ability Score Improvement",
-            description = "You can increase one ability score of your choice."
-        ),
-        FeatureEntity(
-            id = 12006L,
-            name = "Mystic Arcanum",
-            description = "Your patron bestows upon you a magical secret called an arcanum."
-        ),
-        FeatureEntity(
-            id = 12007L,
-            name = "Eldritch Master",
-            description = "You can draw on your inner reserve of mystical power while entreating your patron to regain expended Pact Magic spell slots."
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
+
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-warlock.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
         )
-    )
-
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 12001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 12002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 12003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 12004L, 3),
-
-        ClassFeatureCrossRef(CLASS_ID, 12005L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 12005L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 12005L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 12005L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 12005L, 19),
-
-        ClassFeatureCrossRef(CLASS_ID, 12006L, 11),
-        ClassFeatureCrossRef(CLASS_ID, 12006L, 13),
-        ClassFeatureCrossRef(CLASS_ID, 12006L, 15),
-        ClassFeatureCrossRef(CLASS_ID, 12006L, 17),
-
-        ClassFeatureCrossRef(CLASS_ID, 12007L, 20)
-    )
+    }
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,

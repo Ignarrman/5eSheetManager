@@ -1,64 +1,29 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.MetamagicEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorceryPointProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object SorcererReferenceData {
 
     const val CLASS_ID = 11L
+    const val FEATURE_STARTING_ID = 11001L
 
-    val features = listOf(
-        FeatureEntity(
-            id = 11001L,
-            name = "Spellcasting",
-            description = "You have learned to untangle and reshape the raw fabric of creation in harmony with your wishes and music."
-        ),
-        FeatureEntity(
-            id = 11002L,
-            name = "Sorcerous Origin",
-            description = "You choose a sorcerous origin, which describes the source of your innate magical power."
-        ),
-        FeatureEntity(
-            id = 11003L,
-            name = "Font of Magic",
-            description = "You tap into a deep wellspring of magic within yourself. This wellspring is represented by sorcery points."
-        ),
-        FeatureEntity(
-            id = 11004L,
-            name = "Metamagic",
-            description = "You gain the ability to twist your spells to suit your needs."
-        ),
-        FeatureEntity(
-            id = 11005L,
-            name = "Ability Score Improvement",
-            description = "You can increase one ability score of your choice."
-        ),
-        FeatureEntity(
-            id = 11006L,
-            name = "Sorcerous Restoration",
-            description = "You regain 4 expended sorcery points whenever you finish a short rest."
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
+
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-sorcerer.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
         )
-    )
-
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 11001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 11002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 11003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 11004L, 3),
-
-        ClassFeatureCrossRef(CLASS_ID, 11005L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 11005L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 11005L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 11005L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 11005L, 19),
-
-        ClassFeatureCrossRef(CLASS_ID, 11006L, 20)
-    )
+    }
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,

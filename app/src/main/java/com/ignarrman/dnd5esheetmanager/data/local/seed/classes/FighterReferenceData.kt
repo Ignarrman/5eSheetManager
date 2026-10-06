@@ -1,14 +1,16 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFightingStyleCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FighterProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object FighterReferenceData {
 
     const val CLASS_ID = 6L
+    const val FEATURE_STARTING_ID = 6001L
 
     val fightingStyles = listOf(
         FightingStyleEntity(
@@ -75,62 +77,14 @@ object FighterReferenceData {
         FighterProgressionEntity(20, 2, 1)
     )
 
-    val features = listOf(
-        FeatureEntity(
-            id = 6101L,
-            name = "Fighting Style",
-            description = "Allows the fighter to adopt a specialized combat style."
-        ),
-        FeatureEntity(
-            id = 6102L,
-            name = "Second Wind",
-            description = "Allows the fighter to recover hit points as a bonus action."
-        ),
-        FeatureEntity(
-            id = 6103L,
-            name = "Action Surge",
-            description = "Allows the fighter to take an additional action on their turn."
-        ),
-        FeatureEntity(
-            id = 6104L,
-            name = "Martial Archetype",
-            description = "Provides a fighter subclass and its associated features."
-        ),
-        FeatureEntity(
-            id = 6105L,
-            name = "Ability Score Improvement",
-            description = "Allows the fighter to improve ability scores or select a feat."
-        ),
-        FeatureEntity(
-            id = 6106L,
-            name = "Extra Attack",
-            description = "Allows the fighter to make additional attacks when taking the Attack action."
-        ),
-        FeatureEntity(
-            id = 6107L,
-            name = "Indomitable",
-            description = "Allows the fighter to reroll a failed saving throw."
-        )
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 6101L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 6102L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 6103L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 6104L, 3),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 6106L, 5),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 6),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 6107L, 9),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 6106L, 11),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 14),
-        ClassFeatureCrossRef(CLASS_ID, 6107L, 13),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 6107L, 17),
-        ClassFeatureCrossRef(CLASS_ID, 6107L, 18),
-        ClassFeatureCrossRef(CLASS_ID, 6105L, 19),
-        ClassFeatureCrossRef(CLASS_ID, 6106L, 20)
-    )
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-fighter.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+        )
+    }
 }

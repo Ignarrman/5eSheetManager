@@ -1,5 +1,6 @@
 package com.ignarrman.dnd5esheetmanager.data.local.repositories
 
+import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
@@ -12,10 +13,12 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.FighterProgres
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.InfusionProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.LayOnHandsProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MetamagicDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SneakAttackProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SorceryPointProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.WildShapeProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ArtificerData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BarbarianData
@@ -31,6 +34,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WarlockData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WizardData
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
+import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Artificer
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Barbarian
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Bard
@@ -61,9 +65,10 @@ class ClassRepository @Inject constructor(
     private val monkProgressionDao: MonkProgressionDao,
     private val sneakAttackProgressionDao: SneakAttackProgressionDao,
     private val sorceryPointProgressionDao: SorceryPointProgressionDao,
+    private val metamagicDao: MetamagicDao,
     private val eldritchInvocationsKnownProgressionDao: EldritchInvocationsKnownProgressionDao,
     private val eldritchInvocationsProgressionDao: EldritchInvocationsProgressionDao,
-    private val spellcastingDao: SpellcastingDao
+    private val spellcastingDao: SpellcastingDao,
 ) {
 
     suspend fun getBarbarian(id: Long): Barbarian {
@@ -477,6 +482,9 @@ class ClassRepository @Inject constructor(
         val sorceryPointProgression =
             sorceryPointProgressionDao.getProgression()
 
+        val metamagics =
+            metamagicDao.getAll()
+
         return SorcererData(
             classEntity = classEntity,
             featureRelations = featureRelations,
@@ -485,7 +493,8 @@ class ClassRepository @Inject constructor(
             cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
             spellsKnownProgression = spellsKnownProgression,
-            sorceryPointProgression = sorceryPointProgression
+            sorceryPointProgression = sorceryPointProgression,
+            metamagicList = metamagics
         ).toDomain()
     }
 

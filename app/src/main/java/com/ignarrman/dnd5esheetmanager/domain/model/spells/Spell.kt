@@ -10,7 +10,8 @@ data class Spell(
     val duration: String,
     val description: String,
     val ritual: Boolean,
-    val concentration: Boolean
+    val concentration: Boolean,
+    val source: String
 )
 
 enum class SpellSchool {

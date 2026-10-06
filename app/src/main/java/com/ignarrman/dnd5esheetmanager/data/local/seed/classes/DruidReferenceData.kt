@@ -1,16 +1,17 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WildShapeProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object DruidReferenceData {
 
     const val CLASS_ID = 5L
+    const val FEATURE_STARTING_ID = 5001L
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,
@@ -66,26 +67,14 @@ object DruidReferenceData {
         WildShapeProgressionEntity(20, "4", 2)
     )
 
-    val features = listOf(
-        FeatureEntity(5001L, "Druidic", "Grants the druid knowledge of the Druidic language and its secret written signs."),
-        FeatureEntity(5002L, "Spellcasting", "Allows the druid to cast spells using Wisdom as the spellcasting ability."),
-        FeatureEntity(5003L, "Wild Shape", "Allows the druid to assume the form of a beast under the normal Wild Shape limitations."),
-        FeatureEntity(5004L, "Ability Score Improvement", "Allows the druid to improve ability scores or select a feat."),
-        FeatureEntity(5005L, "Timeless Body", "Reduces the physical effects of aging on the druid."),
-        FeatureEntity(5006L, "Beast Spells", "Allows the druid to cast spells while using Wild Shape."),
-        FeatureEntity(5007L, "Archdruid", "Removes most restrictions on Wild Shape and improves the druid's ability to use it repeatedly.")
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 5001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 5002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 5003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 5004L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 5004L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 5004L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 5004L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 5005L, 18),
-        ClassFeatureCrossRef(CLASS_ID, 5006L, 18),
-        ClassFeatureCrossRef(CLASS_ID, 5007L, 20)
-    )
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-druid.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+        )
+    }
 }

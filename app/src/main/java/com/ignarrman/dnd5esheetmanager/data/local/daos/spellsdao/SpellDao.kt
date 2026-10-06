@@ -21,4 +21,7 @@ interface SpellDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(spell: SpellEntity)
+
+    @Query("DELETE FROM spells")
+    suspend fun deleteAll()
 }

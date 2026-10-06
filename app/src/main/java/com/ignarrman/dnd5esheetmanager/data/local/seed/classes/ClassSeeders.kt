@@ -1,6 +1,9 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 
 suspend fun clearClassesReferenceData(database: AppDatabase) {
 
@@ -39,7 +42,7 @@ suspend fun clearClassesReferenceData(database: AppDatabase) {
     database.classDao().deleteAll()
 }
 
-suspend fun insertClassesReferenceData(database: AppDatabase) {
+suspend fun insertClassesReferenceData(database: AppDatabase, context: Context) {
 
     // Classes
     database.classDao().insertAll(
@@ -48,36 +51,50 @@ suspend fun insertClassesReferenceData(database: AppDatabase) {
 
     // Features
     database.featureDao().insertAll(
-        BarbarianReferenceData.features +
-                BardReferenceData.features +
-                ArtificerReferenceData.features +
-                ClericReferenceData.features +
-                DruidReferenceData.features +
-                FighterReferenceData.features +
-                MonkReferenceData.features +
-                PaladinReferenceData.features +
-                RangerReferenceData.features +
-                RogueReferenceData.features +
-                SorcererReferenceData.features +
-                WarlockReferenceData.features +
-                WizardReferenceData.features
+        (BarbarianReferenceData.getFeatures(context = context) +
+                BardReferenceData.getFeatures(context = context) +
+                ArtificerReferenceData.getFeatures(context = context) +
+                ClericReferenceData.getFeatures(context = context) +
+                DruidReferenceData.getFeatures(context = context) +
+                FighterReferenceData.getFeatures(context = context) +
+                MonkReferenceData.getFeatures(context = context) +
+                PaladinReferenceData.getFeatures(context = context) +
+                RangerReferenceData.getFeatures(context = context) +
+                RogueReferenceData.getFeatures(context = context) +
+                SorcererReferenceData.getFeatures(context = context) +
+                WarlockReferenceData.getFeatures(context = context) +
+                WizardReferenceData.getFeatures(context = context))
+            .map {
+                FeatureEntity(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description
+                )
+            }
     )
 
     // Class -> Features
     database.classDao().insertFeatures(
-        BarbarianReferenceData.featureRelations +
-                BardReferenceData.featureRelations +
-                ArtificerReferenceData.featureRelations +
-                ClericReferenceData.featureRelations +
-                DruidReferenceData.featureRelations +
-                FighterReferenceData.featureRelations +
-                MonkReferenceData.featureRelations +
-                PaladinReferenceData.featureRelations +
-                RangerReferenceData.featureRelations +
-                RogueReferenceData.featureRelations +
-                SorcererReferenceData.featureRelations +
-                WarlockReferenceData.featureRelations +
-                WizardReferenceData.featureRelations
+        (BarbarianReferenceData.getFeatures(context = context) +
+                BardReferenceData.getFeatures(context = context) +
+                ArtificerReferenceData.getFeatures(context = context) +
+                ClericReferenceData.getFeatures(context = context) +
+                DruidReferenceData.getFeatures(context = context) +
+                FighterReferenceData.getFeatures(context = context) +
+                MonkReferenceData.getFeatures(context = context) +
+                PaladinReferenceData.getFeatures(context = context) +
+                RangerReferenceData.getFeatures(context = context) +
+                RogueReferenceData.getFeatures(context = context) +
+                SorcererReferenceData.getFeatures(context = context) +
+                WarlockReferenceData.getFeatures(context = context) +
+                WizardReferenceData.getFeatures(context = context))
+            .map {
+                ClassFeatureCrossRef(
+                    classId = ArtificerReferenceData.CLASS_ID,
+                    featureId = it.id,
+                    level = it.level
+                )
+            }
     )
 
     // Fighting styles

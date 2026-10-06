@@ -5,7 +5,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
-import com.ignarrman.dnd5esheetmanager.domain.model.AbilityScores
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.CantripProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellComponents
@@ -66,4 +66,5 @@ fun SpellEntity.toDomain(): Spell =
         concentration = concentration,
         ritual = ritual,
         description = description,
+        source = source
     )

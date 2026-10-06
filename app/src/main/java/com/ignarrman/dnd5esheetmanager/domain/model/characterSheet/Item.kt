@@ -1,8 +1,6 @@
-package com.ignarrman.dnd5esheetmanager.domain.model
+package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 
-data class Inventory(
-    val items: Item
-)
+import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
 
 open class Item(
     open val name: String,

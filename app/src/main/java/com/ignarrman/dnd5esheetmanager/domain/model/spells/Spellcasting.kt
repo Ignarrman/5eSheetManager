@@ -1,6 +1,6 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.spells
 
-import com.ignarrman.dnd5esheetmanager.domain.model.AbilityScores
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 
 open class Spellcasting(
     val spellcastingAbility: AbilityScores,

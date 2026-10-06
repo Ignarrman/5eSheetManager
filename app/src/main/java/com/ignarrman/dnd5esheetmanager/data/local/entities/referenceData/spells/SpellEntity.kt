@@ -18,4 +18,5 @@ data class SpellEntity(
     val concentration: Boolean,
     val ritual: Boolean,
     val description: String,
+    val source: String
 )

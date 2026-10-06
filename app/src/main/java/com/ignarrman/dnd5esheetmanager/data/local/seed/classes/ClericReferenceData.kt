@@ -1,16 +1,17 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ChannelDivinityProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object ClericReferenceData {
 
     const val CLASS_ID = 4L
+    const val FEATURE_STARTING_ID = 4001L
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,
@@ -66,28 +67,14 @@ object ClericReferenceData {
         ChannelDivinityProgressionEntity(20, 3)
     )
 
-    val features = listOf(
-        FeatureEntity(4001L, "Spellcasting", "Allows the cleric to cast divine spells using Wisdom as the spellcasting ability."),
-        FeatureEntity(4002L, "Divine Domain", "Provides a divine domain with additional features and domain spells."),
-        FeatureEntity(4003L, "Channel Divinity", "Allows the cleric to channel divine power for special effects granted by the class and domain."),
-        FeatureEntity(4004L, "Ability Score Improvement", "Allows the cleric to improve ability scores or select a feat."),
-        FeatureEntity(4005L, "Destroy Undead", "Allows Channel Divinity to destroy undead creatures below the appropriate challenge threshold."),
-        FeatureEntity(4006L, "Divine Intervention", "Allows the cleric to call upon their deity for aid.")
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 4001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 4002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 4003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 4004L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 4004L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 4004L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 4004L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 4005L, 5),
-        ClassFeatureCrossRef(CLASS_ID, 4005L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 4005L, 11),
-        ClassFeatureCrossRef(CLASS_ID, 4005L, 14),
-        ClassFeatureCrossRef(CLASS_ID, 4006L, 10),
-        ClassFeatureCrossRef(CLASS_ID, 4006L, 20)
-    )
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-cleric.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+        )
+    }
 }

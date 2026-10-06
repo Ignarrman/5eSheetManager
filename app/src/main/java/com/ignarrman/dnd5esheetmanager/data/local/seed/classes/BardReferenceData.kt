@@ -1,16 +1,17 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BardicInspirationProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object BardReferenceData {
 
     const val CLASS_ID = 2L
+    const val FEATURE_STARTING_ID = 2001L
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,
@@ -88,99 +89,14 @@ object BardReferenceData {
 
     val spellSlots = fullCasterSpellSlots(CLASS_ID)
 
-    val features = listOf(
-        FeatureEntity(
-            id = 2001L,
-            name = "Spellcasting",
-            description = "Allows the bard to cast spells using Charisma as the spellcasting ability."
-        ),
-        FeatureEntity(
-            id = 2002L,
-            name = "Bardic Inspiration",
-            description = "Allows the bard to inspire another creature with a Bardic Inspiration die."
-        ),
-        FeatureEntity(
-            id = 2003L,
-            name = "Jack of All Trades",
-            description = "Adds part of the bard's proficiency bonus to ability checks that do not already use it."
-        ),
-        FeatureEntity(
-            id = 2004L,
-            name = "Song of Rest",
-            description = "Improves the amount of healing received during a short rest."
-        ),
-        FeatureEntity(
-            id = 2005L,
-            name = "Expertise",
-            description = "Doubles the proficiency bonus for selected proficient skills."
-        ),
-        FeatureEntity(
-            id = 2006L,
-            name = "Font of Inspiration",
-            description = "Allows Bardic Inspiration to be recovered on a short rest."
-        ),
-        FeatureEntity(
-            id = 2007L,
-            name = "Countercharm",
-            description = "Allows the bard to help nearby creatures resist certain charm and fear effects."
-        ),
-        FeatureEntity(
-            id = 2008L,
-            name = "Magical Secrets",
-            description = "Allows the bard to learn selected spells from outside the bard spell list."
-        ),
-        FeatureEntity(
-            id = 2009L,
-            name = "Superior Inspiration",
-            description = "Restores Bardic Inspiration when the bard begins an encounter without any uses remaining."
-        )
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2001L,
-            level = 1
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2002L,
-            level = 1
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2003L,
-            level = 2
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2004L,
-            level = 2
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2005L,
-            level = 3
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2006L,
-            level = 5
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2007L,
-            level = 6
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2008L,
-            level = 10
-        ),
-        ClassFeatureCrossRef(
-            classId = CLASS_ID,
-            featureId = 2009L,
-            level = 20
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-bard.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
         )
-    )
+    }
 }

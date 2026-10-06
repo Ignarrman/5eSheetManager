@@ -1,17 +1,18 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object ArtificerReferenceData {
 
     const val CLASS_ID = 3L
+    const val FEATURE_STARTING_ID = 3001L
 
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,
@@ -171,31 +172,14 @@ object ArtificerReferenceData {
         InfusionProgressionEntity(20, 18, 8)
     )
 
-    val features = listOf(
-        FeatureEntity(3001L, "Magical Tinkering", "Allows the artificer to imbue small objects with minor magical properties."),
-        FeatureEntity(3002L, "Spellcasting", "Allows the artificer to cast spells using Intelligence as the spellcasting ability."),
-        FeatureEntity(3003L, "Infuse Item", "Allows the artificer to apply magical infusions to suitable objects."),
-        FeatureEntity(3004L, "The Right Tool for the Job", "Allows the artificer to create a set of artisan tools when needed."),
-        FeatureEntity(3005L, "Tool Expertise", "Doubles proficiency with tools in which the artificer is already proficient."),
-        FeatureEntity(3006L, "Flash of Genius", "Allows the artificer to use Intelligence to improve an ability check or saving throw."),
-        FeatureEntity(3007L, "Magic Item Adept", "Improves the artificer's ability to create and attune to magic items."),
-        FeatureEntity(3008L, "Spell-Storing Item", "Allows the artificer to store a spell in an object for repeated use."),
-        FeatureEntity(3009L, "Magic Item Savant", "Improves the artificer's ability to use and attune to magic items."),
-        FeatureEntity(3010L, "Magic Item Master", "Further increases the number of magic items the artificer can attune to."),
-        FeatureEntity(3011L, "Soul of Artifice", "Provides powerful defensive benefits based on the artificer's attuned magic items.")
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 3001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 3002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 3003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 3004L, 3),
-        ClassFeatureCrossRef(CLASS_ID, 3005L, 6),
-        ClassFeatureCrossRef(CLASS_ID, 3006L, 7),
-        ClassFeatureCrossRef(CLASS_ID, 3007L, 10),
-        ClassFeatureCrossRef(CLASS_ID, 3008L, 11),
-        ClassFeatureCrossRef(CLASS_ID, 3009L, 14),
-        ClassFeatureCrossRef(CLASS_ID, 3010L, 18),
-        ClassFeatureCrossRef(CLASS_ID, 3011L, 20)
-    )
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-artificer.json",
+            startingId = FEATURE_STARTING_ID
+        )
+    }
 }

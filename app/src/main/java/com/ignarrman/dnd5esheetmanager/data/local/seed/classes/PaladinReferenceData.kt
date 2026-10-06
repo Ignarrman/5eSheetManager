@@ -1,57 +1,30 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFeatureCrossRef
+import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFightingStyleCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.LayOnHandsProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
 
 object PaladinReferenceData {
 
     const val CLASS_ID = 8L
+    const val FEATURE_STARTING_ID = 8001L
 
-    val features = listOf(
-        FeatureEntity(8001L, "Divine Sense", "The presence of strong evil registers on your senses like a noxious odor."),
-        FeatureEntity(8002L, "Lay on Hands", "Your blessed touch can heal wounds."),
-        FeatureEntity(8003L, "Fighting Style", "You adopt a particular style of fighting as your specialty."),
-        FeatureEntity(8004L, "Spellcasting", "You have learned to draw on divine magic through meditation and prayer."),
-        FeatureEntity(8005L, "Divine Smite", "When you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage."),
-        FeatureEntity(8006L, "Divine Health", "The divine magic flowing through you makes you immune to disease."),
-        FeatureEntity(8007L, "Sacred Oath", "You swear the oath that binds you as a paladin forever."),
-        FeatureEntity(8008L, "Ability Score Improvement", "You can increase one ability score of your choice."),
-        FeatureEntity(8009L, "Extra Attack", "You can attack twice, instead of once, whenever you take the Attack action on your turn."),
-        FeatureEntity(8010L, "Aura of Protection", "Whenever you or a friendly creature within 10 feet of you must make a saving throw, the creature gains a bonus to the saving throw."),
-        FeatureEntity(8011L, "Aura of Courage", "You and friendly creatures within 10 feet of you can't be frightened while you are conscious."),
-        FeatureEntity(8012L, "Improved Divine Smite", "Whenever you hit a creature with a melee weapon, the creature takes extra radiant damage."),
-        FeatureEntity(8013L, "Cleansing Touch", "You can use your action to end one spell on yourself or on one willing creature that you touch.")
-    )
+    fun getFeatures(
+        context: Context
+    ): List<ParsedFeature> {
 
-    val featureRelations = listOf(
-        ClassFeatureCrossRef(CLASS_ID, 8001L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 8002L, 1),
-        ClassFeatureCrossRef(CLASS_ID, 8003L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 8004L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 8005L, 2),
-        ClassFeatureCrossRef(CLASS_ID, 8006L, 3),
-        ClassFeatureCrossRef(CLASS_ID, 8007L, 3),
-
-        ClassFeatureCrossRef(CLASS_ID, 8008L, 4),
-        ClassFeatureCrossRef(CLASS_ID, 8008L, 8),
-        ClassFeatureCrossRef(CLASS_ID, 8008L, 12),
-        ClassFeatureCrossRef(CLASS_ID, 8008L, 16),
-        ClassFeatureCrossRef(CLASS_ID, 8008L, 19),
-
-        ClassFeatureCrossRef(CLASS_ID, 8009L, 5),
-        ClassFeatureCrossRef(CLASS_ID, 8010L, 6),
-        ClassFeatureCrossRef(CLASS_ID, 8011L, 10),
-        ClassFeatureCrossRef(CLASS_ID, 8012L, 11),
-        ClassFeatureCrossRef(CLASS_ID, 8010L, 18),
-        ClassFeatureCrossRef(CLASS_ID, 8013L, 14)
-    )
+        return ClassFeatureJsonParser.parse(
+            context = context,
+            fileName = "class-paladin.json",
+            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+        )
+    }
 
     val fightingStyles = listOf(
         FightingStyleEntity(80001L, "Defense", "While you are wearing armor, you gain a +1 bonus to AC."),
