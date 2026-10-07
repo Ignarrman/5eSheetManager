@@ -6,8 +6,11 @@ import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.ReferenceDataMetadataEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.background.clearBackgroundReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.background.insertBackgroundReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.charactersheet.insertProficiencyBonusProgressionReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.clearClassesReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.insertClassesReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.feats.clearFeatReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.feats.insertFeatReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.races.clearRaceReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.races.insertRaceReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.spells.clearSpellsReferenceData
@@ -60,6 +63,7 @@ class ReferenceDataSeeder @Inject constructor(
         clearSpellsReferenceData(database = database)
         clearBackgroundReferenceData(database = database)
         clearRaceReferenceData(database = database)
+        clearFeatReferenceData(database = database)
 
         database.featureDao().deleteAll()
 
@@ -68,6 +72,8 @@ class ReferenceDataSeeder @Inject constructor(
 
     private suspend fun insertReferenceData() {
 
+        insertProficiencyBonusProgressionReferenceData(database = database)
+
         insertClassesReferenceData(database = database, context = context)
 
         insertSpellsReferenceData(database = database, context = context)
@@ -75,5 +81,7 @@ class ReferenceDataSeeder @Inject constructor(
         insertBackgroundReferenceData(database = database, context = context)
 
         insertRaceReferenceData(database = database, context = context)
+
+        insertFeatReferenceData(database = database, context = context)
     }
 }

@@ -6,6 +6,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.ReferenceDataMetadataDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.ProficiencyBonusProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ChannelDivinityProgressionDao
@@ -25,6 +26,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.featsdao.FeatDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.races.RaceDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ProficiencyBonusProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.backgrounds.BackgroundEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.ReferenceDataMetadataEntity
@@ -56,6 +58,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
 
 @Database(
     entities = [
+        ProficiencyBonusProgressionEntity::class,
+
         ClassEntity::class,
         FeatureEntity::class,
         ClassFeatureCrossRef::class,
@@ -93,6 +97,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
 )
 abstract class AppDatabase : RoomDatabase() {
 
+    abstract fun proficiencyBonusDao(): ProficiencyBonusProgressionDao
     abstract fun classDao(): ClassDao
     abstract fun featureDao(): FeatureDao
     abstract fun backgroundDao(): BackgroundDao
