@@ -190,15 +190,7 @@ private fun Map<Coins, Int>.toJson(): String {
     return json.toString()
 }
 
-fun CharacterSheetEntity.toDomain(
-    race: Race?,
-    background: Background?,
-    playerClass: PlayerClass?,
-    feats: List<Feat>,
-    items: List<Item>,
-    weapons: List<Weapon>,
-    spells: List<Spell>
-): CharacterSheet {
+fun CharacterSheetEntity.toDomain(): CharacterSheet {
 
     return CharacterSheet(
         portraitUri = portraitUri,

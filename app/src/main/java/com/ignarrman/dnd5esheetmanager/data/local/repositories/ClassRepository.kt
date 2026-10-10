@@ -71,6 +71,10 @@ class ClassRepository @Inject constructor(
     private val spellcastingDao: SpellcastingDao,
 ) {
 
+    suspend fun getIdByName(name: String): Long? {
+        return classDao.getClassIdByName(name)
+    }
+
     suspend fun getBarbarian(id: Long): Barbarian {
 
         val classEntity =

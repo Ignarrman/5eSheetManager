@@ -18,13 +18,17 @@ class RaceRepository(
             }
     }
 
-    suspend fun getByName(name: String): Race? {
-        return raceDao
-            .getByName(name)
-            ?.let { raceEntity ->
-                raceEntity.toDomain(
-                    features = raceDao.getFeaturesForRace(raceEntity.id)
-                )
-            }
+    suspend fun getByName(
+        name: String,
+        source: String
+    ): Race? {
+        return raceDao.getByNameAndSource(
+            name = name,
+            source = source
+        )?.let { raceEntity ->
+            raceEntity.toDomain(
+                features = raceDao.getFeaturesForRace(raceEntity.id)
+            )
+        }
     }
 }

@@ -13,7 +13,8 @@ data class RaceEntity(
     val landSpeed: Int,
     val swimSpeed: Int?,
     val climbSpeed: Int?,
-    val flySpeed: Int?
+    val flySpeed: Int?,
+    val source: String
 )
 
 @Entity(

@@ -15,4 +15,10 @@ class BackgroundRepository @Inject constructor(
             .map { it.toDomain() }
     }
 
+    suspend fun getByName(name: String): Background? {
+        return backgroundDao
+            .getByName(name)
+            ?.toDomain()
+    }
+
 }

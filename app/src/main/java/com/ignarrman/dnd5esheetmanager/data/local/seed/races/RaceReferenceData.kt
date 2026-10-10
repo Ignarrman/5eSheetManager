@@ -37,7 +37,8 @@ suspend fun insertRaceReferenceData(
             landSpeed = race.landSpeed,
             swimSpeed = race.swimSpeed,
             climbSpeed = race.climbSpeed,
-            flySpeed = race.flySpeed
+            flySpeed = race.flySpeed,
+            source = race.source
         )
     }
 

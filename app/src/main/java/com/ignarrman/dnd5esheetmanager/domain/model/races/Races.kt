@@ -6,7 +6,8 @@ data class Race(
     val name: String,
     val size: Size,
     val speed: Speed,
-    val features: List<Feature>
+    val features: List<Feature>,
+    val source: String
 )
 
 enum class Size {

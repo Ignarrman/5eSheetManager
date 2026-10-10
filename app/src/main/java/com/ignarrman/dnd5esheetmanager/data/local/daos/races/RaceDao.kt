@@ -20,8 +20,17 @@ interface RaceDao {
     @Query("SELECT * FROM races ORDER BY name")
     suspend fun getAll(): List<RaceEntity>
 
-    @Query("SELECT * FROM races WHERE name = :name")
-    suspend fun getByName(name: String): RaceEntity?
+    @Query(
+        """
+    SELECT * FROM races
+    WHERE name = :name AND source = :source
+    LIMIT 1
+    """
+    )
+    suspend fun getByNameAndSource(
+        name: String,
+        source: String
+    ): RaceEntity?
 
     @Query("DELETE FROM races")
     suspend fun deleteAll()

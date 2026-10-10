@@ -3,6 +3,7 @@ package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
 
 data class Weapon(
+    val id: Long? = null,
     val name: String,
     val description: String,
     val price: Int,

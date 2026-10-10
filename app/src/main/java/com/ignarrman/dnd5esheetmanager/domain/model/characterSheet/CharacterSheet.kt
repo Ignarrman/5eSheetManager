@@ -7,6 +7,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 
 data class CharacterSheet(
+    val id: Long? = null,
     val portraitUri: String? = null,
     val name: String = "",
     val level: Int = 1,
@@ -16,11 +17,11 @@ data class CharacterSheet(
     val stats: Map<AbilityScores, Int> = emptyMap(),
     val skills: Map<Skill, Int> = emptyMap(),
 
-    val race: Race? = null,
-    val background: Background? = null,
-    val playerClass: PlayerClass? = null,
+    val raceId: Long? = null,
+    val backgroundId: Long? = null,
+    val playerClassId: Long? = null,
 
-    val feats: List<Feat> = emptyList(),
+    val featIds: List<Long> = emptyList(),
 
     val armorClass: Int? = null,
 
@@ -33,12 +34,12 @@ data class CharacterSheet(
     val skillProficiencies: List<Skill> = emptyList(),
     val skillExpertise: List<Skill> = emptyList(),
     val savingThrowProficiencies: List<AbilityScores> = emptyList(),
-
-    val inventory: List<Item> = emptyList(),
     val proficiencies: List<String> = emptyList(),
 
-    val weapons: List<Weapon> = emptyList(),
-    val spells: List<Spell> = emptyList(),
+//    val inventoryIds: List<Long> = emptyList(),
+//    val weaponIds: List<Long> = emptyList(),
+
+    val spellIds: List<Long> = emptyList(),
 
     val notes: String = "",
 
