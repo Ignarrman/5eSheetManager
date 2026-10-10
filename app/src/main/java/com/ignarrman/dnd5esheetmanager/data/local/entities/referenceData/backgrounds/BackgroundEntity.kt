@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "backgrounds")
 data class BackgroundEntity(
     @PrimaryKey
+    val id: Long,
     val name: String,
     val skillProficiencies: String,
     val languages: String?,
     val equipment: String?,
-    val featureName: String,
-    val featureDescription: String
+    val featureId: Long,
 )

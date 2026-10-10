@@ -12,9 +12,7 @@ interface InfusionProgressionDao {
     suspend fun getProgression(): List<InfusionProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<InfusionProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<InfusionProgressionEntity>)
 
     @Query("DELETE FROM infusion_progression")
     suspend fun deleteAll()

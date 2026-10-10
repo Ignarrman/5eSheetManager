@@ -11,6 +11,7 @@ fun RaceEntity.toDomain(
     features: List<FeatureEntity>
 ): Race {
     return Race(
+        id = id,
         name = name,
         size = when (size.uppercase()) {
             "SMALL" -> Size.SMALL
@@ -26,9 +27,11 @@ fun RaceEntity.toDomain(
         ),
         features = features.map {
             Feature(
+                id = id,
                 name = it.name,
                 description = it.description
             )
-        }
+        },
+        source = source
     )
 }

@@ -12,9 +12,7 @@ interface BardicInspirationProgressionDao {
     suspend fun getProgression(): List<BardicInspirationProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<BardicInspirationProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<BardicInspirationProgressionEntity>)
 
     @Query("DELETE FROM bardic_inspiration_progression")
     suspend fun deleteAll()

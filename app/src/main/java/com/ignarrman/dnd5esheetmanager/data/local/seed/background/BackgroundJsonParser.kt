@@ -3,7 +3,6 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.background
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.collections.iterator
 
 object BackgroundJsonParser {
 
@@ -59,6 +58,7 @@ object BackgroundJsonParser {
                 )
 
             result += ParsedBackground(
+                id = result.size + 1L,
                 name = name,
                 skillProficiencies = skillProficiencies,
                 languages = languages,

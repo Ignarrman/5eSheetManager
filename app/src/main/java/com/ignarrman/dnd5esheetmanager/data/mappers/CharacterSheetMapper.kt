@@ -5,7 +5,6 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ItemEnt
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ProficiencyBonusProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.WeaponEntity
 import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
-import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Coins
@@ -16,10 +15,6 @@ import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.RangeType
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Skill
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.WeaponProperty
-import com.ignarrman.dnd5esheetmanager.domain.model.classes.PlayerClass
-import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
-import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
-import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -39,6 +34,7 @@ fun ProficiencyBonusProgression.toEntity(): ProficiencyBonusProgressionEntity {
 
 fun ItemEntity.toDomain(): Item {
     return Item(
+        id = id,
         name = name,
         description = description,
         price = price,
@@ -50,6 +46,7 @@ fun Item.toEntity(
     characterId: Long
 ): ItemEntity {
     return ItemEntity(
+        id = id!!,
         characterId = characterId,
         name = name,
         description = description,
@@ -60,6 +57,7 @@ fun Item.toEntity(
 
 fun WeaponEntity.toDomain(): Weapon {
     return Weapon(
+        id = id,
         name = name,
         description = description,
         price = price,
@@ -85,6 +83,7 @@ fun Weapon.toEntity(
     characterId: Long
 ): WeaponEntity {
     return WeaponEntity(
+        id = id!!,
         characterId = characterId,
         name = name,
         description = description,
@@ -121,7 +120,7 @@ fun CharacterSheet.toEntity(
         skills = skills.toJson(),
 
         raceId = null,
-        backgroundName = background?.name,
+        backgroundId = backgroundId,
         playerClassId = null,
 
         armorClass = armorClass,
@@ -202,11 +201,9 @@ fun CharacterSheetEntity.toDomain(): CharacterSheet {
         stats = stats.toAbilityScoresMap(),
         skills = skills.toSkillMap(),
 
-        race = race,
-        background = background,
-        playerClass = playerClass,
-
-        feats = feats,
+        raceId = raceId,
+        backgroundId = backgroundId,
+        playerClassId = playerClassId,
 
         armorClass = armorClass,
 
@@ -225,14 +222,8 @@ fun CharacterSheetEntity.toDomain(): CharacterSheet {
         savingThrowProficiencies =
             savingThrowProficiencies.toEnumList(AbilityScores::valueOf),
 
-        inventory = items,
-
         proficiencies =
             proficiencies.toStringList(),
-
-        weapons = weapons,
-
-        spells = spells,
 
         notes = notes,
 

@@ -5,17 +5,19 @@ import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spellcasting
 
 
 data class Sorcerer(
+    override val id: Long?,
     override val name: String = "Sorcerer",
     override val hitDice: Int = 6,
-    override val features: Map<Int, List<Feature>>,
+    override val featureIds: Map<Int, List<Long>>,
     override val spellcasting: Spellcasting,
     val sorceryPoints: Map<Int, SorceryPointProgression>,
     val metamagics: List<Metamagic>
 ) : PlayerClass(
+    id = id,
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    features = features
+    featureIds = featureIds
 )
 
 data class SorceryPointProgression(

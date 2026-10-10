@@ -12,9 +12,7 @@ interface BarbarianProgressionDao {
     suspend fun getProgression(): List<BarbarianProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<BarbarianProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<BarbarianProgressionEntity>)
 
     @Query("DELETE FROM barbarian_progression")
     suspend fun deleteAll()

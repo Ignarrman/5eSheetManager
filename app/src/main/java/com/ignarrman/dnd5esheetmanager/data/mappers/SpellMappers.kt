@@ -52,6 +52,7 @@ fun SpellcastingEntity.toDomain(
 
 fun SpellEntity.toDomain(): Spell =
     Spell(
+        id = id,
         name = name,
         level = level,
         school = SpellSchool.valueOf(school),

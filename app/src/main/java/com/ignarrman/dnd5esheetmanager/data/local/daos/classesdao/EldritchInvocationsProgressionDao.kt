@@ -12,9 +12,7 @@ interface EldritchInvocationsProgressionDao {
     suspend fun getProgression(): List<EldritchInvocationsEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<EldritchInvocationsEntity>
-    )
+    suspend fun insertAll(progression: List<EldritchInvocationsEntity>)
 
     @Query("DELETE FROM eldritch_invocations_progression")
     suspend fun deleteAll()

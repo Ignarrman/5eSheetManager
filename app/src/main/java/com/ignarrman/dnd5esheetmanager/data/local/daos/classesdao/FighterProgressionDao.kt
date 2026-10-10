@@ -12,9 +12,7 @@ interface FighterProgressionDao {
     suspend fun getProgression(): List<FighterProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<FighterProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<FighterProgressionEntity>)
 
     @Query("DELETE FROM fighter_progression")
     suspend fun deleteAll()

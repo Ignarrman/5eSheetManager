@@ -14,9 +14,7 @@ interface EldritchInvocationsKnownProgressionDao {
     suspend fun getProgression(): List<EldritchInvocationsKnownProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<EldritchInvocationsKnownProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<EldritchInvocationsKnownProgressionEntity>)
 
     @Query("DELETE FROM eldritch_invocations_known_progression")
     suspend fun deleteAll()

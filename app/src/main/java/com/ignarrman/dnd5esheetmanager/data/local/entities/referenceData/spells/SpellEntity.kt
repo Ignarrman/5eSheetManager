@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "spells")
 data class SpellEntity(
     @PrimaryKey
+    val id: Long = 0,
     val name: String,
     val level: Int,
     val school: String,

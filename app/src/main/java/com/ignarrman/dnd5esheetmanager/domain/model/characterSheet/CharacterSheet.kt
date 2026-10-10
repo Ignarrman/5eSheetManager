@@ -21,8 +21,6 @@ data class CharacterSheet(
     val backgroundId: Long? = null,
     val playerClassId: Long? = null,
 
-    val featIds: List<Long> = emptyList(),
-
     val armorClass: Int? = null,
 
     val maxHp: Int? = null,
@@ -35,11 +33,6 @@ data class CharacterSheet(
     val skillExpertise: List<Skill> = emptyList(),
     val savingThrowProficiencies: List<AbilityScores> = emptyList(),
     val proficiencies: List<String> = emptyList(),
-
-//    val inventoryIds: List<Long> = emptyList(),
-//    val weaponIds: List<Long> = emptyList(),
-
-    val spellIds: List<Long> = emptyList(),
 
     val notes: String = "",
 

@@ -16,6 +16,9 @@ interface SpellDao {
     @Query("SELECT * FROM spells WHERE name = :name")
     suspend fun getByName(name: String): SpellEntity?
 
+    @Query("SELECT * FROM spells WHERE id = :id")
+    suspend fun getById(id: Long): SpellEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(spells: List<SpellEntity>)
 

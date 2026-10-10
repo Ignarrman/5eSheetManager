@@ -1,6 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.spells
 
 data class Spell(
+    val id: Long? = null,
     val name: String,
     val level: Int,
     val school: SpellSchool,

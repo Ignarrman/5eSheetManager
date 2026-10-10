@@ -3,6 +3,7 @@ package com.ignarrman.dnd5esheetmanager.domain.model.races
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 
 data class Race(
+    val id: Long? = null,
     val name: String,
     val size: Size,
     val speed: Speed,

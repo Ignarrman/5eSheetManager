@@ -13,6 +13,14 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorcererData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WarlockData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WizardData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.ArtificerReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.BarbarianReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.BardReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.ClericReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.DruidReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.FighterReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.MonkReferenceData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.PaladinReferenceData
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Artificer
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Barbarian
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Bard
@@ -47,7 +55,7 @@ fun BarbarianData.toDomain(): Barbarian {
 
     val featuresByLevel =
         featureRelations
-            .map { relation -> relation.level to featuresById.getValue(relation.featureId).toDomain() }
+            .map { relation -> relation.level to featuresById.getValue(relation.featureId).id }
             .groupBy(keySelector = { it.first }, valueTransform = { it.second })
 
     val rageProgressionByLevel =
@@ -59,9 +67,10 @@ fun BarbarianData.toDomain(): Barbarian {
         }
 
     return Barbarian(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         rage = rageProgressionByLevel
     )
 }
@@ -78,7 +87,7 @@ fun BardData.toDomain(): Bard {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -99,9 +108,10 @@ fun BardData.toDomain(): Bard {
     )
 
     return Bard(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         bardicInspiration = bardicInspirationByLevel
     )
@@ -118,7 +128,7 @@ fun ArtificerData.toDomain(): Artificer {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -145,9 +155,10 @@ fun ArtificerData.toDomain(): Artificer {
         }
 
     return Artificer(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         infusions = infusionsList,
         infusionsProgression = infusionsByLevel
@@ -166,7 +177,7 @@ fun ClericData.toDomain(): Cleric {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -187,9 +198,10 @@ fun ClericData.toDomain(): Cleric {
         }
 
     return Cleric(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         channelDivinity = channelDivinityByLevel
     )
@@ -207,7 +219,7 @@ fun DruidData.toDomain(): Druid {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -229,9 +241,10 @@ fun DruidData.toDomain(): Druid {
         }
 
     return Druid(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         wildShape = wildShapeByLevel
     )
@@ -249,7 +262,7 @@ fun FighterData.toDomain(): Fighter {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -264,7 +277,7 @@ fun FighterData.toDomain(): Fighter {
         fightingStyleCrossRef.map { relation ->
             fightingStylesById
                 .getValue(relation.fightingStyleId)
-                .toDomain()
+                .id
         }
 
     val fighterProgressionByLevel =
@@ -276,10 +289,11 @@ fun FighterData.toDomain(): Fighter {
         }
 
     return Fighter(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
-        fightingStyles = fightingStyles,
+        featureIds = featuresByLevel,
+        fightingStyleIds = fightingStyles,
         progression = fighterProgressionByLevel
     )
 
@@ -296,7 +310,7 @@ fun MonkData.toDomain(): Monk {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -313,9 +327,10 @@ fun MonkData.toDomain(): Monk {
         }
 
     return Monk(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         martialArtsProgression = monkProgressionByLevel,
     )
 
@@ -332,7 +347,7 @@ fun PaladinData.toDomain(): Paladin {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -352,7 +367,7 @@ fun PaladinData.toDomain(): Paladin {
         fightingStyleCrossRef.map { relation ->
             fightingStylesById
                 .getValue(relation.fightingStyleId)
-                .toDomain()
+                .id
         }
 
     val layOnHandsByLevel =
@@ -363,11 +378,12 @@ fun PaladinData.toDomain(): Paladin {
         }
 
     return Paladin(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
-        fightingStyles = fightingStyles,
+        fightingStyleIds = fightingStyles,
         layOnHands = layOnHandsByLevel
     )
 
@@ -384,7 +400,7 @@ fun RangerData.toDomain(): Ranger {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -404,15 +420,16 @@ fun RangerData.toDomain(): Ranger {
         fightingStyleCrossRef.map { relation ->
             fightingStylesById
                 .getValue(relation.fightingStyleId)
-                .toDomain()
+                .id
         }
 
     return Ranger(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
-        fightingStyles = fightingStyles
+        fightingStyleIds = fightingStyles
     )
 
 }
@@ -428,7 +445,7 @@ fun RogueData.toDomain(): Rogue {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -444,9 +461,10 @@ fun RogueData.toDomain(): Rogue {
         }
 
     return Rogue(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         sneakAttack = sneakAttackByLevel,
     )
 
@@ -463,7 +481,7 @@ fun WarlockData.toDomain(): Warlock {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -489,9 +507,10 @@ fun WarlockData.toDomain(): Warlock {
         }
 
     return Warlock(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         eldritchInvocations = eldritchInvocations,
         eldritchInvocationsKnown = eldritchInvocationsKnownByLevel,
@@ -510,7 +529,7 @@ fun SorcererData.toDomain(): Sorcerer {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -535,9 +554,10 @@ fun SorcererData.toDomain(): Sorcerer {
     }
 
     return Sorcerer(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
         sorceryPoints = sorceryPointProgressionByLevel,
         metamagics = metamagicList
@@ -556,7 +576,7 @@ fun WizardData.toDomain(): Wizard {
                 relation.level to
                         featuresById
                             .getValue(relation.featureId)
-                            .toDomain()
+                            .id
             }
             .groupBy(
                 keySelector = { it.first },
@@ -570,9 +590,10 @@ fun WizardData.toDomain(): Wizard {
     )
 
     return Wizard(
+        id = classEntity.id,
         name = classEntity.name,
         hitDice = classEntity.hitDice,
-        features = featuresByLevel,
+        featureIds = featuresByLevel,
         spellcasting = spellcastingByLevel,
     )
 

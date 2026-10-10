@@ -12,9 +12,7 @@ interface WildShapeProgressionDao {
     suspend fun getProgression(): List<WildShapeProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<WildShapeProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<WildShapeProgressionEntity>)
 
     @Query("DELETE FROM wild_shape_progression")
     suspend fun deleteAll()

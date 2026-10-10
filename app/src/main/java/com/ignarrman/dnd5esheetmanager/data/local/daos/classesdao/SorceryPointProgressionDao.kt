@@ -12,9 +12,7 @@ interface SorceryPointProgressionDao {
     suspend fun getProgression(): List<SorceryPointProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<SorceryPointProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<SorceryPointProgressionEntity>)
 
     @Query("DELETE FROM sorcery_points_progression")
     suspend fun deleteAll()

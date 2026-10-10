@@ -26,6 +26,7 @@ object SpellJsonParser {
             )
 
         val spellsByName = LinkedHashMap<String, SpellEntity>()
+        var nextId = 1L
 
         for (fileName in files) {
             val json = assetManager
@@ -41,7 +42,7 @@ object SpellJsonParser {
                 val spell = parseSpell(spellJson) ?: continue
 
                 /*
-                 * SpellEntity usa el nombre como PK.
+                 * SpellEntity se identifica por ID.
                  *
                  * Si un hechizo aparece en varios libros, conservamos
                  * la primera aparición.
@@ -49,7 +50,10 @@ object SpellJsonParser {
                  * PHB tiene prioridad porque spells-phb.json se procesa
                  * antes que el resto.
                  */
-                spellsByName.putIfAbsent(spell.name, spell)
+                if (spell.name !in spellsByName) {
+                    spellsByName[spell.name] = spell.copy(id = nextId)
+                    nextId++
+                }
             }
         }
 
@@ -93,7 +97,7 @@ object SpellJsonParser {
                 .optJSONObject("meta")
                 ?.optBoolean("ritual", false)
                 ?: false,
-            description = parseDescription(json),
+            description = parseDescription(json)
         )
     }
 

@@ -12,9 +12,7 @@ interface SneakAttackProgressionDao {
     suspend fun getProgression(): List<SneakAttackProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<SneakAttackProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<SneakAttackProgressionEntity>)
 
     @Query("DELETE FROM sneak_attack_progression")
     suspend fun deleteAll()

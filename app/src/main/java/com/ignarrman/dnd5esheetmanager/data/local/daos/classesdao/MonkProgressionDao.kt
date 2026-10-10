@@ -12,9 +12,7 @@ interface MonkProgressionDao {
     suspend fun getProgression(): List<MonkProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<MonkProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<MonkProgressionEntity>)
 
     @Query("DELETE FROM monk_progression")
     suspend fun deleteAll()

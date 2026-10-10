@@ -12,9 +12,7 @@ interface LayOnHandsProgressionDao {
     suspend fun getProgression(): List<LayOnHandsProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<LayOnHandsProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<LayOnHandsProgressionEntity>)
 
     @Query("DELETE FROM lay_on_hands_progression")
     suspend fun deleteAll()

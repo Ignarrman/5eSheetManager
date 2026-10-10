@@ -12,9 +12,7 @@ interface ChannelDivinityProgressionDao {
     suspend fun getProgression(): List<ChannelDivinityProgressionEntity>
 
     @Insert
-    suspend fun insertAll(
-        progression: List<ChannelDivinityProgressionEntity>
-    )
+    suspend fun insertAll(progression: List<ChannelDivinityProgressionEntity>)
 
     @Query("DELETE FROM channel_divinity_progression")
     suspend fun deleteAll()

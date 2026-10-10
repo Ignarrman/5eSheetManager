@@ -24,12 +24,12 @@ suspend fun insertBackgroundReferenceData(
 
     val backgroundEntities = parsedBackgrounds.map {
         BackgroundEntity(
+            id = it.id,
             name = it.name,
             skillProficiencies = JSONArray(it.skillProficiencies).toString(),
             languages = it.languages,
             equipment = it.equipment,
-            featureName = it.featureName,
-            featureDescription = it.featureDescription
+            featureId = it.id,
         )
     }
 

@@ -8,5 +8,5 @@ data class Background(
     val skillProficiencies: List<String>,
     val languages: String?,
     val equipment: String?,
-    val feature: Feature
+    val featureId: Long? = null
 )

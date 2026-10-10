@@ -19,7 +19,7 @@ data class CharacterSheetEntity(
     val skills: String,
 
     val raceId: Long?,
-    val backgroundName: String?,
+    val backgroundId: Long?,
     val playerClassId: Long?,
 
     val armorClass: Int?,

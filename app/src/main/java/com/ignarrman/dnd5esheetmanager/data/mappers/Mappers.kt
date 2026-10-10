@@ -10,6 +10,7 @@ import org.json.JSONArray
 
 fun FeatureEntity.toDomain(): Feature =
     Feature(
+        id = id,
         name = name,
         description = description
     )
@@ -17,12 +18,14 @@ fun FeatureEntity.toDomain(): Feature =
 
 fun FightingStyleEntity.toDomain(): FightingStyle =
     FightingStyle(
+        id = id,
         name = name,
         description = description
     )
 
 fun BackgroundEntity.toDomain(): Background {
     return Background(
+        id = id,
         name = name,
         skillProficiencies = JSONArray(skillProficiencies).let { json ->
             List(json.length()) { index ->
@@ -31,10 +34,7 @@ fun BackgroundEntity.toDomain(): Background {
         },
         languages = languages,
         equipment = equipment,
-        feature = Feature(
-            name = featureName,
-            description = featureDescription
-        )
+        featureId = id
     )
 }
 
