@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ignarrman.dnd5esheetmanager.ui.navigation.Routes.Home
-import com.ignarrman.dnd5esheetmanager.ui.screens.CharacterSheetScreen
+import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.CharacterSheetScreen
 import com.ignarrman.dnd5esheetmanager.ui.screens.home.HomeScreen
 import com.ignarrman.dnd5esheetmanager.ui.navigation.Routes.CharacterSheet
 
@@ -44,7 +44,12 @@ fun AppNavigation() {
 
             entry<CharacterSheet> { route ->
                 CharacterSheetScreen(
-                    characterId = route.characterId
+                    characterId = route.characterId,
+                    onBack = {
+                        if (backStack.size > 1) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
                 )
             }
         },

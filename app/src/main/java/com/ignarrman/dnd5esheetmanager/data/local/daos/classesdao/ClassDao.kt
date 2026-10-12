@@ -13,6 +13,9 @@ interface ClassDao {
     @Query("SELECT * FROM classes WHERE id = :classId")
     suspend fun getClass(classId: Long): ClassEntity?
 
+    @Query("SELECT * FROM classes ORDER BY id")
+    suspend fun getAll(): List<ClassEntity>
+
     @Query("SELECT id FROM classes WHERE name = :name LIMIT 1")
     suspend fun getClassIdByName(name: String): Long?
 

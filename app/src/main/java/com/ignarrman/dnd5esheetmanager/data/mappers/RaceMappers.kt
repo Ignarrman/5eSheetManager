@@ -25,13 +25,7 @@ fun RaceEntity.toDomain(
             climb = climbSpeed,
             fly = flySpeed
         ),
-        features = features.map {
-            Feature(
-                id = id,
-                name = it.name,
-                description = it.description
-            )
-        },
+        featuresIds = featureIds.toLongList(),
         source = source
     )
 }

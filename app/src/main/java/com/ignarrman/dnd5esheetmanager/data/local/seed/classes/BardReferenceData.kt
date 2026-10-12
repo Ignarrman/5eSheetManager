@@ -96,7 +96,7 @@ object BardReferenceData {
         return ClassFeatureJsonParser.parse(
             context = context,
             fileName = "class-bard.json",
-            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+            startingId = FEATURE_STARTING_ID
         )
     }
 }

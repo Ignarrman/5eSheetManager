@@ -10,3 +10,12 @@ data class Background(
     val equipment: String?,
     val featureId: Long? = null
 )
+
+
+fun Background.getFeatures(
+    allFeatures: List<Feature>
+): List<Feature> {
+    val feature = featureId ?: return emptyList()
+
+    return allFeatures.filter { it.id == feature }
+}

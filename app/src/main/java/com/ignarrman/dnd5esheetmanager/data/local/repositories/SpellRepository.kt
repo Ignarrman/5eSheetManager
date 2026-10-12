@@ -12,11 +12,8 @@ class SpellRepository(
     private val spellDao: SpellDao
 ) {
 
-    fun getAll(): Flow<List<Spell>> =
-        spellDao.getAll()
-            .map { spells ->
-                spells.map { it.toDomain() }
-            }
+    suspend fun getAll(): List<Spell> =
+        spellDao.getAll().map { it.toDomain() }
 
     suspend fun getByName(name: String): Spell? =
         spellDao.getByName(name)?.toDomain()

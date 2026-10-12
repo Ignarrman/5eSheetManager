@@ -1,18 +1,13 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 
-import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
-import com.ignarrman.dnd5esheetmanager.domain.model.classes.PlayerClass
-import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
-import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
-import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
-
 data class CharacterSheet(
     val id: Long? = null,
     val portraitUri: String? = null,
     val name: String = "",
     val level: Int = 1,
     val experiencePoints: Int = 0,
-    val proficiencyBonus: Int,
+    val proficiencyBonus: Int = 2,
+    val initiative: Int? = null,
 
     val stats: Map<AbilityScores, Int> = emptyMap(),
     val skills: Map<Skill, Int> = emptyMap(),
@@ -20,12 +15,17 @@ data class CharacterSheet(
     val raceId: Long? = null,
     val backgroundId: Long? = null,
     val playerClassId: Long? = null,
+    val featsId: List<Long> = emptyList(),
+    val spellsId: List<Long> = emptyList(),
 
     val armorClass: Int? = null,
 
     val maxHp: Int? = null,
     val currentHp: Int? = null,
     val temporaryHp: Int = 0,
+
+    val deathSaveSuccesses: Int = 0,
+    val deathSaveFailures: Int = 0,
 
     val currentHitDice: Int = 0,
 
@@ -37,9 +37,8 @@ data class CharacterSheet(
     val notes: String = "",
 
     val wallet: Map<Coins, Int> = emptyMap()
-)
-
-data class ProficiencyBonusProgression(
-    val level: Int,
-    val bonus: Int
-)
+) {
+    companion object {
+        val Empty = CharacterSheet()
+    }
+}

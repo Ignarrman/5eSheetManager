@@ -14,14 +14,6 @@ data class RaceEntity(
     val swimSpeed: Int?,
     val climbSpeed: Int?,
     val flySpeed: Int?,
-    val source: String
-)
-
-@Entity(
-    tableName = "race_features",
-    primaryKeys = ["raceId", "featureId"]
-)
-data class RaceFeatureCrossRef(
-    val raceId: Long,
-    val featureId: Long
+    val source: String,
+    val featureIds: String
 )

@@ -6,6 +6,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.ReferenceDataMetadataDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.CharacterSheetDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ChannelDivinityProgressionDao
@@ -21,6 +23,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressio
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SneakAttackProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SorceryPointProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.WildShapeProgressionDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.featsdao.FeatDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.races.RaceDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
 import dagger.Module
@@ -43,7 +47,9 @@ object AppDatabaseModule {
             context,
             AppDatabase::class.java,
             "dnd5e.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(true)
+            .build()
 
     @Provides
     fun provideClassDao(
@@ -56,6 +62,24 @@ object AppDatabaseModule {
         database: AppDatabase
     ): FeatureDao =
         database.featureDao()
+
+    @Provides
+    fun provideBackgroundDao(
+        database: AppDatabase
+    ): BackgroundDao =
+        database.backgroundDao()
+
+    @Provides
+    fun provideRaceDao(
+        database: AppDatabase
+    ): RaceDao =
+        database.raceDao()
+
+    @Provides
+    fun provideFeatDao(
+        database: AppDatabase
+    ): FeatDao =
+        database.featDao()
 
     @Provides
     fun provideFightingStyleDao(
@@ -158,6 +182,12 @@ object AppDatabaseModule {
         database: AppDatabase
     ): SpellDao =
         database.spellDao()
+
+    @Provides
+    fun provideCharacterSheetDao(
+        database: AppDatabase
+    ): CharacterSheetDao =
+        database.characterSheetDao()
 
     @Provides
     fun provideReferenceDataMetadataDao(

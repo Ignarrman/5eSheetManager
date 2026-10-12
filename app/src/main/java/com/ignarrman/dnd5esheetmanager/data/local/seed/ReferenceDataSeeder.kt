@@ -6,7 +6,6 @@ import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.ReferenceDataMetadataEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.background.clearBackgroundReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.background.insertBackgroundReferenceData
-import com.ignarrman.dnd5esheetmanager.data.local.seed.charactersheet.insertProficiencyBonusProgressionReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.clearClassesReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.insertClassesReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.feats.clearFeatReferenceData
@@ -15,6 +14,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.seed.races.clearRaceReferenceD
 import com.ignarrman.dnd5esheetmanager.data.local.seed.races.insertRaceReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.spells.clearSpellsReferenceData
 import com.ignarrman.dnd5esheetmanager.data.local.seed.spells.insertSpellsReferenceData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +24,7 @@ private const val REFERENCE_DATA_VERSION = 1
 @Singleton
 class ReferenceDataSeeder @Inject constructor(
     private val database: AppDatabase,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
 
     suspend fun seed() {
@@ -71,8 +71,6 @@ class ReferenceDataSeeder @Inject constructor(
     }
 
     private suspend fun insertReferenceData() {
-
-        insertProficiencyBonusProgressionReferenceData(database = database)
 
         insertClassesReferenceData(database = database, context = context)
 

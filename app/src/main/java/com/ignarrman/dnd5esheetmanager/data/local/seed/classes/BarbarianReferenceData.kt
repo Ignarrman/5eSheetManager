@@ -120,7 +120,7 @@ object BarbarianReferenceData {
         return ClassFeatureJsonParser.parse(
             context = context,
             fileName = "class-barbarian.json",
-            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+            startingId = FEATURE_STARTING_ID
         )
     }
 }

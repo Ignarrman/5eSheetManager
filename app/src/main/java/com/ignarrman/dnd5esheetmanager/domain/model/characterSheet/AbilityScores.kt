@@ -1,5 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 
+import kotlin.math.floor
+
 enum class AbilityScores(
     val statName: String
 ) {
@@ -28,8 +30,23 @@ enum class Skill(
     PERCEPTION("Perception", AbilityScores.WIS),
     INSIGHT("Insight", AbilityScores.WIS),
     SURVIVAL("Survival", AbilityScores.WIS),
+    MEDICINE("Medicine", AbilityScores.WIS),
     PERSUASION("Persuasion", AbilityScores.CHA),
     INTIMIDATION("Intimidation", AbilityScores.CHA),
     DECEPTION("DecepTion", AbilityScores.CHA),
     PERFORMANCE("Performance", AbilityScores.CHA)
+}
+
+fun getScoreBonus(score: Int): Int{
+    return floor(((score-10)/2).toDouble()).toInt()
+}
+
+fun getScoreProficiencyBonus(score: Int, proficiency: Boolean, expertise: Boolean, proficiencyBonus: Int): Int{
+    return if (expertise){
+        floor(((score-10)/2).toDouble()).toInt() + proficiencyBonus*2
+    } else if (proficiency){
+        floor(((score-10)/2).toDouble()).toInt() + proficiencyBonus
+    } else {
+        floor(((score-10)/2).toDouble()).toInt()
+    }
 }

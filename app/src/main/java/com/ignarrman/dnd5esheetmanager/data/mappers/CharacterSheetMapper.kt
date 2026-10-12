@@ -2,35 +2,20 @@ package com.ignarrman.dnd5esheetmanager.data.mappers
 
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSheetEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ItemEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ProficiencyBonusProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.WeaponEntity
+import com.ignarrman.dnd5esheetmanager.data.mappers.toJson
 import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Coins
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.MasteryType
-import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.ProficiencyBonusProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.RangeType
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Skill
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.WeaponProperty
 import org.json.JSONArray
 import org.json.JSONObject
-
-fun ProficiencyBonusProgressionEntity.toDomain(): ProficiencyBonusProgression {
-    return ProficiencyBonusProgression(
-        level = level,
-        bonus = bonus
-    )
-}
-
-fun ProficiencyBonusProgression.toEntity(): ProficiencyBonusProgressionEntity {
-    return ProficiencyBonusProgressionEntity(
-        level = level,
-        bonus = bonus
-    )
-}
 
 fun ItemEntity.toDomain(): Item {
     return Item(
@@ -104,24 +89,25 @@ fun Weapon.toEntity(
     )
 }
 
-fun CharacterSheet.toEntity(
-    id: Long = 0
-): CharacterSheetEntity {
+fun CharacterSheet.toEntity(): CharacterSheetEntity {
 
     return CharacterSheetEntity(
-        id = id,
+        id = id?: 0L,
         portraitUri = portraitUri,
         name = name,
         level = level,
         experiencePoints = experiencePoints,
         proficiencyBonus = proficiencyBonus,
+        initiative = initiative,
 
-        stats = stats.toJson(),
-        skills = skills.toJson(),
+        stats = stats.statsToJson(),
+        skills = skills.skillsToJson(),
 
         raceId = null,
         backgroundId = backgroundId,
         playerClassId = null,
+        featsId = featsId.toJson(),
+        spellsId = spellsId.toJson(),
 
         armorClass = armorClass,
 
@@ -130,6 +116,8 @@ fun CharacterSheet.toEntity(
         temporaryHp = temporaryHp,
 
         currentHitDice = currentHitDice,
+        deathSaveSuccesses = deathSaveSuccesses,
+        deathSaveFailures = deathSaveFailures,
 
         skillProficiencies =
             skillProficiencies
@@ -151,11 +139,11 @@ fun CharacterSheet.toEntity(
 
         notes = notes,
 
-        wallet = wallet.toJson()
+        wallet = wallet.walletToJson()
     )
 }
 
-private fun Map<AbilityScores, Int>.toJson(): String {
+private fun Map<AbilityScores, Int>.statsToJson(): String {
     val json = JSONObject()
 
     for ((key, value) in this) {
@@ -165,7 +153,17 @@ private fun Map<AbilityScores, Int>.toJson(): String {
     return json.toString()
 }
 
-private fun Map<Skill, Int>.toJson(): String {
+private fun Map<Skill, Int>.skillsToJson(): String {
+    val json = JSONObject()
+
+    for ((key, value) in this) {
+        json.put(key.name, value)
+    }
+
+    return json.toString()
+}
+
+private fun Map<Coins, Int>.walletToJson(): String {
     val json = JSONObject()
 
     for ((key, value) in this) {
@@ -178,25 +176,20 @@ private fun Map<Skill, Int>.toJson(): String {
 private fun List<String>.toJson(): String {
     return JSONArray(this).toString()
 }
-
-private fun Map<Coins, Int>.toJson(): String {
-    val json = JSONObject()
-
-    for ((key, value) in this) {
-        json.put(key.name, value)
-    }
-
-    return json.toString()
+private fun List<Long>.toJson(): String {
+    return JSONArray(this).toString()
 }
 
 fun CharacterSheetEntity.toDomain(): CharacterSheet {
 
     return CharacterSheet(
+        id = id,
         portraitUri = portraitUri,
         name = name,
         level = level,
         experiencePoints = experiencePoints,
         proficiencyBonus = proficiencyBonus,
+        initiative = initiative,
 
         stats = stats.toAbilityScoresMap(),
         skills = skills.toSkillMap(),
@@ -204,6 +197,8 @@ fun CharacterSheetEntity.toDomain(): CharacterSheet {
         raceId = raceId,
         backgroundId = backgroundId,
         playerClassId = playerClassId,
+        featsId = featsId.toLongList(),
+        spellsId = spellsId.toLongList(),
 
         armorClass = armorClass,
 
@@ -212,6 +207,9 @@ fun CharacterSheetEntity.toDomain(): CharacterSheet {
         temporaryHp = temporaryHp,
 
         currentHitDice = currentHitDice,
+
+        deathSaveFailures = deathSaveFailures,
+        deathSaveSuccesses = deathSaveSuccesses,
 
         skillProficiencies =
             skillProficiencies.toEnumList(Skill::valueOf),
@@ -272,6 +270,14 @@ private fun String.toStringList(): List<String> {
 
     return List(json.length()) { index ->
         json.getString(index)
+    }
+}
+
+fun String.toLongList(): List<Long> {
+    val json = JSONArray(this)
+
+    return List(json.length()) { index ->
+        json.getLong(index)
     }
 }
 

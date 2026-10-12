@@ -1,6 +1,5 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.classes
 
-import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spellcasting
 
 

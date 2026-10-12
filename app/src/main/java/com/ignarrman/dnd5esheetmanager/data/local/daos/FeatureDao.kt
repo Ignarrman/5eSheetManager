@@ -11,6 +11,9 @@ interface FeatureDao {
     @Query(" SELECT * FROM features WHERE id IN (:ids)")
     suspend fun getFeaturesByIds(ids: List<Long>): List<FeatureEntity>
 
+    @Query(" SELECT * FROM features WHERE id = :id ")
+    suspend fun getFeatureById(id: Long): List<FeatureEntity>
+
     @Insert
     suspend fun insertAll(features: List<FeatureEntity>)
 

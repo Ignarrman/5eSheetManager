@@ -1,6 +1,5 @@
 package com.ignarrman.dnd5esheetmanager.data.local.repositories
 
-import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
@@ -18,7 +17,6 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.MonkProgressio
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SneakAttackProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.SorceryPointProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.WildShapeProgressionDao
-import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ArtificerData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.BarbarianData
@@ -33,8 +31,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorcererData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WarlockData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WizardData
+import com.ignarrman.dnd5esheetmanager.data.local.seed.classes.ClassReferenceData
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
-import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Artificer
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Barbarian
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Bard
@@ -75,7 +73,9 @@ class ClassRepository @Inject constructor(
         return classDao.getClassIdByName(name)
     }
 
-    suspend fun getBarbarian(id: Long): Barbarian {
+    suspend fun getBarbarian(): Barbarian {
+
+        val id = ClassReferenceData.BARBARIAN_ID
 
         val classEntity =
             classDao.getClass(id)
@@ -100,7 +100,9 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getBard(id: Long): Bard {
+    suspend fun getBard(): Bard {
+        val id = ClassReferenceData.BARD_ID
+
         val classEntity =
             classDao.getClass(id)
                 ?: error("Class not found")
@@ -141,7 +143,9 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getArtificer(id: Long): Artificer {
+    suspend fun getArtificer(): Artificer {
+
+        val id = ClassReferenceData.ARTIFICER_ID
 
         val classEntity =
             classDao.getClass(id)
@@ -187,14 +191,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getCleric(classId: Long): Cleric {
+    suspend fun getCleric(): Cleric {
+
+        val id = ClassReferenceData.CLERIC_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -202,17 +208,17 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val channelDivinityProgression =
             channelDivinityProgressionDao.getProgression()
@@ -229,14 +235,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getDruid(classId: Long): Druid {
+    suspend fun getDruid(): Druid {
+
+        val id = ClassReferenceData.DRUID_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -244,17 +252,17 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val wildShapeProgression =
             wildShapeProgressionDao.getProgression()
@@ -271,7 +279,9 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getFighter(id: Long): Fighter {
+    suspend fun getFighter(): Fighter {
+
+        val id = ClassReferenceData.FIGHTER_ID
 
         val classEntity =
             classDao.getClass(id)
@@ -306,14 +316,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getMonk(classId: Long): Monk {
+    suspend fun getMonk(): Monk {
+
+        val id = ClassReferenceData.MONK_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -331,14 +343,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getPaladin(classId: Long): Paladin {
+    suspend fun getPaladin(): Paladin {
+
+        val id = ClassReferenceData.PALADIN_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -346,20 +360,20 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val fightingStyleCrossRef =
-            classDao.getFightingStylesFromClass(classId)
+            classDao.getFightingStylesFromClass(id)
 
         val fightingStyles =
             fightingStyleDao.getFightingStylesByIds(
@@ -383,14 +397,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getRanger(classId: Long): Ranger {
+    suspend fun getRanger(): Ranger {
+
+        val id = ClassReferenceData.RANGER_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -398,20 +414,20 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val fightingStyleCrossRef =
-            classDao.getFightingStylesFromClass(classId)
+            classDao.getFightingStylesFromClass(id)
 
         val fightingStyles =
             fightingStyleDao.getFightingStylesByIds(
@@ -431,14 +447,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getRogue(classId: Long): Rogue {
+    suspend fun getRogue(): Rogue {
+
+        val id = ClassReferenceData.ROGUE_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -456,14 +474,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getSorcerer(classId: Long): Sorcerer {
+    suspend fun getSorcerer(): Sorcerer {
+
+        val id = ClassReferenceData.SORCERER_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -471,17 +491,17 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val sorceryPointProgression =
             sorceryPointProgressionDao.getProgression()
@@ -502,14 +522,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getWarlock(classId: Long): Warlock {
+    suspend fun getWarlock(): Warlock {
+
+        val id = ClassReferenceData.WARLOCK_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -517,17 +539,17 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         val eldritchInvocations =
             eldritchInvocationsProgressionDao.getProgression()
@@ -548,14 +570,16 @@ class ClassRepository @Inject constructor(
         ).toDomain()
     }
 
-    suspend fun getWizard(classId: Long): Wizard {
+    suspend fun getWizard(): Wizard {
+
+        val id = ClassReferenceData.WIZARD_ID
 
         val classEntity =
-            classDao.getClass(classId)
+            classDao.getClass(id)
                 ?: error("Class not found")
 
         val featureRelations =
-            classDao.getFeaturesFromClass(classId)
+            classDao.getFeaturesFromClass(id)
 
         val features =
             featureDao.getFeaturesByIds(
@@ -563,17 +587,17 @@ class ClassRepository @Inject constructor(
             )
 
         val spellcasting =
-            spellcastingDao.getSpellcasting(classId)
+            spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
         val cantripProgression =
-            spellcastingDao.getCantripProgression(classId)
+            spellcastingDao.getCantripProgression(id)
 
         val spellSlotProgression =
-            spellcastingDao.getSpellSlotProgression(classId)
+            spellcastingDao.getSpellSlotProgression(id)
 
         val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(classId)
+            spellcastingDao.getSpellsKnownProgression(id)
 
         return WizardData(
             classEntity = classEntity,

@@ -2,6 +2,7 @@ package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classe
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 
 @Entity(
@@ -18,6 +19,9 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.Feature
             parentColumns = ["id"],
             childColumns = ["featureId"]
         )
+    ],
+    indices = [
+        Index(value = ["featureId"])
     ]
 )
 data class ClassFeatureCrossRef(

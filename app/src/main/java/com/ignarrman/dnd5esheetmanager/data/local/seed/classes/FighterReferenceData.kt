@@ -84,7 +84,7 @@ object FighterReferenceData {
         return ClassFeatureJsonParser.parse(
             context = context,
             fileName = "class-fighter.json",
-            startingId = ArtificerReferenceData.FEATURE_STARTING_ID
+            startingId = FEATURE_STARTING_ID
         )
     }
 }

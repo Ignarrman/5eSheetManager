@@ -1,6 +1,8 @@
 package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 
 import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
@@ -21,9 +23,13 @@ data class WarlockData(
 
 @Entity(
     tableName = "eldritch_invocations_progression",
-    primaryKeys = ["level"]
+    indices = [
+        Index(value = ["name"], unique = true)
+    ]
 )
 data class EldritchInvocationsEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val level: Int,
     val name: String,
     val description: String

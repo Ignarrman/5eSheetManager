@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface SpellDao {
 
     @Query("SELECT * FROM spells")
-    fun getAll(): Flow<List<SpellEntity>>
+    fun getAll(): List<SpellEntity>
 
     @Query("SELECT * FROM spells WHERE name = :name")
     suspend fun getByName(name: String): SpellEntity?

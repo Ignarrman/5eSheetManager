@@ -1,12 +1,13 @@
 package com.ignarrman.dnd5esheetmanager.data.local.repositories
 
+import com.ignarrman.dnd5esheetmanager.data.local.daos.FeatureDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
 import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import javax.inject.Inject
 
 class BackgroundRepository @Inject constructor(
-    private val backgroundDao: BackgroundDao,
+    private val backgroundDao: BackgroundDao
     ) {
 
     suspend fun getAll(): List<Background> {
@@ -20,5 +21,4 @@ class BackgroundRepository @Inject constructor(
             .getByName(name)
             ?.toDomain()
     }
-
 }

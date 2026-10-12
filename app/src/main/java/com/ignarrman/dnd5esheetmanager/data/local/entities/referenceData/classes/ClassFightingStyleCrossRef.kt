@@ -2,6 +2,7 @@ package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classe
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     tableName = "class_fighting_styles",
@@ -17,6 +18,9 @@ import androidx.room.ForeignKey
             parentColumns = ["id"],
             childColumns = ["fightingStyleId"]
         )
+    ],
+    indices = [
+        Index(value = ["fightingStyleId"])
     ]
 )
 data class ClassFightingStyleCrossRef(

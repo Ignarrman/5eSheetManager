@@ -44,6 +44,7 @@ interface RaceDao {
     """)
     suspend fun getFeaturesForRace(raceId: Long): List<FeatureEntity>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFeatureRelations(
         relations: List<RaceFeatureCrossRef>
     )
