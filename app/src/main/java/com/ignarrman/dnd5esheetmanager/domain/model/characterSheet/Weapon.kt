@@ -20,24 +20,30 @@ data class Weapon(
     val properties: List<WeaponProperty>
 )
 
-enum class MasteryType {
-    SIMPLE,
-    MARTIAL
+enum class MasteryType(val displayName: String) {
+    SIMPLE("Simple"),
+    MARTIAL("Martial")
 }
 
-enum class RangeType {
-    MELEE,
-    RANGED
+enum class RangeType(val displayName: String) {
+    MELEE("Melee"),
+    RANGED("Ranged")
 }
 
-enum class WeaponProperty {
-    AMMUNITION,
-    FINESSE,
-    HEAVY,
-    LIGHT,
-    LOADING,
-    REACH,
-    THROWN,
-    TWO_HANDED,
-    VERSATILE
+enum class WeaponProperty(val displayName: String) {
+    AMMUNITION("Ammunition"),
+    FINESSE("Finesse"),
+    HEAVY("Heavy"),
+    LIGHT("Light"),
+    LOADING("Loading"),
+    REACH("Reach"),
+    THROWN("Thrown"),
+    TWO_HANDED("Two-Handed"),
+    VERSATILE("Versatile")
 }
+
+fun Weapon.getAttributes(): String = buildList {
+    add(masteryType.displayName)
+    add(rangeType.displayName)
+    addAll(properties.map { it.displayName })
+}.joinToString(", ")

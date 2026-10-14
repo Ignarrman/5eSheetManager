@@ -10,10 +10,12 @@ data class ParsedRace(
     val swimSpeed: Int?,
     val climbSpeed: Int?,
     val flySpeed: Int?,
-    val features: List<ParsedRaceFeature>,
+    val featureIds: List<Long>,
+    val features: List<ParsedRaceFeature>
 )
 
 data class ParsedRaceFeature(
+    val id: Long,
     val name: String,
     val description: String
 )

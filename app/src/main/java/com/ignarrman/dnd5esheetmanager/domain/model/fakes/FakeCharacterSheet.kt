@@ -237,11 +237,17 @@ object FakeCharacterSheet {
             Skill.ACROBATICS,
             Skill.PERCEPTION
         ),
+        skillExpertise = listOf(
+            Skill.STEALTH,
+            Skill.ACROBATICS,
+        ),
         savingThrowProficiencies = listOf(
             AbilityScores.DEX,
             AbilityScores.INT
         ),
-        notes = "A quiet adventurer with a mysterious past.",
+        featsId = listOf(1L,2L),
+        spellsId = listOf(1L,2L,3L,4L,5L),
+        notes = FakeNotes.notes,
         wallet = mapOf(
             Coins.GOLD to 5,
             Coins.SILVER to 10

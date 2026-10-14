@@ -9,7 +9,8 @@ object RaceJsonParser {
     fun parse(
         context: Context,
         fileName: String,
-        startingId: Long
+        startingId: Long,
+        featureStartingId: Long
     ): List<ParsedRace> {
 
         val json = context.assets
@@ -25,6 +26,7 @@ object RaceJsonParser {
         val result = mutableListOf<ParsedRace>()
 
         var nextId = startingId
+        var nextFeatureId = featureStartingId
 
         for (index in 0 until races.length()) {
 
@@ -35,9 +37,7 @@ object RaceJsonParser {
                 .optString("name")
                 .trim()
 
-            if (name.isBlank()) {
-                continue
-            }
+            if (name.isBlank()) continue
 
             val source = raceJson
                 .optString("source")
@@ -51,9 +51,12 @@ object RaceJsonParser {
                 raceJson.opt("speed")
             )
 
-            val features = parseFeatures(
-                raceJson.optJSONArray("entries")
+            val parsedFeatures = parseFeatures(
+                entries = raceJson.optJSONArray("entries"),
+                nextFeatureId = nextFeatureId
             )
+
+            nextFeatureId += parsedFeatures.size
 
             result += ParsedRace(
                 id = nextId,
@@ -64,7 +67,8 @@ object RaceJsonParser {
                 swimSpeed = speed.swim,
                 climbSpeed = speed.climb,
                 flySpeed = speed.fly,
-                features = features
+                featureIds = parsedFeatures.map { it.id },
+                features = parsedFeatures
             )
 
             nextId++
@@ -137,14 +141,14 @@ object RaceJsonParser {
     }
 
     private fun parseFeatures(
-        entries: JSONArray?
+        entries: JSONArray?,
+        nextFeatureId: Long
     ): List<ParsedRaceFeature> {
 
-        if (entries == null) {
-            return emptyList()
-        }
+        if (entries == null) return emptyList()
 
         val result = mutableListOf<ParsedRaceFeature>()
+        var currentFeatureId = nextFeatureId
 
         for (index in 0 until entries.length()) {
 
@@ -155,9 +159,7 @@ object RaceJsonParser {
                 .optString("name")
                 .trim()
 
-            if (name.isBlank()) {
-                continue
-            }
+            if (name.isBlank()) continue
 
             val description = entry
                 .optJSONArray("entries")
@@ -165,9 +167,12 @@ object RaceJsonParser {
                 ?: ""
 
             result += ParsedRaceFeature(
+                id = currentFeatureId,
                 name = name,
                 description = description
             )
+
+            currentFeatureId++
         }
 
         return result

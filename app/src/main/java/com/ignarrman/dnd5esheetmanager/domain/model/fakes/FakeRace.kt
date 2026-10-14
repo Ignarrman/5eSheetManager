@@ -11,7 +11,7 @@ object FakeRace {
         name = "Human",
         size = Size.MEDIUM,
         speed = Speed(land = 30, swim = null, climb = null, fly = null),
-        features = emptyList(),
+        featuresIds = emptyList(),
         source = "Player's Handbook"
     )
 
@@ -20,7 +20,7 @@ object FakeRace {
         name = "Sea Elf",
         size = Size.MEDIUM,
         speed = Speed(land = 30, swim = 30, climb = null, fly = null),
-        features = emptyList(),
+        featuresIds = emptyList(),
         source = "Player's Handbook"
     )
 
@@ -29,7 +29,7 @@ object FakeRace {
         name = "Dwarf",
         size = Size.MEDIUM,
         speed = Speed(land = 25, swim = null, climb = 30, fly = null),
-        features = emptyList(),
+        featuresIds = emptyList(),
         source = "Player's Handbook"
     )
 
@@ -38,7 +38,7 @@ object FakeRace {
         name = "Halfling",
         size = Size.SMALL,
         speed = Speed(land = 25, swim = null, climb = null, fly = 30),
-        features = emptyList(),
+        featuresIds = emptyList(),
         source = "Player's Handbook"
     )
 
@@ -47,7 +47,7 @@ object FakeRace {
         name = "Dragonborn",
         size = Size.MEDIUM,
         speed = Speed(land = 30, swim = 30, climb = 30, fly = 30),
-        features = emptyList(),
+        featuresIds = emptyList(),
         source = "Player's Handbook"
     )
 

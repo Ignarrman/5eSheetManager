@@ -106,8 +106,8 @@ fun CharacterSheet.toEntity(): CharacterSheetEntity {
         raceId = null,
         backgroundId = backgroundId,
         playerClassId = null,
-        featsId = featsId.toJson(),
-        spellsId = spellsId.toJson(),
+        featsId = featsId.longToJson(),
+        spellsId = spellsId.longToJson(),
 
         armorClass = armorClass,
 
@@ -176,7 +176,7 @@ private fun Map<Coins, Int>.walletToJson(): String {
 private fun List<String>.toJson(): String {
     return JSONArray(this).toString()
 }
-private fun List<Long>.toJson(): String {
+private fun List<Long>.longToJson(): String {
     return JSONArray(this).toString()
 }
 

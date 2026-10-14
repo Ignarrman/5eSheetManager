@@ -41,12 +41,17 @@ fun getScoreBonus(score: Int): Int{
     return floor(((score-10)/2).toDouble()).toInt()
 }
 
-fun getScoreProficiencyBonus(score: Int, proficiency: Boolean, expertise: Boolean, proficiencyBonus: Int): Int{
-    return if (expertise){
-        floor(((score-10)/2).toDouble()).toInt() + proficiencyBonus*2
-    } else if (proficiency){
-        floor(((score-10)/2).toDouble()).toInt() + proficiencyBonus
-    } else {
-        floor(((score-10)/2).toDouble()).toInt()
+fun getScoreProficiencyBonus(
+    score: Int,
+    proficiency: Boolean,
+    expertise: Boolean,
+    proficiencyBonus: Int
+): Int {
+    val abilityModifier = floor((score - 10) / 2.0).toInt()
+
+    return abilityModifier + when {
+        expertise -> proficiencyBonus * 2
+        proficiency -> proficiencyBonus
+        else -> 0
     }
 }

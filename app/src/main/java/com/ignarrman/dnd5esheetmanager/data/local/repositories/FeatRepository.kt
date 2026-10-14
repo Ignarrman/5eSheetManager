@@ -3,8 +3,9 @@ package com.ignarrman.dnd5esheetmanager.data.local.repositories
 import com.ignarrman.dnd5esheetmanager.data.local.daos.featsdao.FeatDao
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
 import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
+import javax.inject.Inject
 
-class FeatRepository(
+class FeatRepository @Inject constructor(
     private val featDao: FeatDao
 ) {
 

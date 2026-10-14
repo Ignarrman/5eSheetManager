@@ -59,7 +59,7 @@ object FakeSpells {
         duration = "Instantaneous",
         description = "Create darts of magical force that strike targets automatically.",
         ritual = false,
-        concentration = false,
+        concentration = true,
         source = "Player's Handbook"
     )
 
@@ -77,7 +77,7 @@ object FakeSpells {
         ),
         duration = "Instantaneous",
         description = "A creature you can see regains hit points when it hears your healing words.",
-        ritual = false,
+        ritual = true,
         concentration = false,
         source = "Player's Handbook"
     )
@@ -96,7 +96,7 @@ object FakeSpells {
         ),
         duration = "Up to 1 hour",
         description = "A creature you touch becomes invisible until the spell ends or its conditions are broken.",
-        ritual = false,
+        ritual = true,
         concentration = true,
         source = "Player's Handbook"
     )

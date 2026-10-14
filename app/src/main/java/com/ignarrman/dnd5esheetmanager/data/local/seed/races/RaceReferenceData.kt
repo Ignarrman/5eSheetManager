@@ -4,19 +4,17 @@ import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceFeatureCrossRef
+import org.json.JSONArray
 
 private const val RACE_STARTING_ID = 1L
 private const val RACE_FEATURE_STARTING_ID = 14001L
 
-fun getRaces(
-    context: Context
-): List<ParsedRace> {
-
+fun getRaces(context: Context): List<ParsedRace> {
     return RaceJsonParser.parse(
         context = context,
         fileName = "races.json",
-        startingId = RACE_STARTING_ID
+        startingId = RACE_STARTING_ID,
+        featureStartingId = RACE_FEATURE_STARTING_ID
     )
 }
 
@@ -26,10 +24,7 @@ suspend fun insertRaceReferenceData(
 ) {
     val races = getRaces(context)
 
-    var nextFeatureId = RACE_FEATURE_STARTING_ID
-
     val raceEntities = races.map { race ->
-
         RaceEntity(
             id = race.id,
             name = race.name,
@@ -38,46 +33,27 @@ suspend fun insertRaceReferenceData(
             swimSpeed = race.swimSpeed,
             climbSpeed = race.climbSpeed,
             flySpeed = race.flySpeed,
+            featureIds = JSONArray(race.featureIds).toString(),
             source = race.source
         )
     }
 
-    val featureEntities = mutableListOf<FeatureEntity>()
-    val featureRelations = mutableListOf<RaceFeatureCrossRef>()
-
-    races.forEach { race ->
-
-        race.features.forEach { feature ->
-
-            val featureId = nextFeatureId++
-
-            featureEntities += FeatureEntity(
-                id = featureId,
+    val featureEntities = races
+        .flatMap { it.features }
+        .map { feature ->
+            FeatureEntity(
+                id = feature.id,
                 name = feature.name,
                 description = feature.description
             )
-
-            featureRelations += RaceFeatureCrossRef(
-                raceId = race.id,
-                featureId = featureId
-            )
         }
-    }
-
-    database.raceDao().insertAll(raceEntities)
 
     database.featureDao().insertAll(featureEntities)
-
-    database.raceDao().insertFeatureRelations(featureRelations)
+    database.raceDao().insertAll(raceEntities)
 }
 
 suspend fun clearRaceReferenceData(
     database: AppDatabase
 ) {
-
-    database.raceDao().deleteAllFeatureRelations()
-
     database.raceDao().deleteAll()
-
-    database.featureDao().deleteAll()
 }

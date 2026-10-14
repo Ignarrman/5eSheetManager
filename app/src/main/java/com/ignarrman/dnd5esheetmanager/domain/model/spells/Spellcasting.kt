@@ -23,3 +23,6 @@ data class CantripProgression(
 data class SpellSlotProgression(
     val slots: Map<Int, Int>
 )
+
+fun getDifficultyClass(proficiencyBonus: Int, scoreBonus: Int) =
+    8+proficiencyBonus+scoreBonus

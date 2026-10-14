@@ -8,6 +8,8 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.FightingStyleDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.ReferenceDataMetadataDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.backgrounds.BackgroundDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.CharacterSheetDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.ItemDao
+import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.WeaponDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BarbarianProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.BardicInspirationProgressionDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.classesdao.ChannelDivinityProgressionDao
@@ -188,6 +190,18 @@ object AppDatabaseModule {
         database: AppDatabase
     ): CharacterSheetDao =
         database.characterSheetDao()
+
+    @Provides
+    fun provideItemDao(
+        database: AppDatabase
+    ): ItemDao =
+        database.itemDao()
+
+    @Provides
+    fun provideWeaponDao(
+        database: AppDatabase
+    ): WeaponDao =
+        database.weaponDao()
 
     @Provides
     fun provideReferenceDataMetadataDao(

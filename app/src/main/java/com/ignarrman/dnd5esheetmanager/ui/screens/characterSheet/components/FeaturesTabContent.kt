@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeats
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures
 import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
@@ -18,7 +20,7 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 fun FeaturesTabContent(
     classFeatures: List<Feature>,
     raceFeatures: List<Feature>,
-    backgroundFeatures: List<Feature>,
+    backgroundFeatures: Feature?,
     featList: List<Feat>
 ){
 
@@ -43,7 +45,7 @@ fun FeaturesTabContent(
 
         FeatureSection(
             title = "Background Features",
-            features = backgroundFeatures
+            features = backgroundFeatures?.let { listOf(backgroundFeatures) } ?: emptyList()
         )
 
         FeatSection(
@@ -56,9 +58,17 @@ fun FeaturesTabContent(
 @Composable
 fun FeaturesTabContentPreview() {
 
+    val fakeClassFeature = FakeFeatures.allClass
+    val fakeRaceFeatures = FakeFeatures.allRace
+    val fakeBackgroundFeature = FakeFeatures.rusticHospitality
+    val fakeFeats = listOf(FakeFeats.alert)
+
     _5eSheetManagerTheme(){
         FeaturesTabContent(
-
+            classFeatures =fakeClassFeature,
+            raceFeatures = fakeRaceFeatures,
+            backgroundFeatures = fakeBackgroundFeature,
+            featList = fakeFeats
         )
     }
 }

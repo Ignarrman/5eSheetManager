@@ -4,8 +4,9 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.charactersheet.WeaponDao
 import com.ignarrman.dnd5esheetmanager.data.mappers.toDomain
 import com.ignarrman.dnd5esheetmanager.data.mappers.toEntity
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
+import javax.inject.Inject
 
-class WeaponRepository(
+class WeaponRepository @Inject constructor(
     private val weaponDao: WeaponDao
 ) {
 

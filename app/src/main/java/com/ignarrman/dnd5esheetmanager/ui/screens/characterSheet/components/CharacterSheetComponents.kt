@@ -14,8 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -25,13 +24,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,15 +48,61 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Skill
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getAttributes
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getScoreBonus
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getScoreProficiencyBonus
 import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
 import com.ignarrman.dnd5esheetmanager.domain.model.races.Speed
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellComponents
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSchool
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSlotProgression
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.getDifficultyClass
 
 private val FrameColor = Color(0xFF526575)
 private val PanelColor = Color(0xFF263440)
 private val InnerPanelColor = Color(0xFF1D2A34)
 private val TextColor = Color(0xFFF1F4F7)
+
+@Composable
+fun ProficiencyIndicator(
+    modifier: Modifier = Modifier,
+    proficient: Boolean,
+    expertise: Boolean = false,
+    color: Color = Color(0xFFF1F4F7)
+) {
+    Box(
+        modifier = modifier
+            .size(18.dp)
+            .then(
+                if (expertise) {
+                    Modifier.border(
+                        width = 1.5.dp,
+                        color = color,
+                        shape = CircleShape
+                    )
+                } else {
+                    Modifier
+                }
+            )
+            .padding(if (expertise) 3.dp else 2.dp)
+            .size(12.dp)
+            .clip(CircleShape)
+            .background(
+                color = if (proficient) color else Color.Transparent,
+                shape = CircleShape
+            )
+            .border(
+                width = 1.5.dp,
+                color = color,
+                shape = CircleShape
+            )
+    )
+}
 
 @Composable
 fun AbilityScoreCard(
@@ -171,22 +220,8 @@ fun SavingThrowCard(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(14.dp)
-                .background(
-                    color = if (proficiency) {
-                        textColor
-                    } else {
-                        Color.Transparent
-                    },
-                    shape = CircleShape
-                )
-                .border(
-                    width = 1.5.dp,
-                    color = textColor,
-                    shape = CircleShape
-                )
+        ProficiencyIndicator(
+            proficient = proficiency
         )
 
         Text(
@@ -899,5 +934,910 @@ fun FeatSection(
                 feat = feat
             )
         }
+    }
+}
+
+@Composable
+fun WeaponsSection(
+    modifier: Modifier,
+    weapons: List<Weapon>,
+    proficiencyBonus: Int?,
+    title: String = "Weapons"
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        weapons.forEach { weapon ->
+            WeaponDropdown(
+                modifier = Modifier,
+                weapon = weapon,
+                proficiencyBonus = proficiencyBonus ?: 0
+            )
+        }
+    }
+}
+
+@Composable
+fun WeaponDropdown(
+    modifier: Modifier,
+    weapon: Weapon,
+    proficiencyBonus: Int
+) {
+    var expanded by remember (weapon.id) {
+        mutableStateOf(false)
+    }
+
+    val textColor = Color(0xFFF1F4F7)
+
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        label = "FeatureDropdownArrowRotation"
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { expanded = !expanded }
+            .padding(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ProficiencyIndicator(
+                proficient = weapon.proficient
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            Text(
+                text = weapon.name,
+                modifier = Modifier.weight(1f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+
+            val finalAttackBonus = if (weapon.proficient) weapon.attackBonus + proficiencyBonus else weapon.attackBonus
+
+            Text(
+                text = "+${finalAttackBonus}",
+                modifier = Modifier.weight(0.4f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = weapon.damage + " + ${weapon.damageBonus}",
+                modifier = Modifier.weight(0.4f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) {
+                    "Collapse feature description"
+                } else {
+                    "Expand feature description"
+                },
+                modifier = Modifier.rotate(arrowRotation),
+                tint = textColor
+            )
+        }
+
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 220)
+            ),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = 180)
+            )
+        ) {
+            Column {
+                Spacer(
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Text(
+                    text = "Tags: ${weapon.getAttributes()}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = "Damage Type: ${weapon.damageType.displayName}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                if (weapon.normalRange != null && weapon.longRange != null){
+                    Text(
+                        text = "Range: ${weapon.normalRange}/${weapon.longRange}",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Text(
+                    text = "Quantity: ${weapon.quantity}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = "Price: ${weapon.price}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = weapon.description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemsSection(
+    modifier: Modifier,
+    inventory: List<Item>,
+    title: String = "Items"
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        inventory.forEach { item ->
+            ItemDropdown(
+                modifier = Modifier,
+                item = item
+            )
+        }
+    }
+}
+
+@Composable
+fun ItemDropdown(
+    modifier: Modifier = Modifier,
+    item: Item
+) {
+    var expanded by remember(item.id) {
+        mutableStateOf(false)
+    }
+
+    val textColor = Color(0xFFF1F4F7)
+
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        label = "ItemDropdownArrowRotation"
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { expanded = !expanded }
+            .padding(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = item.name,
+                modifier = Modifier.weight(1f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "x${item.quantity}",
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) {
+                    "Collapse item description"
+                } else {
+                    "Expand item description"
+                },
+                modifier = Modifier.rotate(arrowRotation),
+                tint = textColor
+            )
+        }
+
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 220)
+            ),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = 180)
+            )
+        ) {
+            Column {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Price: ${item.price} gp",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = Color.LightGray
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = item.description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SkillTable(
+    modifier: Modifier = Modifier,
+    stats: Map<AbilityScores, Int>,
+    skillProficiencies: List<Skill>,
+    skillExpertise: List<Skill>,
+    proficiencyBonus: Int
+) {
+    val textColor = Color(0xFFF1F4F7)
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Skill.entries.forEachIndexed { index, skill ->
+            val proficient = skill in skillProficiencies || skill in skillExpertise
+
+            val expertise = skill in skillExpertise
+
+            val abilityScore = stats[skill.stat] ?: 10
+            val abilityModifier = getScoreProficiencyBonus(
+                score = abilityScore,
+                proficiency = proficient,
+                expertise = expertise,
+                proficiencyBonus = proficiencyBonus
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ProficiencyIndicator(
+                    proficient = proficient,
+                    expertise = expertise,
+                    color = textColor
+                )
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Text(
+                    text = skill.skillName,
+                    modifier = Modifier.weight(1f),
+                    color = textColor,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = "%+d".format(abilityModifier),
+                    color = textColor,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            if (index < Skill.entries.lastIndex) {
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outline.copy(
+                        alpha = 0.35f
+                    ),
+                    thickness = 0.5.dp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SpellcastingStats(
+    modifier: Modifier = Modifier,
+    castingScore: AbilityScores,
+    castingScoreValue: Int,
+    proficiencyBonus: Int
+) {
+    val textColor = Color(0xFFF1F4F7)
+
+    val scoreModifier = getScoreBonus(castingScoreValue)
+
+    val spellSaveDc = getDifficultyClass(
+        proficiencyBonus = proficiencyBonus,
+        scoreBonus = scoreModifier
+    )
+
+    Column(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Spellcasting",
+            style = MaterialTheme.typography.titleLarge,
+            color = textColor
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Ability",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = castingScore.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = textColor
+                )
+            }
+
+            Column {
+                Text(
+                    text = "Score",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = "%+d".format(scoreModifier),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = textColor
+                )
+            }
+
+            Column {
+                Text(
+                    text = "Save DC",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = spellSaveDc.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = textColor
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun SpellSlotsSection(
+    progression: SpellSlotProgression,
+    modifier: Modifier = Modifier
+) {
+    val textColor = Color(0xFFF1F4F7)
+
+    val spentSlots = remember(progression) {
+        mutableStateListOf<Boolean>().apply {
+            progression.slots.toSortedMap().forEach { (_, count) ->
+                repeat(count.coerceAtLeast(0)) {
+                    add(false)
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "Spell Slots",
+            style = MaterialTheme.typography.titleLarge,
+            color = textColor
+        )
+
+        progression.slots.toSortedMap().entries.forEach { (slotLevel, count) ->
+            val startIndex = progression.slots.toSortedMap()
+                .entries
+                .takeWhile { it.key != slotLevel }
+                .sumOf { it.value.coerceAtLeast(0) }
+
+            Row(
+                modifier = Modifier.padding(vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Level $slotLevel",
+                    modifier = Modifier.weight(1f),
+                    color = textColor,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    repeat(count.coerceAtLeast(0)) { index ->
+                        val stateIndex = startIndex + index
+
+                        val isSpent = spentSlots.getOrElse(stateIndex) {
+                            false
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .background(
+                                    color = if (isSpent) {
+                                        textColor
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    shape = RoundedCornerShape(5.dp)
+                                )
+                                .border(
+                                    width = 1.5.dp,
+                                    color = textColor,
+                                    shape = RoundedCornerShape(5.dp)
+                                )
+                                .clickable {
+                                    spentSlots[stateIndex] = !isSpent
+                                }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun SpellSection(
+    modifier: Modifier,
+    spells: List<Spell>,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.outline
+        )
+        val sortedSpells = spells.sortedWith(
+            compareBy<Spell> { it.level }
+                .thenBy { it.name.lowercase() }
+        )
+        sortedSpells.forEach { spell ->
+            SpellDropdown(
+                modifier = Modifier,
+                spell = spell
+            )
+        }
+    }
+}
+
+@Composable
+fun SpellDropdown(
+    modifier: Modifier = Modifier,
+    spell: Spell
+) {
+    var expanded by remember(spell.id) {
+        mutableStateOf(false)
+    }
+
+    val textColor = Color(0xFFF1F4F7)
+
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        label = "SpellDropdownArrowRotation"
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { expanded = !expanded }
+            .padding(12.dp)
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "${spell.level}",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Icon(
+                imageVector = getSchoolIcon(spell.school),
+                contentDescription = spell.school.schoolName,
+                tint = textColor,
+                modifier = Modifier.size(22.dp)
+            )
+
+            Text(
+                text = spell.name,
+                modifier = Modifier.weight(1f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+
+            if (spell.ritual) {
+                Icon(
+                    imageVector = Icons.Default.AutoAwesome,
+                    contentDescription = "Ritual",
+                    tint = textColor,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+
+            if (spell.concentration) {
+                Icon(
+                    imageVector = Icons.Default.AutoAwesome,
+                    contentDescription = "Concentration",
+                    tint = textColor,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+
+            Text(
+                text = "(${spell.components.toAbbreviation()})",
+                color = textColor,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+
+            Text(
+                text = spell.castingTime.toCastingTimeAbbreviation(),
+                color = textColor,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) {
+                    "Collapse spell details"
+                } else {
+                    "Expand spell details"
+                },
+                modifier = Modifier
+                    .size(24.dp)
+                    .rotate(arrowRotation),
+                tint = textColor
+            )
+        }
+
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 220)
+            ),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = 180)
+            )
+        ) {
+            Column {
+                Spacer(modifier = Modifier.padding(top = 12.dp))
+
+                DetailRow(
+                    label = "Level",
+                    value = if (spell.level == 0) {
+                        "Cantrip"
+                    } else {
+                        "${spell.level}"
+                    }
+                )
+
+                DetailRow(
+                    label = "School",
+                    value = spell.school.schoolName,
+                )
+
+                DetailRow(
+                    label = "Components",
+                    value = spell.components.toFullDescription()
+                )
+
+                DetailRow(
+                    label = "Range",
+                    value = spell.range
+                )
+
+                DetailRow(
+                    label = "Casting Time",
+                    value = spell.castingTime
+                )
+
+                DetailRow(
+                    label = "Ritual",
+                    value = if (spell.ritual) "Yes" else "No"
+                )
+
+                DetailRow(
+                    label = "Concentration",
+                    value = if (spell.concentration) "Yes" else "No"
+                )
+
+                DetailRow(
+                    label = "Duration",
+                    value = spell.duration
+                )
+
+                Spacer(modifier = Modifier.padding(top = 8.dp))
+
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = Color.LightGray
+                )
+
+                Spacer(modifier = Modifier.padding(top = 12.dp))
+
+                Text(
+                    text = spell.description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.padding(top = 12.dp))
+
+                Text(
+                    text = "Source: ${spell.source}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailRow(
+    label: String,
+    value: String,
+    icon: (@Composable () -> Unit)? = null
+) {
+    val textColor = Color(0xFFF1F4F7)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (icon != null) {
+            icon()
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        Text(
+            text = "$label:",
+            modifier = Modifier.weight(0.42f),
+            color = textColor,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            text = value,
+            modifier = Modifier.weight(0.58f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+private fun SpellComponents
+        .toAbbreviation(): String = buildList {
+    if (verbal) add("V")
+    if (somatic) add("S")
+    if (material != null) add("M")
+}.joinToString(",").ifEmpty { "—" }
+
+private fun SpellComponents
+        .toFullDescription(): String = buildList {
+    if (verbal) add("V (Verbal)")
+    if (somatic) add("S (Somatic)")
+    if (material != null) add("M (Material: $material)")
+}.joinToString(", ").ifEmpty { "None" }
+
+private fun String.toCastingTimeAbbreviation(): String {
+    val normalized = trim().lowercase()
+
+    return when {
+        normalized == "action" -> "A"
+        normalized == "bonus action" -> "B"
+        normalized == "reaction" -> "R"
+        normalized.startsWith("1 action") -> "A"
+        normalized.startsWith("1 bonus action") -> "BA"
+        normalized.startsWith("1 reaction") -> "R"
+        else -> this
+    }
+}
+
+private fun getSchoolIcon(school: SpellSchool) =
+    when (school) {
+        SpellSchool.ABJURATION -> Icons.Default.AutoAwesome
+        SpellSchool.CONJURATION -> Icons.Default.AutoAwesome
+        SpellSchool.DIVINATION -> Icons.Default.AutoAwesome
+        SpellSchool.ENCHANTMENT -> Icons.Default.AutoAwesome
+        SpellSchool.EVOCATION -> Icons.Default.AutoAwesome
+        SpellSchool.ILLUSION -> Icons.Default.AutoAwesome
+        SpellSchool.NECROMANCY -> Icons.Default.AutoAwesome
+        SpellSchool.TRANSMUTATION -> Icons.Default.AutoAwesome
+    }
+
+
+@Composable
+fun NotesSection(
+    modifier: Modifier = Modifier,
+    notes: String,
+    onNotesChange: (String) -> Unit,
+    title: String = "Notes"
+) {
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = notes,
+            onValueChange = onNotesChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 160.dp),
+            placeholder = {
+                Text(
+                    text = "Write your notes here...",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            minLines = 5,
+            maxLines = Int.MAX_VALUE,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = Color(0xFFF1F4F7)
+            ),
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color(0xFFF1F4F7),
+                unfocusedTextColor = Color(0xFFF1F4F7),
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = Color(0xFFF1F4F7),
+                focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
     }
 }
