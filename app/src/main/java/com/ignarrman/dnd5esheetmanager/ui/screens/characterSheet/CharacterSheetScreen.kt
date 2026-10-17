@@ -21,10 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ignarrman.dnd5esheetmanager.domain.model.Feature
-import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.getFeatures
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeBackground
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
@@ -36,7 +35,6 @@ import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeRace
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeSpells
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeWeapons
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.CharacterSheetTab
-import com.ignarrman.dnd5esheetmanager.ui.screens.components.AppTopBar
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.FeaturesTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.GeneralTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.InventoryTabContent
@@ -44,6 +42,7 @@ import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.Note
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.SkillsTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.SpellsTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.WeaponsTabContent
+import com.ignarrman.dnd5esheetmanager.ui.screens.components.AppTopBar
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
@@ -135,7 +134,7 @@ fun CharacterSheetContent(
                         text = {
                             Text(
                                 text = tab.title,
-                                style = MaterialTheme.typography.titleSmall,
+                                fontSize = 16.sp,
                                 fontWeight = if (selected) {
                                     FontWeight.Bold
                                 } else {
@@ -154,7 +153,24 @@ fun CharacterSheetContent(
                     characterSheet = characterSheet,
                     race = characterRace,
                     background = characterBackground,
-                    playerClass = characterClass
+                    playerClass = characterClass,
+
+                    races = state.races,
+                    classes = state.classes,
+                    backgrounds = state.backgrounds,
+
+                    onNameChange = {
+                        // TODO
+                    },
+                    onRaceChange = {
+                        // TODO
+                    },
+                    onClassChange = {
+                        // TODO
+                    },
+                    onBackgroundChange = {
+                        // TODO
+                    },
                 )
                 CharacterSheetTab.FEATURES -> FeaturesTabContent(
                     classFeatures = state.classFeatures,
@@ -164,17 +180,33 @@ fun CharacterSheetContent(
                 )
                 CharacterSheetTab.WEAPONS -> WeaponsTabContent(
                     weapons = state.weapons,
-                    proficiencyBonus = characterSheet.proficiencyBonus
+                    proficiencyBonus = characterSheet.proficiencyBonus,
+                    onAddWeapon = {
+                        // TODO
+                    },
+                    onProficiencyChange = {
+                        // TODO
+                    }
                 )
                 CharacterSheetTab.INVENTORY -> InventoryTabContent(
-                    inventory = state.inventory
+                    inventory = state.inventory,
+                    onAddItem = {
+                        // TODO
+                    }
                 )
                 CharacterSheetTab.SPELLS -> SpellsTabContent(
                     characterSpells = characterSpells,
                     castingScore = characterClass?.spellcasting?.spellcastingAbility ?: AbilityScores.INT,
                     castingScoreValue = characterSheet.stats[characterClass?.spellcasting?.spellcastingAbility] ?: 0,
                     spellSlots = characterClass?.spellcasting?.spellSlotProgression[characterSheet.level],
-                    proficiencyBonus = characterSheet.proficiencyBonus
+                    proficiencyBonus = characterSheet.proficiencyBonus,
+                    spentSpellSlots = characterSheet.spellSlotUsed,
+                    onSpentSpellSlotsChange = {
+                        // TODO
+                    },
+                    onAddSpell = {
+                        // TODO
+                    }
                 )
                 CharacterSheetTab.SKILLS -> SkillsTabContent(
                     stats = characterSheet.stats,

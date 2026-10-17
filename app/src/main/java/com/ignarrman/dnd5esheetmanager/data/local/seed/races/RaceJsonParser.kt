@@ -1,8 +1,10 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.races
 
 import android.content.Context
+import com.ignarrman.dnd5esheetmanager.data.local.seed.features.ParsedFeature
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.collections.map
 
 object RaceJsonParser {
 
@@ -143,11 +145,11 @@ object RaceJsonParser {
     private fun parseFeatures(
         entries: JSONArray?,
         nextFeatureId: Long
-    ): List<ParsedRaceFeature> {
+    ): List<ParsedFeature> {
 
         if (entries == null) return emptyList()
 
-        val result = mutableListOf<ParsedRaceFeature>()
+        val result = mutableListOf<ParsedFeature>()
         var currentFeatureId = nextFeatureId
 
         for (index in 0 until entries.length()) {
@@ -166,7 +168,7 @@ object RaceJsonParser {
                 ?.let { flattenEntries(it) }
                 ?: ""
 
-            result += ParsedRaceFeature(
+            result += ParsedFeature(
                 id = currentFeatureId,
                 name = name,
                 description = description

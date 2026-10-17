@@ -18,7 +18,7 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun FeaturesTabContent(
-    classFeatures: List<Feature>,
+    classFeatures: Map<Int, List<Feature>>,
     raceFeatures: List<Feature>,
     backgroundFeatures: Feature?,
     featList: List<Feat>
@@ -33,7 +33,7 @@ fun FeaturesTabContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        FeatureSection(
+        ClassFeatureSection(
             title = "Class Features",
             features = classFeatures
         )

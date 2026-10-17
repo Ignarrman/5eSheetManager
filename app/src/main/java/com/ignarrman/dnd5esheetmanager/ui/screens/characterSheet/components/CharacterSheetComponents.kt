@@ -5,6 +5,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -20,12 +23,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +48,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,10 +56,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ignarrman.dnd5esheetmanager.R
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
@@ -61,6 +79,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellComponents
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSchool
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSlotProgression
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpentSpellSlots
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.getDifficultyClass
 
 private val FrameColor = Color(0xFF526575)
@@ -109,7 +128,7 @@ fun AbilityScoreCard(
     score: Int,
     scoreName: String,
     modifier: Modifier = Modifier,
-    bonus: Int = (score - 10) / 2
+    onValueChange: (String) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -156,7 +175,7 @@ fun AbilityScoreCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "%+d".format(bonus),
+                    text = "%+d".format(getScoreBonus(score)),
                     color = TextColor,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
@@ -180,9 +199,19 @@ fun AbilityScoreCard(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = score.toString(),
+                text = "$score",
                 color = TextColor,
                 fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            AppTextField(
+                modifier = modifier,
+                value = "$score",
+                onValueChange = onValueChange,
+                placeholder = "—",
+                fontSize = 18.sp,
+                addBorder = false,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -205,7 +234,7 @@ fun SavingThrowCard(
 
     Row(
         modifier = modifier
-            .size(width = 170.dp, height = 50.dp)
+            .size(width = 180.dp, height = 50.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(panelColor)
             .border(
@@ -270,7 +299,8 @@ fun SavingThrowCard(
 @Composable
 fun ProficiencyBonusCard(
     modifier: Modifier,
-    proficiencyBonus: Int
+    proficiencyBonus: Int,
+    onValueChange: (String) -> Unit
 ) {
     val textColor = Color(0xFFF1F4F7)
 
@@ -298,11 +328,14 @@ fun ProficiencyBonusCard(
             maxLines = 2
         )
         Spacer(modifier = Modifier.size(8.dp))
-        Text(
-            text = "%+d".format(proficiencyBonus),
-            color = textColor,
+
+        AppTextField(
+            modifier = Modifier,
+            value = "%+d".format(proficiencyBonus),
+            placeholder = "Character Name",
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            onValueChange = onValueChange
         )
 
     }
@@ -311,7 +344,8 @@ fun ProficiencyBonusCard(
 @Composable
 fun InitiativeCard(
     modifier: Modifier,
-    initiative: Int? = null
+    initiative: Int? = null,
+    onValueChange: (String) -> Unit
 ) {
     val textColor = Color(0xFFF1F4F7)
 
@@ -337,20 +371,15 @@ fun InitiativeCard(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.size(8.dp))
-        if (initiative == null) {
-            Text(
-                text = "—",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Red
-            )
-        } else {
-            Text(
-                text = "%+d".format(initiative),
-                color = textColor,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+
+        AppTextField(
+            modifier = Modifier,
+            value = "%+d".format(initiative),
+            onValueChange = onValueChange,
+            placeholder = "—",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -439,7 +468,10 @@ fun HitPointsCard(
     currentHp: Int,
     maxHp: Int,
     temporaryHp: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCurrentHPChange: (String) -> Unit,
+    onMaxHPChange: (String) -> Unit,
+    onTHPChange: (String) -> Unit,
 ) {
     val textColor = Color(0xFFF1F4F7)
 
@@ -459,7 +491,7 @@ fun HitPointsCard(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
-            text = "Hit Points",
+            text = "Hit Points".uppercase(),
             color = textColor,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
@@ -467,39 +499,69 @@ fun HitPointsCard(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "$currentHp",
-                    color = textColor,
-                    style = MaterialTheme.typography.headlineMedium,
+                AppTextField(
+                    modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                    value = "$currentHp",
+                    onValueChange = onCurrentHPChange,
+                    placeholder = "—",
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "/ $maxHp HP",
-                    color = textColor,
-                    modifier = Modifier.padding(top = 8.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    text = "/",
+                    fontSize = 24.sp,
+                )
+
+                AppTextField(
+                    modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                    value = "$maxHp",
+                    onValueChange = onMaxHPChange,
+                    placeholder = "—",
+                    fontSize = 24.sp
+                )
+
+                Text(
+                    text = "HP",
+                    fontSize = 20.sp,
                 )
             }
 
             if (temporaryHp > 0) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text(
-                        text = " + $temporaryHp THP",
-                        color = textColor,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = modifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+
+                    ) {
+                        Text(
+                            text = "+",
+                            fontSize = 20.sp,
+                        )
+
+                        AppTextField(
+                            modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                            value = temporaryHp.toString(),
+                            onValueChange = onTHPChange,
+                            placeholder = "—",
+                            fontSize = 24.sp,
+                        )
+
+                        Text(
+                            text = "THP",
+                            fontSize = 20.sp,
+                        )
+                    }
                 }
             }
         }
@@ -511,7 +573,8 @@ fun HitDiceCard(
     modifier: Modifier = Modifier,
     dieType: String?,
     available: Int,
-    total: Int
+    total: Int,
+    onValueChange: (String) -> Unit
 ) {
 
     val textColor = Color(0xFFF1F4F7)
@@ -530,20 +593,21 @@ fun HitDiceCard(
             .padding(12.dp)
     ) {
         Text(
-            text = "Hit Dice",
+            text = "Hit Dice".uppercase(),
             color = textColor,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Text(
-                text = "$available",
-                color = textColor,
-                style = MaterialTheme.typography.headlineSmall,
+            AppTextField(
+                modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                value = "$available",
+                onValueChange = onValueChange,
+                placeholder = "—",
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
 
@@ -551,7 +615,7 @@ fun HitDiceCard(
                 text = "/ ${total}d${dieType ?: "(No_dice)"}",
                 color = textColor,
                 modifier = Modifier.padding(top = 8.dp),
-                style = MaterialTheme.typography.bodyLarge
+                fontSize = 20.sp
             )
         }
     }
@@ -561,7 +625,13 @@ fun HitDiceCard(
 fun DeathSavesCard(
     modifier: Modifier,
     successDeathSaves: Int,
-    failureDeathSaves: Int
+    failureDeathSaves: Int,
+    onSetToOneSuccess: () -> Unit,
+    onSetToTwoSuccess: () -> Unit,
+    onSetToThreeSuccess: () -> Unit,
+    onSetToOneFailed: () -> Unit,
+    onSetToTwoFailed: () -> Unit,
+    onSetToThreeFailed: () -> Unit
 ) {
     val textColor = Color(0xFFF1F4F7)
 
@@ -579,22 +649,73 @@ fun DeathSavesCard(
             .padding(12.dp)
     ) {
         Text(
-            text = "Death Saves",
+            text = "Death Saves".uppercase(),
             color = textColor,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
+        Column() {
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = "WORK IN PROGRESS",
-                color = textColor,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+            val empty = R.drawable.death_saves_tracker_empty
+            val filled = R.drawable.death_saves_tracker_checked
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToOneSuccess() }
+                        .size(32.dp),
+                    painter = painterResource(if(successDeathSaves >= 1) filled else empty),
+                    contentDescription = "",
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToTwoSuccess() }
+                        .size(32.dp),
+                    painter = painterResource(if(successDeathSaves >= 2) filled else empty),
+                    contentDescription = "",
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToThreeSuccess() }
+                        .size(32.dp),
+                    painter = painterResource(if(successDeathSaves >= 3) filled else empty),
+                    contentDescription = "",
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToOneFailed() }
+                        .size(32.dp),
+                    painter = painterResource(if(failureDeathSaves >= 1) filled else empty),
+                    contentDescription = "",
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToTwoFailed() }
+                        .size(32.dp),
+                    painter = painterResource(if(failureDeathSaves >= 2) filled else empty),
+                    contentDescription = "",
+                )
+
+                Icon(
+                    modifier = Modifier
+                        .clickable() { onSetToThreeFailed() }
+                        .size(32.dp),
+                    painter = painterResource(if(failureDeathSaves >= 3) filled else empty),
+                    contentDescription = "",
+                )
+            }
         }
     }
 }
@@ -640,7 +761,8 @@ fun PassivePerceptionCard(
 @Composable
 fun ArmorClassCard(
     modifier: Modifier,
-    armorClass: Int?
+    armorClass: Int?,
+    onValueChange: (String) -> Unit
 ){
     val textColor = Color(0xFFF1F4F7)
 
@@ -668,27 +790,142 @@ fun ArmorClassCard(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.size(8.dp))
-        if (armorClass == null) {
-            Text(
-                text = "—",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Red
+
+        AppTextField(
+            modifier = Modifier,
+            value = "$armorClass",
+            onValueChange = onValueChange,
+            placeholder = "—",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun ClassFeatureDropdown(
+    modifier: Modifier = Modifier,
+    level: Int,
+    feature: Feature,
+    initiallyExpanded: Boolean = false
+) {
+    var expanded by remember (feature.id, feature.name) {
+        mutableStateOf(initiallyExpanded)
+    }
+
+    val textColor = Color(0xFFF1F4F7)
+
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = 220),
+        label = "FeatureDropdownArrowRotation"
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(12.dp)
             )
-        } else {
+            .clickable { expanded = !expanded }
+            .padding(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
-                text = "$armorClass",
+                text = "Lv: $level",
+                modifier = Modifier.weight(0.2f),
                 color = textColor,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
+
+            Text(
+                text = feature.name,
+                modifier = Modifier.weight(1f),
+                color = textColor,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) {
+                    "Collapse feature description"
+                } else {
+                    "Expand feature description"
+                },
+                modifier = Modifier.rotate(arrowRotation),
+                tint = textColor
+            )
+        }
+
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 220)
+            ),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = 180)
+            )
+        ) {
+            Column {
+                Spacer(
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Text(
+                    text = feature.description,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ClassFeatureSection(
+    title: String,
+    features: Map<Int, List<Feature>>
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        features.forEach { featureEntry ->
+            featureEntry.value.forEach { featureInLevel ->
+                ClassFeatureDropdown(
+                    level = featureEntry.key,
+                    feature = featureInLevel
+                )
+            }
         }
     }
 }
 
 @Composable
 fun FeatureDropdown(
-    feature: Feature,
     modifier: Modifier = Modifier,
+    feature: Feature,
     initiallyExpanded: Boolean = false
 ) {
     var expanded by remember (feature.id, feature.name) {
@@ -942,18 +1179,30 @@ fun WeaponsSection(
     modifier: Modifier,
     weapons: List<Weapon>,
     proficiencyBonus: Int?,
-    title: String = "Weapons"
+    title: String = "Weapons",
+    onProficiencyChange: (Long) -> Unit,
+    onAddWeapon: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            AddButton(modifier = Modifier, onAdd = onAddWeapon)
+        }
 
         HorizontalDivider(
             color = MaterialTheme.colorScheme.outline
@@ -963,7 +1212,8 @@ fun WeaponsSection(
             WeaponDropdown(
                 modifier = Modifier,
                 weapon = weapon,
-                proficiencyBonus = proficiencyBonus ?: 0
+                proficiencyBonus = proficiencyBonus ?: 0,
+                onProficiencyChange = onProficiencyChange
             )
         }
     }
@@ -973,7 +1223,8 @@ fun WeaponsSection(
 fun WeaponDropdown(
     modifier: Modifier,
     weapon: Weapon,
-    proficiencyBonus: Int
+    proficiencyBonus: Int,
+    onProficiencyChange: (Long) -> Unit
 ) {
     var expanded by remember (weapon.id) {
         mutableStateOf(false)
@@ -1006,6 +1257,7 @@ fun WeaponDropdown(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProficiencyIndicator(
+                modifier = Modifier.clickable(onClick = { onProficiencyChange(weapon.id!!) }),
                 proficient = weapon.proficient
             )
 
@@ -1114,18 +1366,25 @@ fun WeaponDropdown(
 fun ItemsSection(
     modifier: Modifier,
     inventory: List<Item>,
-    title: String = "Items"
+    title: String = "Items",
+    onAddItem: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        Row(){
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            AddButton(modifier = Modifier, onAdd = onAddItem)
+        }
 
         HorizontalDivider(
             color = MaterialTheme.colorScheme.outline
@@ -1402,20 +1661,12 @@ fun SpellcastingStats(
 
 @Composable
 fun SpellSlotsSection(
-    progression: SpellSlotProgression,
+    progression: SpellSlotProgression?,
+    spentSpellSlots: SpentSpellSlots?,
+    onSpentSpellSlotsChange: (SpentSpellSlots) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val textColor = Color(0xFFF1F4F7)
-
-    val spentSlots = remember(progression) {
-        mutableStateListOf<Boolean>().apply {
-            progression.slots.toSortedMap().forEach { (_, count) ->
-                repeat(count.coerceAtLeast(0)) {
-                    add(false)
-                }
-            }
-        }
-    }
 
     Column(
         modifier = modifier
@@ -1437,53 +1688,124 @@ fun SpellSlotsSection(
             color = textColor
         )
 
-        progression.slots.toSortedMap().entries.forEach { (slotLevel, count) ->
-            val startIndex = progression.slots.toSortedMap()
-                .entries
-                .takeWhile { it.key != slotLevel }
-                .sumOf { it.value.coerceAtLeast(0) }
-
-            Row(
-                modifier = Modifier.padding(vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+        when {
+            progression == null -> {
                 Text(
-                    text = "Level $slotLevel",
-                    modifier = Modifier.weight(1f),
-                    color = textColor,
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "No class selected",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    repeat(count.coerceAtLeast(0)) { index ->
-                        val stateIndex = startIndex + index
+            progression.slots.isEmpty() -> {
+                Text(
+                    text = "No spellcasting",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
-                        val isSpent = spentSlots.getOrElse(stateIndex) {
-                            false
-                        }
+            spentSpellSlots == null -> {
+                Text(
+                    text = "Spell slots not initialized",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .background(
-                                    color = if (isSpent) {
-                                        textColor
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .border(
-                                    width = 1.5.dp,
-                                    color = textColor,
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .clickable {
-                                    spentSlots[stateIndex] = !isSpent
+            else -> {
+                progression.slots
+                    .toSortedMap()
+                    .forEach { (slotLevel, count) ->
+                        SpellSlotRow(
+                            slotLevel = slotLevel,
+                            totalSlots = count.coerceAtLeast(0),
+                            spentSlots = spentSpellSlots.slots[slotLevel] ?: 0,
+                            onSpentSlotsChange = { newSpent ->
+                                val updated = spentSpellSlots.slots.toMutableMap()
+
+                                if (newSpent == 0) {
+                                    updated.remove(slotLevel)
+                                } else {
+                                    updated[slotLevel] = newSpent
                                 }
+
+                                onSpentSpellSlotsChange(
+                                    SpentSpellSlots(updated)
+                                )
+                            }
+                        )
+                    }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SpellSlotRow(
+    slotLevel: Int,
+    totalSlots: Int,
+    spentSlots: Int,
+    onSpentSlotsChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val textColor = Color(0xFFF1F4F7)
+    val actionColor = MaterialTheme.colorScheme.primary
+    val shape = RoundedCornerShape(5.dp)
+
+    val total = totalSlots.coerceAtLeast(0)
+    val spent = spentSlots.coerceIn(0, total)
+
+    val spendIndex = total - spent - 1
+    val recoverIndex = total - spent
+
+    Row(
+        modifier = modifier.padding(vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Level $slotLevel",
+            modifier = Modifier.weight(1f),
+            color = textColor,
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            repeat(total) { index ->
+                val isSpent = index >= total - spent
+                val canSpend = index == spendIndex && spent < total
+                val canRecover = index == recoverIndex && spent > 0
+                val canClick = canSpend || canRecover
+
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            color = if (isSpent) {
+                                textColor.copy(alpha = 0.35f)
+                            } else {
+                                textColor
+                            },
+                            shape = shape
+                        )
+                        .border(
+                            width = if (canClick) 2.dp else 1.dp,
+                            color = if (canClick) actionColor else textColor,
+                            shape = shape
+                        )
+                        .clickable(enabled = canClick) {
+                            when {
+                                canSpend -> onSpentSlotsChange(spent + 1)
+                                canRecover -> onSpentSlotsChange(spent - 1)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (canRecover) {
+                        Text(
+                            text = "+",
+                            color = actionColor,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }
@@ -1497,11 +1819,29 @@ fun SpellSlotsSection(
 fun SpellSection(
     modifier: Modifier,
     spells: List<Spell>,
+    title: String = "Spells",
+    onAddSpell: (Long) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        Row(){
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            AddButton(modifier = Modifier,
+                onAdd = {
+                    // TODO This function opens the dialog, the add spells will come on the dialog
+                }
+            )
+        }
 
         HorizontalDivider(
             thickness = 2.dp,
@@ -1563,7 +1903,7 @@ fun SpellDropdown(
             )
 
             Icon(
-                imageVector = getSchoolIcon(spell.school),
+                painter = painterResource(getSchoolIcon(spell.school) as Int),
                 contentDescription = spell.school.schoolName,
                 tint = textColor,
                 modifier = Modifier.size(22.dp)
@@ -1773,14 +2113,14 @@ private fun String.toCastingTimeAbbreviation(): String {
 
 private fun getSchoolIcon(school: SpellSchool) =
     when (school) {
-        SpellSchool.ABJURATION -> Icons.Default.AutoAwesome
-        SpellSchool.CONJURATION -> Icons.Default.AutoAwesome
-        SpellSchool.DIVINATION -> Icons.Default.AutoAwesome
-        SpellSchool.ENCHANTMENT -> Icons.Default.AutoAwesome
-        SpellSchool.EVOCATION -> Icons.Default.AutoAwesome
-        SpellSchool.ILLUSION -> Icons.Default.AutoAwesome
-        SpellSchool.NECROMANCY -> Icons.Default.AutoAwesome
-        SpellSchool.TRANSMUTATION -> Icons.Default.AutoAwesome
+        SpellSchool.ABJURATION -> R.drawable.school_badge_shield
+        SpellSchool.CONJURATION -> R.drawable.school_badge_conjuration
+        SpellSchool.DIVINATION -> R.drawable.school_badge_divination
+        SpellSchool.ENCHANTMENT -> R.drawable.school_badge_enchantment
+        SpellSchool.EVOCATION -> R.drawable.school_badge_evocation
+        SpellSchool.ILLUSION -> R.drawable.school_badge_illusion
+        SpellSchool.NECROMANCY -> R.drawable.school_badge_necromancy
+        SpellSchool.TRANSMUTATION -> R.drawable.school_badge_transmutation
     }
 
 
@@ -1839,5 +2179,261 @@ fun NotesSection(
                 unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
+    }
+}
+
+@Composable
+fun AddButton(
+    modifier: Modifier,
+    onAdd: () -> Unit
+) {
+    Button(
+        modifier = modifier.size(35.dp),
+        onClick = onAdd,
+        shape = RoundedCornerShape(4.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color(0xFFF1F4F7)
+        ),
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = Color(0xFFF1F4F7)
+        )
+    ) {
+        Text(
+            text = "+",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun AppTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String = "",
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Center,
+    textColor: Color = Color(0xFFF1F4F7),
+    backgroundColor: Color = InnerPanelColor,
+    addBorder: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    singleLine: Boolean = true
+) {
+    BasicTextField(
+        modifier = Modifier,
+        value = value,
+        onValueChange = onValueChange,
+        singleLine = singleLine,
+        textStyle = TextStyle(
+            color = textColor,
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            textAlign = textAlign
+        ),
+        keyboardOptions = keyboardOptions,
+        cursorBrush = SolidColor(textColor),
+        decorationBox = { innerTextField ->
+
+            Box(
+                modifier = modifier
+                    .background(backgroundColor)
+                    .border(
+                        width = 1.dp,
+                        color = if (addBorder) textColor else Color.Transparent,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .size(width = 60.dp, height = 45.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (value.isEmpty() && placeholder.isNotEmpty()) {
+                    Text(
+                        text = placeholder,
+                        color = textColor.copy(alpha = 0.5f),
+                        fontSize = fontSize,
+                        fontWeight = fontWeight,
+                    )
+                }
+
+                innerTextField()
+            }
+        }
+    )
+}
+
+@Composable
+fun ProfileBox(
+    characterName: String,
+    raceName: String,
+    backgroundName: String,
+    className: String,
+
+    races: List<String>,
+    classes: List<String>,
+    backgrounds: List<String>,
+
+    onNameChange: (String) -> Unit,
+    onRaceChange: (String) -> Unit,
+    onClassChange: (String) -> Unit,
+    onBackgroundChange: (String) -> Unit,
+) {
+    val textColor = Color(0xFFF1F4F7)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = characterName,
+            onValueChange = onNameChange,
+            label = { Text("Character Name") }
+        )
+        AutocompleteOutlinedTextField(
+            value = raceName,
+            onValueChange = onRaceChange,
+            options = races,
+            label = "Race"
+        )
+        AutocompleteOutlinedTextField(
+            value = backgroundName,
+            onValueChange = onClassChange,
+            options = backgrounds,
+            label = "Background"
+        )
+        AutocompleteOutlinedTextField(
+            value = className,
+            onValueChange = onBackgroundChange,
+            options = classes,
+            label = "Cleric"
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AutocompleteOutlinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    options: List<String>,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val filteredOptions = remember(value, options) {
+        if (value.isBlank()) {
+            options
+        } else {
+            options.filter {
+                it.contains(value, ignoreCase = true)
+            }
+        }
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded && filteredOptions.isNotEmpty(),
+        onExpandedChange = {
+            expanded = !expanded
+        },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = {
+                onValueChange(it)
+                expanded = true
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            label = {
+                Text(label)
+            },
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
+            }
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded && filteredOptions.isNotEmpty(),
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
+            filteredOptions.forEach { option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(option)
+                    },
+                    onClick = {
+                        onValueChange(option)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileLevelBox(
+    level: Int,
+    onValueChange: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier
+                .size(200.dp)
+                .clip(shape = CircleShape)
+                .background(Color.LightGray)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = CircleShape
+                ),
+            painter = painterResource(R.drawable.dnd_logo),
+            contentDescription = null,
+        )
+        Box(Modifier.offset(x = (-50).dp)) {
+            Box(
+                modifier = Modifier
+                    .size(80.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                AppTextField(
+                    modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                    value = "$level",
+                    onValueChange = onValueChange,
+                    placeholder = "—",
+                    fontSize = 32.sp,
+                    addBorder = false,
+                    backgroundColor = Color.Transparent,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
 }

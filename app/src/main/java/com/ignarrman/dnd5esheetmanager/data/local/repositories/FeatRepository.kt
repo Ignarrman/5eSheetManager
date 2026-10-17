@@ -23,14 +23,6 @@ class FeatRepository @Inject constructor(
             ?.toDomain()
     }
 
-    suspend fun getByName(
-        name: String
-    ): List<Feat> {
-        return featDao
-            .getByName(name)
-            .map { it.toDomain() }
-    }
-
     suspend fun deleteAll() {
         featDao.deleteAll()
     }

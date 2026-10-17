@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceFeatureCrossRef
 
 @Dao
 interface RaceDao {
@@ -33,4 +34,33 @@ interface RaceDao {
         name: String,
         source: String
     ): RaceEntity?
+
+    @Query(
+        """
+    SELECT * FROM races
+    WHERE id = :id
+    LIMIT 1
+    """
+    )
+    suspend fun getById(
+        id: Long?,
+    ): RaceEntity?
+
+    @Query("""
+    SELECT features.*
+    FROM features
+    INNER JOIN race_features
+        ON features.id = race_features.featureId
+    WHERE race_features.raceId = :raceId
+    ORDER BY features.id 
+    """)
+    suspend fun getFeaturesForRace(raceId: Long): List<FeatureEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFeatureRelations(
+        relations: List<RaceFeatureCrossRef>
+    )
+
+    @Query("DELETE FROM race_features")
+    suspend fun deleteAllFeatureRelations()
 }

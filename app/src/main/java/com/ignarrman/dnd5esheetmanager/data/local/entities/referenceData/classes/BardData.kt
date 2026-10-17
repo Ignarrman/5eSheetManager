@@ -2,10 +2,8 @@ package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classe
 
 import androidx.room.Entity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 
 
 data class BardData(
@@ -14,9 +12,7 @@ data class BardData(
     val features: List<FeatureEntity>,
     val bardicInspirationProgression: List<BardicInspirationProgressionEntity>,
     val spellcasting: SpellcastingEntity,
-    val cantripProgression: List<CantripProgressionEntity>,
     val spellSlotProgression: List<SpellSlotProgressionEntity>,
-    val spellsKnownProgression: List<SpellsKnownProgressionEntity>
 )
 
 @Entity(

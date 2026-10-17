@@ -3,11 +3,9 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.MetamagicEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SorceryPointProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object SorcererReferenceData {
 
@@ -16,7 +14,7 @@ object SorcererReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,
@@ -29,59 +27,6 @@ object SorcererReferenceData {
         classId = CLASS_ID,
         spellcastingAbility = "CHA"
     )
-
-    val cantrips = listOf(
-        (1..3).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 4
-            )
-        },
-        (4..9).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 5
-            )
-        },
-        (10..20).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 6
-            )
-        }
-    ).flatten()
-
-    val spellsKnown = listOf(
-        1 to 2,
-        2 to 3,
-        3 to 4,
-        4 to 5,
-        5 to 6,
-        6 to 7,
-        7 to 8,
-        8 to 9,
-        9 to 10,
-        10 to 11,
-        11 to 12,
-        12 to 12,
-        13 to 13,
-        14 to 13,
-        15 to 14,
-        16 to 14,
-        17 to 15,
-        18 to 15,
-        19 to 15,
-        20 to 15
-    ).map { (level, known) ->
-        SpellsKnownProgressionEntity(
-            classId = CLASS_ID,
-            level = level,
-            known = known
-        )
-    }
 
     val spellSlots = fullCasterSpellSlots(
         classId = CLASS_ID

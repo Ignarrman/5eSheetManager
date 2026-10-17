@@ -5,7 +5,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FighterProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object FighterReferenceData {
 
@@ -79,7 +79,7 @@ object FighterReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,

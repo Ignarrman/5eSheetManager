@@ -35,11 +35,13 @@ object FakeFeatures {
                 "dealing extra damage when the conditions for Sneak Attack are met."
     )
 
-    val allClass = listOf(
-        rage,
-        secondWind,
-        bardicInspiration,
-        sneakAttack
+    val allClass = mapOf(
+        1 to listOf(
+            rage,
+            secondWind,
+            bardicInspiration,
+            sneakAttack
+        )
     )
 
 
@@ -114,5 +116,5 @@ object FakeFeatures {
 
     // ALL FEATURES
 
-    val all = allClass + allRace + allBackground
+    val all = allRace + allBackground
 }

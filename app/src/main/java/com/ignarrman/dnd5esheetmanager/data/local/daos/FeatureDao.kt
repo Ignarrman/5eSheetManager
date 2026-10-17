@@ -12,7 +12,7 @@ interface FeatureDao {
     suspend fun getFeaturesByIds(ids: List<Long>): List<FeatureEntity>
 
     @Query(" SELECT * FROM features WHERE id = :id ")
-    suspend fun getFeatureById(id: Long): List<FeatureEntity>
+    suspend fun getById(id: Long): FeatureEntity?
 
     @Insert
     suspend fun insertAll(features: List<FeatureEntity>)

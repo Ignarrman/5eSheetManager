@@ -13,9 +13,7 @@ class FeatureRepository @Inject constructor(
 ) {
 
     suspend fun getById(id: Long): Feature? {
-        return featureDao.getFeatureById(id)
-            .firstOrNull()
-            ?.toDomain()
+        return featureDao.getById(id)?.toDomain()
     }
 
     suspend fun getByIds(ids: List<Long>): List<Feature> {

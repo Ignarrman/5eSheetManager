@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSpellCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,17 +14,40 @@ interface SpellDao {
     @Query("SELECT * FROM spells")
     fun getAll(): List<SpellEntity>
 
-    @Query("SELECT * FROM spells WHERE name = :name")
-    suspend fun getByName(name: String): SpellEntity?
-
     @Query("SELECT * FROM spells WHERE id = :id")
     suspend fun getById(id: Long): SpellEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(spells: List<SpellEntity>)
+    @Query("""
+    SELECT * FROM spells
+    WHERE id IN (:ids)
+""")
+    suspend fun getByIds(
+        ids: List<Long>
+    ): List<SpellEntity>
+
+    @Query("""
+        SELECT * FROM character_spells
+        WHERE characterId = :characterId
+    """)
+    suspend fun getByCharacterId(
+        characterId: Long
+    ): List<CharacterSpellCrossRef>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(spell: SpellEntity)
+    suspend fun insertAllCharacterRef(
+        refs: List<CharacterSpellCrossRef>
+    )
+
+    @Query("""
+    DELETE FROM character_spells
+    WHERE characterId = :characterId
+""")
+    suspend fun deleteByCharacterId(
+        characterId: Long
+    )
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(spells: List<SpellEntity>)
 
     @Query("DELETE FROM spells")
     suspend fun deleteAll()

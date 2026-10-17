@@ -55,8 +55,6 @@ class ReferenceDataSeeder @Inject constructor(
     private suspend fun clearReferenceData() {
 
         database.spellcastingDao().deleteAllSpellSlots()
-        database.spellcastingDao().deleteAllSpellsKnown()
-        database.spellcastingDao().deleteAllCantrips()
         database.spellcastingDao().deleteAllSpellcasting()
 
         clearClassesReferenceData(database = database)
@@ -66,8 +64,6 @@ class ReferenceDataSeeder @Inject constructor(
         clearFeatReferenceData(database = database)
 
         database.featureDao().deleteAll()
-
-
     }
 
     private suspend fun insertReferenceData() {

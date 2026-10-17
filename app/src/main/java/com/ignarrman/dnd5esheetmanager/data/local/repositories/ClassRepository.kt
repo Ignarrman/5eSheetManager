@@ -122,14 +122,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         return BardData(
             classEntity = classEntity,
@@ -137,9 +131,7 @@ class ClassRepository @Inject constructor(
             features = features,
             bardicInspirationProgression = bardicInspirationProgression,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression
         ).toDomain()
     }
 
@@ -163,14 +155,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val infusionsList =
             infusionDao.getAll()
@@ -183,9 +169,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featuresRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = spellcastingDao.getCantripProgression(id),
             spellSlotProgression = spellcastingDao.getSpellSlotProgression(id),
-            spellsKnownProgression = spellcastingDao.getSpellsKnownProgression(id),
             infusions = infusionsList,
             infusionProgression = infusionProgression
         ).toDomain()
@@ -211,14 +195,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val channelDivinityProgression =
             channelDivinityProgressionDao.getProgression()
@@ -228,9 +206,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             channelDivinityProgression = channelDivinityProgression
         ).toDomain()
     }
@@ -255,14 +231,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val wildShapeProgression =
             wildShapeProgressionDao.getProgression()
@@ -272,9 +242,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             wildShapeProgression = wildShapeProgression
         ).toDomain()
     }
@@ -363,14 +331,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val fightingStyleCrossRef =
             classDao.getFightingStylesFromClass(id)
@@ -388,9 +350,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             fightingStyleCrossRef = fightingStyleCrossRef,
             fightingStyles = fightingStyles,
             layOnHands = layOnHands
@@ -417,14 +377,9 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
 
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val fightingStyleCrossRef =
             classDao.getFightingStylesFromClass(id)
@@ -439,9 +394,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             fightingStyleCrossRef = fightingStyleCrossRef,
             fightingStyles = fightingStyles
         ).toDomain()
@@ -494,14 +447,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val sorceryPointProgression =
             sorceryPointProgressionDao.getProgression()
@@ -514,9 +461,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             sorceryPointProgression = sorceryPointProgression,
             metamagicList = metamagics
         ).toDomain()
@@ -542,14 +487,8 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         val eldritchInvocations =
             eldritchInvocationsProgressionDao.getProgression()
@@ -562,9 +501,7 @@ class ClassRepository @Inject constructor(
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression,
             eldritchInvocations = eldritchInvocations,
             eldritchInvocationsKnown = eldritchInvocationsKnown
         ).toDomain()
@@ -590,23 +527,15 @@ class ClassRepository @Inject constructor(
             spellcastingDao.getSpellcasting(id)
                 ?: error("Spellcasting not found")
 
-        val cantripProgression =
-            spellcastingDao.getCantripProgression(id)
-
         val spellSlotProgression =
             spellcastingDao.getSpellSlotProgression(id)
-
-        val spellsKnownProgression =
-            spellcastingDao.getSpellsKnownProgression(id)
 
         return WizardData(
             classEntity = classEntity,
             featureRelations = featureRelations,
             features = features,
             spellcasting = spellcasting,
-            cantripProgression = cantripProgression,
             spellSlotProgression = spellSlotProgression,
-            spellsKnownProgression = spellsKnownProgression
         ).toDomain()
     }
 

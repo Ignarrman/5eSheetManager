@@ -7,7 +7,7 @@ data class Ranger(
     override val id: Long?,
     override val name: String = "Ranger",
     override val hitDice: Int = 10,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
     override val fightingStyleIds: List<Long>
 ) : PlayerClass(
@@ -15,5 +15,5 @@ data class Ranger(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    featureIds = featureIds
+    features = features
 )

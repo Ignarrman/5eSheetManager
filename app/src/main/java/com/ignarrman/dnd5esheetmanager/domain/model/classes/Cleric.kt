@@ -8,7 +8,7 @@ data class Cleric(
     override val id: Long?,
     override val name: String = "Cleric",
     override val hitDice: Int = 8,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
     val channelDivinity: Map<Int, ChannelDivinityProgression>
 ) : PlayerClass(
@@ -16,7 +16,7 @@ data class Cleric(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    featureIds = featureIds
+    features = features
 )
 
 data class ChannelDivinityProgression(

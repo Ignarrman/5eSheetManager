@@ -1,9 +1,12 @@
 package com.ignarrman.dnd5esheetmanager.data.mappers
 
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterFeatCrossRef
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSheetData
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSheetEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSheetPersistence
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSpellCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ItemEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.WeaponEntity
-import com.ignarrman.dnd5esheetmanager.data.mappers.toJson
 import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
@@ -89,9 +92,9 @@ fun Weapon.toEntity(
     )
 }
 
-fun CharacterSheet.toEntity(): CharacterSheetEntity {
+fun CharacterSheet.toPersistence(): CharacterSheetPersistence {
 
-    return CharacterSheetEntity(
+    val entity = CharacterSheetEntity(
         id = id?: 0L,
         portraitUri = portraitUri,
         name = name,
@@ -104,10 +107,8 @@ fun CharacterSheet.toEntity(): CharacterSheetEntity {
         skills = skills.skillsToJson(),
 
         raceId = null,
-        backgroundId = backgroundId,
+        backgroundId = background?.id,
         playerClassId = null,
-        featsId = featsId.longToJson(),
-        spellsId = spellsId.longToJson(),
 
         armorClass = armorClass,
 
@@ -141,6 +142,29 @@ fun CharacterSheet.toEntity(): CharacterSheetEntity {
 
         wallet = wallet.walletToJson()
     )
+
+    val featRelations =
+        feats.map { feat ->
+            CharacterFeatCrossRef(
+                characterId = id ?: 0,
+                featId = feat.id!!
+            )
+        }
+
+    val spellRelations =
+        spells.map { spell ->
+            CharacterSpellCrossRef(
+                characterId = id ?: 0,
+                spellId = spell.id!!
+            )
+        }
+
+    return CharacterSheetPersistence(
+        entity = entity,
+        featRelations = featRelations,
+        spellRelations = spellRelations
+    )
+
 }
 
 private fun Map<AbilityScores, Int>.statsToJson(): String {
@@ -180,52 +204,52 @@ private fun List<Long>.longToJson(): String {
     return JSONArray(this).toString()
 }
 
-fun CharacterSheetEntity.toDomain(): CharacterSheet {
+fun CharacterSheetData.toDomain(): CharacterSheet {
 
     return CharacterSheet(
-        id = id,
-        portraitUri = portraitUri,
-        name = name,
-        level = level,
-        experiencePoints = experiencePoints,
-        proficiencyBonus = proficiencyBonus,
-        initiative = initiative,
+        id = characterSheetEntity.id,
+        portraitUri = characterSheetEntity.portraitUri,
+        name = characterSheetEntity.name,
+        level = characterSheetEntity.level,
+        experiencePoints = characterSheetEntity.experiencePoints,
+        proficiencyBonus = characterSheetEntity.proficiencyBonus,
+        initiative = characterSheetEntity.initiative,
 
-        stats = stats.toAbilityScoresMap(),
-        skills = skills.toSkillMap(),
+        stats = characterSheetEntity.stats.toAbilityScoresMap(),
+        skills = characterSheetEntity.skills.toSkillMap(),
 
-        raceId = raceId,
-        backgroundId = backgroundId,
-        playerClassId = playerClassId,
-        featsId = featsId.toLongList(),
-        spellsId = spellsId.toLongList(),
+        race = race?.toDomain(),
+        background = background?.toDomain(),
+        playerClassId = characterSheetEntity.playerClassId,
+        feats = feats.map { it.toDomain() },
+        spells = spells.map { it.toDomain() },
 
-        armorClass = armorClass,
+        armorClass = characterSheetEntity.armorClass,
 
-        maxHp = maxHp,
-        currentHp = currentHp,
-        temporaryHp = temporaryHp,
+        maxHp = characterSheetEntity.maxHp,
+        currentHp = characterSheetEntity.currentHp,
+        temporaryHp = characterSheetEntity.temporaryHp,
 
-        currentHitDice = currentHitDice,
+        currentHitDice = characterSheetEntity.currentHitDice,
 
-        deathSaveFailures = deathSaveFailures,
-        deathSaveSuccesses = deathSaveSuccesses,
+        deathSaveFailures = characterSheetEntity.deathSaveFailures,
+        deathSaveSuccesses = characterSheetEntity.deathSaveSuccesses,
 
         skillProficiencies =
-            skillProficiencies.toEnumList(Skill::valueOf),
+            characterSheetEntity.skillProficiencies.toEnumList(Skill::valueOf),
 
         skillExpertise =
-            skillExpertise.toEnumList(Skill::valueOf),
+            characterSheetEntity.skillExpertise.toEnumList(Skill::valueOf),
 
         savingThrowProficiencies =
-            savingThrowProficiencies.toEnumList(AbilityScores::valueOf),
+            characterSheetEntity.savingThrowProficiencies.toEnumList(AbilityScores::valueOf),
 
         proficiencies =
-            proficiencies.toStringList(),
+            characterSheetEntity.proficiencies.toStringList(),
 
-        notes = notes,
+        notes = characterSheetEntity.notes,
 
-        wallet = wallet.toCoinsMap()
+        wallet = characterSheetEntity.wallet.toCoinsMap()
     )
 }
 

@@ -7,13 +7,13 @@ data class Barbarian(
     override val id: Long?,
     override val name: String = "Barbarian",
     override val hitDice: Int = 12,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     val rage: Map<Int, RageProgression>
 ) : PlayerClass(
     id = id,
     name = name,
     hitDice = hitDice,
-    featureIds = featureIds
+    features = features
 )
 
 data class RageProgression(

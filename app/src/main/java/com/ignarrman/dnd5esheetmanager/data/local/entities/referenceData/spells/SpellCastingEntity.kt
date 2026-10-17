@@ -22,24 +22,6 @@ data class SpellcastingEntity(
 
 
 @Entity(
-    tableName = "cantrip_progression",
-    primaryKeys = ["classId", "level"],
-    foreignKeys = [
-        ForeignKey(
-            entity = SpellcastingEntity::class,
-            parentColumns = ["classId"],
-            childColumns = ["classId"]
-        )
-    ]
-)
-data class CantripProgressionEntity(
-    val classId: Long,
-    val level: Int,
-    val known: Int
-)
-
-
-@Entity(
     tableName = "spell_slot_progression",
     primaryKeys = ["classId", "level", "slotLevel"],
     foreignKeys = [
@@ -55,21 +37,4 @@ data class SpellSlotProgressionEntity(
     val level: Int,
     val slotLevel: Int,
     val slots: Int
-)
-
-@Entity(
-    tableName = "spells_known_progression",
-    primaryKeys = ["classId", "level"],
-    foreignKeys = [
-        ForeignKey(
-            entity = SpellcastingEntity::class,
-            parentColumns = ["classId"],
-            childColumns = ["classId"]
-        )
-    ]
-)
-data class SpellsKnownProgressionEntity(
-    val classId: Long,
-    val level: Int,
-    val known: Int
 )

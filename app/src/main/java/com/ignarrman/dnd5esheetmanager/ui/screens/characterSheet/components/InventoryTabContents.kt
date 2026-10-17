@@ -19,7 +19,8 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun InventoryTabContent(
-    inventory: List<Item>
+    inventory: List<Item>,
+    onAddItem: () -> Unit,
 ){
     val scrollState = rememberScrollState()
 
@@ -32,7 +33,8 @@ fun InventoryTabContent(
     ) {
         ItemsSection(
             modifier = Modifier,
-            inventory = inventory
+            inventory = inventory,
+            onAddItem = onAddItem
         )
     }
 }
@@ -45,7 +47,8 @@ fun InventoryTabContentPreview() {
 
     _5eSheetManagerTheme(){
         InventoryTabContent(
-            inventory = inventory
+            inventory = inventory,
+            onAddItem = {}
         )
     }
 }

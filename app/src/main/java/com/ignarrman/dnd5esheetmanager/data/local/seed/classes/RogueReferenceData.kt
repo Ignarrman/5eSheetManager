@@ -3,7 +3,7 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.SneakAttackProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object RogueReferenceData {
 
@@ -12,7 +12,7 @@ object RogueReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,

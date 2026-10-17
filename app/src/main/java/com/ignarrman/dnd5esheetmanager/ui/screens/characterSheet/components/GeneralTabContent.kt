@@ -1,11 +1,6 @@
 package com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -13,27 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import com.ignarrman.dnd5esheetmanager.R
 import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
@@ -51,7 +37,16 @@ fun GeneralTabContent(
     characterSheet: CharacterSheet,
     race: Race?,
     background: Background?,
-    playerClass: PlayerClass?
+    playerClass: PlayerClass?,
+
+    races: List<Race>,
+    classes: List<PlayerClass>,
+    backgrounds: List<Background>,
+
+    onNameChange: (String) -> Unit,
+    onRaceChange: (String) -> Unit,
+    onClassChange: (String) -> Unit,
+    onBackgroundChange: (String) -> Unit,
 ) {
 
     val scrollState = rememberScrollState()
@@ -64,58 +59,35 @@ fun GeneralTabContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(18.dp)
+                .padding(18.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Image(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(shape = CircleShape)
-                        .background(Color.LightGray)
-                        .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = CircleShape
-                        ),
-                    painter = painterResource(R.drawable.dnd_logo),
-                    contentDescription = null,
-                )
-                Box(Modifier.offset(x = (-40).dp)) {
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                shape = CircleShape
-                            )
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.outline,
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = characterSheet.level.toString(),
-                            fontSize = 24.sp,
-                            color = Color(0xFFF1F4F7)
-                        )
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                ) {
 
-                    Text(characterSheet.name, color = Color(0xFFF1F4F7))
-                    Text(race?.name ?: "No Race", color = Color(0xFFF1F4F7))
-                    Text(background?.name ?: "No background", color = Color(0xFFF1F4F7))
-                    Text(playerClass?.name ?: "No color", color = Color(0xFFF1F4F7))
-                }
+            Row {
+                Spacer(Modifier.width(60.dp))
+                ProfileLevelBox(
+                    level = characterSheet.level,
+                    onValueChange = {
+                        // TODO
+                    }
+                )
             }
+
+            ProfileBox(
+                characterName = characterSheet.name,
+                raceName = race?.name ?: "No Race",
+                backgroundName = background?.name ?: "No Background",
+                className = playerClass?.name ?: "No Class",
+
+                races = races.map { it.name },
+                classes = classes.map { it.name },
+                backgrounds = backgrounds.map { it.name },
+
+                onNameChange = onNameChange,
+                onRaceChange = onRaceChange,
+                onClassChange = onClassChange,
+                onBackgroundChange = onBackgroundChange,
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
@@ -129,18 +101,26 @@ fun GeneralTabContent(
                 ProficiencyBonusCard(
                     modifier = Modifier
                         .weight(0.4f)
-                        .size(height = 100.dp, width = 120.dp)
-                        ,
-                    proficiencyBonus = characterSheet.proficiencyBonus
+                        .size(height = 120.dp, width = 120.dp),
+                    proficiencyBonus = characterSheet.proficiencyBonus,
+                    onValueChange = {
+                        // TODO
+                    }
                 )
                 ArmorClassCard(
-                    modifier = Modifier.size(height = 100.dp, width = 90.dp),
-                    armorClass = characterSheet.armorClass
+                    modifier = Modifier.size(height = 120.dp, width = 110.dp),
+                    armorClass = characterSheet.armorClass,
+                    onValueChange = {
+                        // TODO
+                    }
                 )
 
                 InitiativeCard(
-                    modifier = Modifier.size(height = 100.dp, width = 100.dp),
-                    initiative = characterSheet.proficiencyBonus
+                    modifier = Modifier.size(height = 120.dp, width = 100.dp),
+                    initiative = characterSheet.proficiencyBonus,
+                    onValueChange = {
+                        // TODO
+                    }
                 )
             }
 
@@ -171,7 +151,10 @@ fun GeneralTabContent(
                 AbilityScores.entries.forEach { it ->
                     AbilityScoreCard(
                         score = characterSheet.stats[it] ?: 10,
-                        scoreName = it.statName
+                        scoreName = it.statName,
+                        onValueChange = {
+                            // TODO
+                        }
                     )
                 }
             }
@@ -205,6 +188,15 @@ fun GeneralTabContent(
                 currentHp = characterSheet.currentHp ?: 0,
                 maxHp = characterSheet.maxHp ?: 0,
                 temporaryHp = characterSheet.temporaryHp,
+                onCurrentHPChange = {
+                    // TODO
+                },
+                onMaxHPChange = {
+                    // TODO
+                },
+                onTHPChange = {
+                    // TODO
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -218,7 +210,10 @@ fun GeneralTabContent(
                         .height(80.dp),
                     dieType = playerClass?.hitDice.toString(),
                     available = characterSheet.currentHitDice,
-                    total = characterSheet.level
+                    total = characterSheet.level,
+                    onValueChange = {
+                        // TODO
+                    }
                 )
                 PassivePerceptionCard(
                     modifier = Modifier
@@ -231,9 +226,27 @@ fun GeneralTabContent(
             Spacer(modifier = Modifier.height(12.dp))
 
             DeathSavesCard(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier,
                 successDeathSaves = characterSheet.deathSaveSuccesses,
-                failureDeathSaves = characterSheet.deathSaveFailures
+                failureDeathSaves = characterSheet.deathSaveFailures,
+                onSetToOneSuccess = {
+                    // TODO Set to 1
+                },
+                onSetToTwoSuccess = {
+                    // TODO Set to 2
+                },
+                onSetToThreeSuccess = {
+                    // TODO Set to 3
+                },
+                onSetToOneFailed = {
+                    // TODO Set to 1
+                },
+                onSetToTwoFailed = {
+                    // TODO Set to 2
+                },
+                onSetToThreeFailed = {
+                    // TODO Set to 3
+                }
             )
         }
     }
@@ -253,7 +266,16 @@ fun GeneralTabContentPreview() {
             characterSheet = character,
             race = race,
             background = background,
-            playerClass = playerClass
+            playerClass = playerClass,
+
+            races = emptyList(),
+            classes = emptyList(),
+            backgrounds = emptyList(),
+
+            onNameChange = {},
+            onRaceChange = {},
+            onClassChange = {},
+            onBackgroundChange = {}
         )
     }
 }

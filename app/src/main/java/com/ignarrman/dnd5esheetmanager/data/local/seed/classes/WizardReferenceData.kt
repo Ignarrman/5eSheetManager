@@ -1,11 +1,9 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
 import android.content.Context
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object WizardReferenceData {
 
@@ -14,7 +12,7 @@ object WizardReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,
@@ -27,32 +25,6 @@ object WizardReferenceData {
         classId = CLASS_ID,
         spellcastingAbility = "INT"
     )
-
-    val cantrips = listOf(
-        (1..3).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 3
-            )
-        },
-        (4..9).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 4
-            )
-        },
-        (10..20).map { level ->
-            CantripProgressionEntity(
-                classId = CLASS_ID,
-                level = level,
-                known = 5
-            )
-        }
-    ).flatten()
-
-    val spellsKnown = emptyList<SpellsKnownProgressionEntity>()
 
     val spellSlots = fullCasterSpellSlots(
         classId = CLASS_ID

@@ -4,11 +4,9 @@ import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassFightingStyleCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.FightingStyleEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.LayOnHandsProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object PaladinReferenceData {
 
@@ -17,7 +15,7 @@ object PaladinReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,
@@ -44,10 +42,6 @@ object PaladinReferenceData {
         classId = CLASS_ID,
         spellcastingAbility = "CHA"
     )
-
-    val cantrips = emptyList<CantripProgressionEntity>()
-
-    val spellsKnown = emptyList<SpellsKnownProgressionEntity>()
 
     val spellSlots = halfCasterSpellSlots(
         classId = CLASS_ID,

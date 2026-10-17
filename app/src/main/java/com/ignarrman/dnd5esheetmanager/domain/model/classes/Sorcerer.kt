@@ -8,7 +8,7 @@ data class Sorcerer(
     override val id: Long?,
     override val name: String = "Sorcerer",
     override val hitDice: Int = 6,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
     val sorceryPoints: Map<Int, SorceryPointProgression>,
     val metamagics: List<Metamagic>
@@ -17,7 +17,7 @@ data class Sorcerer(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    featureIds = featureIds
+    features = features
 )
 
 data class SorceryPointProgression(

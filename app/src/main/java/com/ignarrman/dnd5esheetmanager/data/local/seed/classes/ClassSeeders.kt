@@ -31,8 +31,6 @@ suspend fun clearClassesReferenceData(database: AppDatabase) {
 
     // Spellcasting
     database.spellcastingDao().deleteAllSpellSlots()
-    database.spellcastingDao().deleteAllSpellsKnown()
-    database.spellcastingDao().deleteAllCantrips()
     database.spellcastingDao().deleteAllSpellcasting()
 
     // Class features
@@ -212,25 +210,6 @@ suspend fun insertClassesReferenceData(database: AppDatabase, context: Context) 
 
     database.spellcastingDao().insertSpellcasting(
         WizardReferenceData.spellcasting
-    )
-
-    // Cantrips
-    database.spellcastingDao().insertCantrips(
-        BardReferenceData.cantrips +
-                ArtificerReferenceData.cantrips +
-                ClericReferenceData.cantrips +
-                DruidReferenceData.cantrips +
-                SorcererReferenceData.cantrips +
-                WarlockReferenceData.cantrips +
-                WizardReferenceData.cantrips
-    )
-
-    // Spells known
-    database.spellcastingDao().insertSpellsKnown(
-        BardReferenceData.spellsKnown +
-                ArtificerReferenceData.spellsKnown +
-                SorcererReferenceData.spellsKnown +
-                WarlockReferenceData.spellsKnown
     )
 
     // Spell slots

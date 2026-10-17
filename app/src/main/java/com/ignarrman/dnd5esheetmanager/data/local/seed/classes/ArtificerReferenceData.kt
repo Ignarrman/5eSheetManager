@@ -3,11 +3,9 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.InfusionProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object ArtificerReferenceData {
 
@@ -17,52 +15,6 @@ object ArtificerReferenceData {
     val spellcasting = SpellcastingEntity(
         classId = CLASS_ID,
         spellcastingAbility = "INT"
-    )
-
-    val cantrips = listOf(
-        CantripProgressionEntity(CLASS_ID, 1, 2),
-        CantripProgressionEntity(CLASS_ID, 2, 2),
-        CantripProgressionEntity(CLASS_ID, 3, 2),
-        CantripProgressionEntity(CLASS_ID, 4, 2),
-        CantripProgressionEntity(CLASS_ID, 5, 2),
-        CantripProgressionEntity(CLASS_ID, 6, 2),
-        CantripProgressionEntity(CLASS_ID, 7, 2),
-        CantripProgressionEntity(CLASS_ID, 8, 2),
-        CantripProgressionEntity(CLASS_ID, 9, 2),
-        CantripProgressionEntity(CLASS_ID, 10, 3),
-        CantripProgressionEntity(CLASS_ID, 11, 3),
-        CantripProgressionEntity(CLASS_ID, 12, 3),
-        CantripProgressionEntity(CLASS_ID, 13, 3),
-        CantripProgressionEntity(CLASS_ID, 14, 3),
-        CantripProgressionEntity(CLASS_ID, 15, 3),
-        CantripProgressionEntity(CLASS_ID, 16, 3),
-        CantripProgressionEntity(CLASS_ID, 17, 4),
-        CantripProgressionEntity(CLASS_ID, 18, 4),
-        CantripProgressionEntity(CLASS_ID, 19, 4),
-        CantripProgressionEntity(CLASS_ID, 20, 4)
-    )
-
-    val spellsKnown = listOf(
-        SpellsKnownProgressionEntity(CLASS_ID, 1, 2),
-        SpellsKnownProgressionEntity(CLASS_ID, 2, 2),
-        SpellsKnownProgressionEntity(CLASS_ID, 3, 3),
-        SpellsKnownProgressionEntity(CLASS_ID, 4, 3),
-        SpellsKnownProgressionEntity(CLASS_ID, 5, 4),
-        SpellsKnownProgressionEntity(CLASS_ID, 6, 4),
-        SpellsKnownProgressionEntity(CLASS_ID, 7, 5),
-        SpellsKnownProgressionEntity(CLASS_ID, 8, 5),
-        SpellsKnownProgressionEntity(CLASS_ID, 9, 6),
-        SpellsKnownProgressionEntity(CLASS_ID, 10, 6),
-        SpellsKnownProgressionEntity(CLASS_ID, 11, 7),
-        SpellsKnownProgressionEntity(CLASS_ID, 12, 7),
-        SpellsKnownProgressionEntity(CLASS_ID, 13, 8),
-        SpellsKnownProgressionEntity(CLASS_ID, 14, 8),
-        SpellsKnownProgressionEntity(CLASS_ID, 15, 9),
-        SpellsKnownProgressionEntity(CLASS_ID, 16, 9),
-        SpellsKnownProgressionEntity(CLASS_ID, 17, 10),
-        SpellsKnownProgressionEntity(CLASS_ID, 18, 10),
-        SpellsKnownProgressionEntity(CLASS_ID, 19, 11),
-        SpellsKnownProgressionEntity(CLASS_ID, 20, 11)
     )
 
     val spellSlots = halfCasterSpellSlots(CLASS_ID, startLevel = 1)
@@ -174,7 +126,7 @@ object ArtificerReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,

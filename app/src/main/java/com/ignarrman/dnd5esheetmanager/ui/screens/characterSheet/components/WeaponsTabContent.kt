@@ -22,6 +22,8 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 fun WeaponsTabContent(
     weapons: List<Weapon>,
     proficiencyBonus: Int?,
+    onAddWeapon: () -> Unit,
+    onProficiencyChange: (Long) -> Unit
 ){
     val scrollState = rememberScrollState()
 
@@ -35,7 +37,9 @@ fun WeaponsTabContent(
         WeaponsSection(
             modifier = Modifier,
             proficiencyBonus = proficiencyBonus,
-            weapons = weapons
+            weapons = weapons,
+            onAddWeapon = onAddWeapon,
+            onProficiencyChange = onProficiencyChange
         )
     }
 }
@@ -50,7 +54,9 @@ fun WeaponsTabContentPreview() {
     _5eSheetManagerTheme(){
         WeaponsTabContent(
             weapons = weapons,
-            proficiencyBonus = proficiencyBonus
+            proficiencyBonus = proficiencyBonus,
+            onAddWeapon = {},
+            onProficiencyChange = {}
         )
     }
 }

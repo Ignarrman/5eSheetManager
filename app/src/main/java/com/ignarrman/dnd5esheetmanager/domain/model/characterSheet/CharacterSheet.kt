@@ -1,5 +1,12 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.characterSheet
 
+import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
+import com.ignarrman.dnd5esheetmanager.domain.model.classes.PlayerClass
+import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
+import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpentSpellSlots
+
 data class CharacterSheet(
     val id: Long? = null,
     val portraitUri: String? = null,
@@ -12,11 +19,13 @@ data class CharacterSheet(
     val stats: Map<AbilityScores, Int> = emptyMap(),
     val skills: Map<Skill, Int> = emptyMap(),
 
-    val raceId: Long? = null,
-    val backgroundId: Long? = null,
+    val race: Race? = null,
+    val background: Background? = null,
     val playerClassId: Long? = null,
-    val featsId: List<Long> = emptyList(),
-    val spellsId: List<Long> = emptyList(),
+    val feats: List<Feat> = emptyList(),
+    val spells: List<Spell> = emptyList(),
+
+    val spellSlotUsed: SpentSpellSlots? = null,
 
     val armorClass: Int? = null,
 

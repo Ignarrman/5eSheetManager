@@ -17,8 +17,10 @@ import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakePlayerClass
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeSpells
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeSpentSpellSlots
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSlotProgression
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpentSpellSlots
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
@@ -28,6 +30,9 @@ fun SpellsTabContent(
     castingScore: AbilityScores,
     castingScoreValue: Int,
     spellSlots: SpellSlotProgression? = null,
+    spentSpellSlots: SpentSpellSlots? = null,
+    onSpentSpellSlotsChange: (SpentSpellSlots) -> Unit,
+    onAddSpell: (Long) -> Unit
 ){
 
     val scrollState = rememberScrollState()
@@ -47,11 +52,14 @@ fun SpellsTabContent(
         )
         SpellSlotsSection(
             modifier = Modifier,
-            progression = spellSlots?: SpellSlotProgression(emptyMap())
+            progression = spellSlots?: SpellSlotProgression(emptyMap()),
+            spentSpellSlots = spentSpellSlots,
+            onSpentSpellSlotsChange = onSpentSpellSlotsChange
         )
         SpellSection(
             modifier = Modifier,
-            spells = characterSpells
+            spells = characterSpells,
+            onAddSpell = onAddSpell
         )
     }
 }
@@ -63,8 +71,9 @@ fun SpellsTabContentPreview() {
     val spells = FakeSpells.all
     val castingScore = FakePlayerClass.wizard.spellcasting.spellcastingAbility
     val castingScoreValue = FakeCharacterSheet.shadowmere.stats[AbilityScores.INT]!!
-    val spellSlots = FakePlayerClass.wizard.spellcasting.spellSlotProgression[5]
+    val spellSlots = FakePlayerClass.cleric.spellcasting.spellSlotProgression[5]
     val proficiencyBonus = FakeCharacterSheet.shadowmere.proficiencyBonus
+    val spentSpellSlots = FakeSpentSpellSlots.partial
 
     _5eSheetManagerTheme(){
         SpellsTabContent(
@@ -72,7 +81,10 @@ fun SpellsTabContentPreview() {
             castingScore = castingScore,
             castingScoreValue = castingScoreValue,
             spellSlots = spellSlots,
-            proficiencyBonus = proficiencyBonus
+            proficiencyBonus = proficiencyBonus,
+            spentSpellSlots = spentSpellSlots,
+            onSpentSpellSlotsChange = {},
+            onAddSpell = {}
         )
     }
 }

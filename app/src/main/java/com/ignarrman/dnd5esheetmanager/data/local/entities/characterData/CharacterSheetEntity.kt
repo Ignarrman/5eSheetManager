@@ -22,8 +22,6 @@ data class CharacterSheetEntity(
     val raceId: Long?,
     val backgroundId: Long?,
     val playerClassId: Long?,
-    val featsId: String,
-    val spellsId: String,
 
     val armorClass: Int?,
     val maxHp: Int?,
@@ -44,4 +42,22 @@ data class CharacterSheetEntity(
     val notes: String,
 
     val wallet: String
+)
+
+@Entity(
+    tableName = "character_spells",
+    primaryKeys = ["characterId", "spellId"]
+)
+data class CharacterSpellCrossRef(
+    val characterId: Long,
+    val spellId: Long
+)
+
+@Entity(
+    tableName = "character_feats",
+    primaryKeys = ["characterId", "featId"]
+)
+data class CharacterFeatCrossRef(
+    val characterId: Long,
+    val featId: Long
 )

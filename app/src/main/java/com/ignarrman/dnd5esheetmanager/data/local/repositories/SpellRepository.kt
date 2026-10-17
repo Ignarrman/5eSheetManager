@@ -15,6 +15,4 @@ class SpellRepository @Inject constructor(
     suspend fun getAll(): List<Spell> =
         spellDao.getAll().map { it.toDomain() }
 
-    suspend fun getByName(name: String): Spell? =
-        spellDao.getByName(name)?.toDomain()
 }

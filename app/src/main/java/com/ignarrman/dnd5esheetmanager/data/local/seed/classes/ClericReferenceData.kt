@@ -2,11 +2,9 @@ package com.ignarrman.dnd5esheetmanager.data.local.seed.classes
 
 import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ChannelDivinityProgressionEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ClassFeatureJsonParser
-import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedFeature
+import com.ignarrman.dnd5esheetmanager.data.local.seed.helpers.ParsedLevelFeature
 
 object ClericReferenceData {
 
@@ -17,31 +15,6 @@ object ClericReferenceData {
         classId = CLASS_ID,
         spellcastingAbility = "WIS"
     )
-
-    val cantrips = listOf(
-        CantripProgressionEntity(CLASS_ID, 1, 3),
-        CantripProgressionEntity(CLASS_ID, 2, 3),
-        CantripProgressionEntity(CLASS_ID, 3, 3),
-        CantripProgressionEntity(CLASS_ID, 4, 4),
-        CantripProgressionEntity(CLASS_ID, 5, 4),
-        CantripProgressionEntity(CLASS_ID, 6, 4),
-        CantripProgressionEntity(CLASS_ID, 7, 4),
-        CantripProgressionEntity(CLASS_ID, 8, 4),
-        CantripProgressionEntity(CLASS_ID, 9, 4),
-        CantripProgressionEntity(CLASS_ID, 10, 5),
-        CantripProgressionEntity(CLASS_ID, 11, 5),
-        CantripProgressionEntity(CLASS_ID, 12, 5),
-        CantripProgressionEntity(CLASS_ID, 13, 5),
-        CantripProgressionEntity(CLASS_ID, 14, 5),
-        CantripProgressionEntity(CLASS_ID, 15, 5),
-        CantripProgressionEntity(CLASS_ID, 16, 5),
-        CantripProgressionEntity(CLASS_ID, 17, 5),
-        CantripProgressionEntity(CLASS_ID, 18, 5),
-        CantripProgressionEntity(CLASS_ID, 19, 5),
-        CantripProgressionEntity(CLASS_ID, 20, 5)
-    )
-
-    val spellsKnown = emptyList<SpellsKnownProgressionEntity>()
 
     val spellSlots = fullCasterSpellSlots(CLASS_ID)
 
@@ -69,7 +42,7 @@ object ClericReferenceData {
 
     fun getFeatures(
         context: Context
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         return ClassFeatureJsonParser.parse(
             context = context,

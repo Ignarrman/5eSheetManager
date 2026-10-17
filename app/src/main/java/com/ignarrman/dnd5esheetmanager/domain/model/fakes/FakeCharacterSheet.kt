@@ -192,7 +192,7 @@ object FakeCharacterSheet {
     val shadowmere = CharacterSheet(
         id = 4L,
         name = "Shadowmere",
-        level = 1,
+        level = 5,
         experiencePoints = 0,
         proficiencyBonus = 2,
         initiative = 3,
@@ -232,6 +232,7 @@ object FakeCharacterSheet {
         currentHitDice = 1,
         deathSaveSuccesses = 2,
         deathSaveFailures = 1,
+        spellSlotUsed = FakeSpentSpellSlots.partial,
         skillProficiencies = listOf(
             Skill.STEALTH,
             Skill.ACROBATICS,
@@ -247,6 +248,7 @@ object FakeCharacterSheet {
         ),
         featsId = listOf(1L,2L),
         spellsId = listOf(1L,2L,3L,4L,5L),
+        temporaryHp = 2,
         notes = FakeNotes.notes,
         wallet = mapOf(
             Coins.GOLD to 5,

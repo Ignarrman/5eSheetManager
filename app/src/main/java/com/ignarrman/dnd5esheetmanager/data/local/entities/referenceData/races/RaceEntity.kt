@@ -2,6 +2,10 @@ package com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races
 
 import androidx.room.PrimaryKey
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.ClassEntity
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
 
 @Entity(tableName = "races")
@@ -14,6 +18,14 @@ data class RaceEntity(
     val swimSpeed: Int?,
     val climbSpeed: Int?,
     val flySpeed: Int?,
-    val source: String,
-    val featureIds: String
+    val source: String
+)
+
+@Entity(
+    tableName = "race_features",
+    primaryKeys = ["raceId", "featureId"]
+)
+data class RaceFeatureCrossRef(
+    val raceId: Long,
+    val featureId: Long
 )

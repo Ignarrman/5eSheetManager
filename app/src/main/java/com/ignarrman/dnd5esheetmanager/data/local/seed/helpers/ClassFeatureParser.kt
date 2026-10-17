@@ -10,7 +10,7 @@ object ClassFeatureJsonParser {
         context: Context,
         fileName: String,
         startingId: Long
-    ): List<ParsedFeature> {
+    ): List<ParsedLevelFeature> {
 
         val json = context.assets
             .open("classes/$fileName")
@@ -22,7 +22,7 @@ object ClassFeatureJsonParser {
         val classFeatures = root.optJSONArray("classFeature")
             ?: return emptyList()
 
-        val result = mutableListOf<ParsedFeature>()
+        val result = mutableListOf<ParsedLevelFeature>()
 
         var nextId = startingId
 
@@ -47,7 +47,7 @@ object ClassFeatureJsonParser {
                 ?.let { flattenEntries(it) }
                 ?: ""
 
-            result += ParsedFeature(
+            result += ParsedLevelFeature(
                 id = nextId,
                 name = name,
                 description = description,

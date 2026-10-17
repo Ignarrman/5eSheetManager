@@ -1,5 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.data.local.seed.races
 
+import com.ignarrman.dnd5esheetmanager.data.local.seed.features.ParsedFeature
+
 
 data class ParsedRace(
     val id: Long,
@@ -11,11 +13,6 @@ data class ParsedRace(
     val climbSpeed: Int?,
     val flySpeed: Int?,
     val featureIds: List<Long>,
-    val features: List<ParsedRaceFeature>
+    val features: List<ParsedFeature>
 )
 
-data class ParsedRaceFeature(
-    val id: Long,
-    val name: String,
-    val description: String
-)

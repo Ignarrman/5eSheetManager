@@ -21,6 +21,9 @@ interface BackgroundDao {
     @Query("SELECT * FROM backgrounds WHERE name = :name")
     suspend fun getByName(name: String): BackgroundEntity?
 
+    @Query("SELECT * FROM backgrounds WHERE id = :id")
+    suspend fun getById(id: Long?): BackgroundEntity?
+
     @Query("DELETE FROM backgrounds")
     suspend fun deleteAll()
 }

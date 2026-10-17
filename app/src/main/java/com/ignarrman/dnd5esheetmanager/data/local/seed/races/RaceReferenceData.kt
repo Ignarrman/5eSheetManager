@@ -4,7 +4,7 @@ import android.content.Context
 import com.ignarrman.dnd5esheetmanager.data.local.AppDatabase
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
-import org.json.JSONArray
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceFeatureCrossRef
 
 private const val RACE_STARTING_ID = 1L
 private const val RACE_FEATURE_STARTING_ID = 14001L
@@ -33,23 +33,32 @@ suspend fun insertRaceReferenceData(
             swimSpeed = race.swimSpeed,
             climbSpeed = race.climbSpeed,
             flySpeed = race.flySpeed,
-            featureIds = JSONArray(race.featureIds).toString(),
             source = race.source
         )
     }
+    val featureRelations = mutableListOf<RaceFeatureCrossRef>()
+    val featureEntities = mutableListOf<FeatureEntity>()
 
-    val featureEntities = races
-        .flatMap { it.features }
-        .map { feature ->
-            FeatureEntity(
+    races.forEach { race ->
+
+        race.features.forEach { feature ->
+
+            featureEntities += FeatureEntity(
                 id = feature.id,
                 name = feature.name,
                 description = feature.description
             )
+
+            featureRelations += RaceFeatureCrossRef(
+                raceId = race.id,
+                featureId = feature.id
+            )
         }
+    }
 
     database.featureDao().insertAll(featureEntities)
     database.raceDao().insertAll(raceEntities)
+    database.raceDao().insertFeatureRelations(featureRelations)
 }
 
 suspend fun clearRaceReferenceData(

@@ -8,14 +8,5 @@ data class Background(
     val skillProficiencies: List<String>,
     val languages: String?,
     val equipment: String?,
-    val featureId: Long? = null
+    val feature: Feature
 )
-
-
-fun Background.getFeatures(
-    allFeatures: List<Feature>
-): List<Feature> {
-    val feature = featureId ?: return emptyList()
-
-    return allFeatures.filter { it.id == feature }
-}

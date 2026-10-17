@@ -54,11 +54,10 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.classes.WildShapeProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.feats.FeatEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.CantripProgressionEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceFeatureCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellSlotProgressionEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellcastingEntity
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.SpellsKnownProgressionEntity
 
 @Database(
     entities = [
@@ -68,6 +67,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         BackgroundEntity::class,
 
         RaceEntity::class,
+        RaceFeatureCrossRef::class,
         FeatEntity::class,
 
         FightingStyleEntity::class,
@@ -89,9 +89,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         EldritchInvocationsKnownProgressionEntity::class,
 
         SpellcastingEntity::class,
-        CantripProgressionEntity::class,
         SpellSlotProgressionEntity::class,
-        SpellsKnownProgressionEntity::class,
         SpellEntity::class,
 
         CharacterSheetEntity::class,
@@ -100,7 +98,7 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
 
         ReferenceDataMetadataEntity::class
     ],
-    version = 4
+    version = 6
 )
 abstract class AppDatabase : RoomDatabase() {
 

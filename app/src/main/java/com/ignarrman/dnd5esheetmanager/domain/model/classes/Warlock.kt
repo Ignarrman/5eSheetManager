@@ -8,7 +8,7 @@ data class Warlock(
     override val id: Long?,
     override val name: String = "Warlock",
     override val hitDice: Int = 8,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
     val eldritchInvocations: List<EldritchInvocation>,
     val eldritchInvocationsKnown: Map<Int, EldritchInvocationsKnownProgression>,
@@ -17,7 +17,7 @@ data class Warlock(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    featureIds = featureIds
+    features = features
 )
 
 data class EldritchInvocation(

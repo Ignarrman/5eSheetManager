@@ -7,7 +7,7 @@ data class Fighter(
     override val id: Long?,
     override val name: String = "Fighter",
     override val hitDice: Int = 10,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val fightingStyleIds: List<Long>,
     val progression: Map<Int, FighterProgression>
 ) : PlayerClass(
@@ -15,7 +15,7 @@ data class Fighter(
     name = name,
     hitDice = hitDice,
     fightingStyleIds = fightingStyleIds,
-    featureIds = featureIds
+    features = features
 )
 
 data class FighterProgression(

@@ -8,7 +8,7 @@ data class Druid(
     override val id: Long?,
     override val name: String = "Druid",
     override val hitDice: Int = 8,
-    override val featureIds: Map<Int, List<Long>>,
+    override val features: Map<Int, List<Feature>>,
     override val spellcasting: Spellcasting,
     val wildShape: Map<Int, WildShapeProgression>
 ) : PlayerClass(
@@ -16,7 +16,7 @@ data class Druid(
     name = name,
     hitDice = hitDice,
     spellcasting = spellcasting,
-    featureIds = featureIds
+    features = features
 )
 
 data class WildShapeProgression(

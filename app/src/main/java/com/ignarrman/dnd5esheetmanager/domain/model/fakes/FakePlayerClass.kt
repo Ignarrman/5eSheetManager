@@ -28,7 +28,6 @@ import com.ignarrman.dnd5esheetmanager.domain.model.classes.SorceryPointProgress
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Warlock
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.WildShapeProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Wizard
-import com.ignarrman.dnd5esheetmanager.domain.model.spells.CantripProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSlotProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spellcasting
 
@@ -39,24 +38,14 @@ object FakePlayerClass {
         id = 1L,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.INT,
-            cantripProgression = mapOf(
-                1 to CantripProgression(2),
-                10 to CantripProgression(4)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 2)),
                 3 to SpellSlotProgression(mapOf(1 to 3, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 2))
-            ),
-            spellsKnown = mapOf(
-                1 to 2,
-                2 to 3,
-                3 to 3,
-                5 to 4
             )
         ),
-        featureIds = emptyMap(),
+        features = emptyMap(),
         infusions = listOf(
             Infusion(
                 name = "Enhanced Defense",
@@ -77,7 +66,7 @@ object FakePlayerClass {
 
     val barbarian = Barbarian(
         id = 2L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         rage = mapOf(
             1 to RageProgression(charges = 2, damageBonus = 2),
             2 to RageProgression(charges = 2, damageBonus = 2),
@@ -91,25 +80,14 @@ object FakePlayerClass {
 
     val bard = Bard(
         id = 3L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
-            cantripProgression = mapOf(
-                1 to CantripProgression(2),
-                4 to CantripProgression(3),
-                10 to CantripProgression(4)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 3)),
                 3 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = mapOf(
-                1 to 4,
-                2 to 5,
-                3 to 6,
-                5 to 8
             )
         ),
         bardicInspiration = mapOf(
@@ -122,21 +100,15 @@ object FakePlayerClass {
 
     val cleric = Cleric(
         id = 4L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
-            cantripProgression = mapOf(
-                1 to CantripProgression(3),
-                4 to CantripProgression(4),
-                10 to CantripProgression(5)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 3)),
                 3 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = emptyMap()
+            )
         ),
         channelDivinity = mapOf(
             2 to ChannelDivinityProgression(uses = 1),
@@ -147,21 +119,15 @@ object FakePlayerClass {
 
     val druid = Druid(
         id = 5L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
-            cantripProgression = mapOf(
-                1 to CantripProgression(2),
-                4 to CantripProgression(3),
-                10 to CantripProgression(4)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 3)),
                 3 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = emptyMap()
+            )
         ),
         wildShape = mapOf(
             2 to WildShapeProgression(maxCr = "1/4", uses = 2),
@@ -172,7 +138,7 @@ object FakePlayerClass {
 
     val fighter = Fighter(
         id = 6L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         fightingStyleIds = emptyList(),
         progression = mapOf(
             2 to FighterProgression(
@@ -200,7 +166,7 @@ object FakePlayerClass {
 
     val monk = Monk(
         id = 7L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         martialArtsProgression = mapOf(
             1 to MonkProgression(martialArtsDie = 4, kiPoints = 0),
             2 to MonkProgression(martialArtsDie = 4, kiPoints = 2),
@@ -212,17 +178,15 @@ object FakePlayerClass {
 
     val paladin = Paladin(
         id = 8L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
-            cantripProgression = emptyMap(),
             spellSlotProgression = mapOf(
                 2 to SpellSlotProgression(mapOf(1 to 2)),
                 3 to SpellSlotProgression(mapOf(1 to 3)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 9 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = emptyMap()
+            )
         ),
         fightingStyleIds = emptyList(),
         layOnHands = mapOf(
@@ -236,21 +200,14 @@ object FakePlayerClass {
 
     val ranger = Ranger(
         id = 9L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
-            cantripProgression = emptyMap(),
             spellSlotProgression = mapOf(
                 2 to SpellSlotProgression(mapOf(1 to 2)),
                 3 to SpellSlotProgression(mapOf(1 to 3)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 9 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = mapOf(
-                2 to 2,
-                3 to 3,
-                5 to 4,
-                9 to 6
             )
         ),
         fightingStyleIds = emptyList()
@@ -258,7 +215,7 @@ object FakePlayerClass {
 
     val rogue = Rogue(
         id = 10L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         sneakAttack = mapOf(
             1 to SneakAttackProgression(dice = 1),
             3 to SneakAttackProgression(dice = 2),
@@ -275,25 +232,14 @@ object FakePlayerClass {
 
     val sorcerer = Sorcerer(
         id = 11L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
-            cantripProgression = mapOf(
-                1 to CantripProgression(4),
-                4 to CantripProgression(5),
-                10 to CantripProgression(6)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 3)),
                 3 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = mapOf(
-                1 to 2,
-                2 to 3,
-                3 to 4,
-                5 to 6
             )
         ),
         sorceryPoints = mapOf(
@@ -317,26 +263,15 @@ object FakePlayerClass {
 
     val warlock = Warlock(
         id = 12L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
-            cantripProgression = mapOf(
-                1 to CantripProgression(2),
-                4 to CantripProgression(3),
-                10 to CantripProgression(4)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 1)),
                 2 to SpellSlotProgression(mapOf(1 to 2)),
                 3 to SpellSlotProgression(mapOf(2 to 2)),
                 5 to SpellSlotProgression(mapOf(3 to 2)),
                 11 to SpellSlotProgression(mapOf(5 to 3))
-            ),
-            spellsKnown = mapOf(
-                1 to 2,
-                2 to 3,
-                3 to 4,
-                5 to 6
             )
         ),
         eldritchInvocations = listOf(
@@ -362,21 +297,15 @@ object FakePlayerClass {
 
     val wizard = Wizard(
         id = 13L,
-        featureIds = emptyMap(),
+        features = emptyMap(),
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.INT,
-            cantripProgression = mapOf(
-                1 to CantripProgression(3),
-                4 to CantripProgression(4),
-                10 to CantripProgression(5)
-            ),
             spellSlotProgression = mapOf(
                 1 to SpellSlotProgression(mapOf(1 to 2)),
                 2 to SpellSlotProgression(mapOf(1 to 3)),
                 3 to SpellSlotProgression(mapOf(1 to 4, 2 to 2)),
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 3, 3 to 2))
-            ),
-            spellsKnown = emptyMap()
+            )
         )
     )
 
