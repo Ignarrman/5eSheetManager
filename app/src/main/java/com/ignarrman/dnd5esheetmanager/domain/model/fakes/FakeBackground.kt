@@ -1,6 +1,9 @@
 package com.ignarrman.dnd5esheetmanager.domain.model.fakes
 
 import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures.criminalContact
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures.rusticHospitality
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures.shelterOfTheFaithful
 
 object FakeBackground {
 
@@ -10,7 +13,7 @@ object FakeBackground {
         skillProficiencies = listOf("Insight", "Religion"),
         languages = "Two languages of your choice",
         equipment = "Holy symbol, prayer book, incense, vestments, common clothes, 15 gp",
-        featureId = 1L
+        feature = shelterOfTheFaithful
     )
 
     val criminal = Background(
@@ -19,7 +22,7 @@ object FakeBackground {
         skillProficiencies = listOf("Deception", "Stealth"),
         languages = null,
         equipment = "Crowbar, dark common clothes with a hood, 15 gp",
-        featureId = 2L
+        feature = criminalContact
     )
 
     val folkHero = Background(
@@ -28,32 +31,12 @@ object FakeBackground {
         skillProficiencies = listOf("Animal Handling", "Survival"),
         languages = null,
         equipment = "Artisan's tools, shovel, iron pot, common clothes, 10 gp",
-        featureId = 3L
-    )
-
-    val noble = Background(
-        id = 4L,
-        name = "Noble",
-        skillProficiencies = listOf("History", "Persuasion"),
-        languages = null,
-        equipment = "Fine clothes, signet ring, scroll of pedigree, 25 gp",
-        featureId = 4L
-    )
-
-    val sage = Background(
-        id = 5L,
-        name = "Sage",
-        skillProficiencies = listOf("Arcana", "History"),
-        languages = "Two languages of your choice",
-        equipment = "Bottle of ink, quill, small knife, letter, common clothes, 10 gp",
-        featureId = 5L
+        feature = rusticHospitality
     )
 
     val all = listOf(
         acolyte,
         criminal,
         folkHero,
-        noble,
-        sage
     )
 }

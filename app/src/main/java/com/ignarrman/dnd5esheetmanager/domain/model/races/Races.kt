@@ -7,7 +7,7 @@ data class Race(
     val name: String,
     val size: Size,
     val speed: Speed,
-    val featuresIds: List<Feature> = emptyList(),
+    val features: List<Feature> = emptyList(),
     val source: String
 )
 

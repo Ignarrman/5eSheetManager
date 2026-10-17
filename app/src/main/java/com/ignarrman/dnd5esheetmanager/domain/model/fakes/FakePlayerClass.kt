@@ -45,7 +45,7 @@ object FakePlayerClass {
                 5 to SpellSlotProgression(mapOf(1 to 4, 2 to 2))
             )
         ),
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         infusions = listOf(
             Infusion(
                 name = "Enhanced Defense",
@@ -66,7 +66,7 @@ object FakePlayerClass {
 
     val barbarian = Barbarian(
         id = 2L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         rage = mapOf(
             1 to RageProgression(charges = 2, damageBonus = 2),
             2 to RageProgression(charges = 2, damageBonus = 2),
@@ -80,7 +80,7 @@ object FakePlayerClass {
 
     val bard = Bard(
         id = 3L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
             spellSlotProgression = mapOf(
@@ -100,7 +100,7 @@ object FakePlayerClass {
 
     val cleric = Cleric(
         id = 4L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
             spellSlotProgression = mapOf(
@@ -119,7 +119,7 @@ object FakePlayerClass {
 
     val druid = Druid(
         id = 5L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
             spellSlotProgression = mapOf(
@@ -138,7 +138,7 @@ object FakePlayerClass {
 
     val fighter = Fighter(
         id = 6L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         fightingStyleIds = emptyList(),
         progression = mapOf(
             2 to FighterProgression(
@@ -166,7 +166,7 @@ object FakePlayerClass {
 
     val monk = Monk(
         id = 7L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         martialArtsProgression = mapOf(
             1 to MonkProgression(martialArtsDie = 4, kiPoints = 0),
             2 to MonkProgression(martialArtsDie = 4, kiPoints = 2),
@@ -178,7 +178,7 @@ object FakePlayerClass {
 
     val paladin = Paladin(
         id = 8L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
             spellSlotProgression = mapOf(
@@ -200,7 +200,7 @@ object FakePlayerClass {
 
     val ranger = Ranger(
         id = 9L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.WIS,
             spellSlotProgression = mapOf(
@@ -215,7 +215,7 @@ object FakePlayerClass {
 
     val rogue = Rogue(
         id = 10L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         sneakAttack = mapOf(
             1 to SneakAttackProgression(dice = 1),
             3 to SneakAttackProgression(dice = 2),
@@ -232,7 +232,7 @@ object FakePlayerClass {
 
     val sorcerer = Sorcerer(
         id = 11L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
             spellSlotProgression = mapOf(
@@ -263,7 +263,7 @@ object FakePlayerClass {
 
     val warlock = Warlock(
         id = 12L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.CHA,
             spellSlotProgression = mapOf(
@@ -297,7 +297,7 @@ object FakePlayerClass {
 
     val wizard = Wizard(
         id = 13L,
-        features = emptyMap(),
+        features = FakeFeatures.allClass,
         spellcasting = Spellcasting(
             spellcastingAbility = AbilityScores.INT,
             spellSlotProgression = mapOf(

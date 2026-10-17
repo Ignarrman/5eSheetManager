@@ -36,12 +36,10 @@ object FakeFeatures {
     )
 
     val allClass = mapOf(
-        1 to listOf(
-            rage,
-            secondWind,
-            bardicInspiration,
-            sneakAttack
-        )
+        1 to listOf(rage),
+        2 to listOf(secondWind),
+        3 to listOf(bardicInspiration),
+        6 to listOf(sneakAttack)
     )
 
 

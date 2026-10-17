@@ -14,8 +14,8 @@ object FakeCharacterSheet {
         experiencePoints = 6500,
         proficiencyBonus = 3,
         initiative = 3,
-        raceId = 1L,
-        backgroundId = 1L,
+        race = FakeRace.elf,
+        background = FakeBackground.folkHero,
         playerClassId = 1L,
         stats = mapOf(
             AbilityScores.STR to 8,
@@ -74,8 +74,8 @@ object FakeCharacterSheet {
         experiencePoints = 900,
         proficiencyBonus = 2,
         initiative = 0,
-        raceId = 2L,
-        backgroundId = 2L,
+        race = FakeRace.dragonborn,
+        background = FakeBackground.acolyte,
         playerClassId = 2L,
         stats = mapOf(
             AbilityScores.STR to 17,
@@ -132,8 +132,8 @@ object FakeCharacterSheet {
         experiencePoints = 23000,
         proficiencyBonus = 3,
         initiative = 2,
-        raceId = 3L,
-        backgroundId = 3L,
+        race = FakeRace.dwarf,
+        background = FakeBackground.acolyte,
         playerClassId = 3L,
         stats = mapOf(
             AbilityScores.STR to 8,
@@ -196,8 +196,8 @@ object FakeCharacterSheet {
         experiencePoints = 0,
         proficiencyBonus = 2,
         initiative = 3,
-        raceId = 4L,
-        backgroundId = 4L,
+        race = FakeRace.human,
+        background = FakeBackground.criminal,
         playerClassId = 4L,
         stats = mapOf(
             AbilityScores.STR to 10,
@@ -246,8 +246,8 @@ object FakeCharacterSheet {
             AbilityScores.DEX,
             AbilityScores.INT
         ),
-        featsId = listOf(1L,2L),
-        spellsId = listOf(1L,2L,3L,4L,5L),
+        feats = FakeFeats.all,
+        spells = FakeSpells.all,
         temporaryHp = 2,
         notes = FakeNotes.notes,
         wallet = mapOf(

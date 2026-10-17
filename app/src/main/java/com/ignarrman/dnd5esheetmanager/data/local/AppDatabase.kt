@@ -28,7 +28,9 @@ import com.ignarrman.dnd5esheetmanager.data.local.daos.featsdao.FeatDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.races.RaceDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellDao
 import com.ignarrman.dnd5esheetmanager.data.local.daos.spellsdao.SpellcastingDao
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterFeatCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSheetEntity
+import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.CharacterSpellCrossRef
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.ItemEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.characterData.WeaponEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.FeatureEntity
@@ -95,10 +97,12 @@ import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.spells.
         CharacterSheetEntity::class,
         ItemEntity:: class,
         WeaponEntity::class,
+        CharacterFeatCrossRef::class,
+        CharacterSpellCrossRef::class,
 
         ReferenceDataMetadataEntity::class
     ],
-    version = 6
+    version = 7
 )
 abstract class AppDatabase : RoomDatabase() {
 

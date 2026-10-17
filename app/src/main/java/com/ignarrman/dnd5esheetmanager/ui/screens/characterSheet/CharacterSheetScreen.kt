@@ -43,6 +43,13 @@ import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.Skil
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.SpellsTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.WeaponsTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.components.AppTopBar
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.BackgroundUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.CharacterSheetUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.ClassUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.InventoryUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.RaceUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.SpellsUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.WeaponUiState
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
@@ -52,10 +59,22 @@ fun CharacterSheetScreen(
     viewModel: CharacterSheetViewModel = hiltViewModel()
 ){
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val characterState by viewModel.characterState.collectAsStateWithLifecycle()
+    val spellsState by viewModel.spellsState.collectAsStateWithLifecycle()
+    val racesState by viewModel.racesState.collectAsStateWithLifecycle()
+    val classesState by viewModel.classesState.collectAsStateWithLifecycle()
+    val backgroundsState by viewModel.backgroundsState.collectAsStateWithLifecycle()
+    val inventoryState by viewModel.inventoryState.collectAsStateWithLifecycle()
+    val weaponsState by viewModel.weaponsState.collectAsStateWithLifecycle()
 
     CharacterSheetContent(
-        state = state,
+        characterState = characterState,
+        spellsState = spellsState,
+        racesState = racesState,
+        classesState = classesState,
+        backgroundsState = backgroundsState,
+        inventoryState = inventoryState,
+        weaponsState = weaponsState,
         onBack = onBack
     )
 
@@ -63,18 +82,20 @@ fun CharacterSheetScreen(
 
 @Composable
 fun CharacterSheetContent(
-    state: CharacterSheetUiState,
+    characterState: CharacterSheetUiState,
+    spellsState: SpellsUiState,
+    racesState: RaceUiState,
+    classesState: ClassUiState,
+    backgroundsState: BackgroundUiState,
+    inventoryState: InventoryUiState,
+    weaponsState: WeaponUiState,
     onBack: () -> Unit,
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = CharacterSheetTab.entries
 
-    val characterSheet = state.characterSheet
-    val characterRace = state.races.firstOrNull { it.id == characterSheet.raceId }
-    val characterBackground = state.backgrounds.firstOrNull { it.id == characterSheet.backgroundId }
-    val characterClass = state.classes.firstOrNull { it.id == characterSheet.playerClassId }
-    val characterFeats = state.feats.filter { it.id in characterSheet.featsId }
-    val characterSpells = state.spells.filter { it.id in characterSheet.spellsId }
+    val characterSheet = characterState.characterSheet
+    val characterClass = classesState.classes.firstOrNull { it.id == characterSheet.playerClassId }
 
 
     Scaffold(
@@ -151,13 +172,13 @@ fun CharacterSheetContent(
             when (tabs[selectedTabIndex]) {
                 CharacterSheetTab.GENERAL -> GeneralTabContent(
                     characterSheet = characterSheet,
-                    race = characterRace,
-                    background = characterBackground,
+                    race = characterSheet.race,
+                    background = characterSheet.background,
                     playerClass = characterClass,
 
-                    races = state.races,
-                    classes = state.classes,
-                    backgrounds = state.backgrounds,
+                    races = racesState.races,
+                    classes = classesState.classes,
+                    backgrounds = backgroundsState.backgrounds,
 
                     onNameChange = {
                         // TODO
@@ -173,13 +194,13 @@ fun CharacterSheetContent(
                     },
                 )
                 CharacterSheetTab.FEATURES -> FeaturesTabContent(
-                    classFeatures = state.classFeatures,
-                    raceFeatures = state.raceFeatures,
-                    backgroundFeatures = state.backgroundFeature,
-                    featList = characterFeats
+                    classFeatures = characterClass?.features?.filterKeys { it in 1..characterSheet.level } ?: emptyMap(),
+                    raceFeatures = characterSheet.race?.features ?: emptyList(),
+                    backgroundFeatures = characterSheet.background?.feature,
+                    featList = characterSheet.feats
                 )
                 CharacterSheetTab.WEAPONS -> WeaponsTabContent(
-                    weapons = state.weapons,
+                    weapons = weaponsState.characterWeapons,
                     proficiencyBonus = characterSheet.proficiencyBonus,
                     onAddWeapon = {
                         // TODO
@@ -189,13 +210,13 @@ fun CharacterSheetContent(
                     }
                 )
                 CharacterSheetTab.INVENTORY -> InventoryTabContent(
-                    inventory = state.inventory,
+                    inventory = inventoryState.characterInventory,
                     onAddItem = {
                         // TODO
                     }
                 )
                 CharacterSheetTab.SPELLS -> SpellsTabContent(
-                    characterSpells = characterSpells,
+                    characterSpells = characterSheet.spells,
                     castingScore = characterClass?.spellcasting?.spellcastingAbility ?: AbilityScores.INT,
                     castingScoreValue = characterSheet.stats[characterClass?.spellcasting?.spellcastingAbility] ?: 0,
                     spellSlots = characterClass?.spellcasting?.spellSlotProgression[characterSheet.level],
@@ -226,24 +247,44 @@ fun CharacterSheetContent(
 @Preview(showSystemUi = true)
 @Composable
 fun CharacterSheetContentPreview(isLoading: Boolean = false) {
-    val fakeState = CharacterSheetUiState(
+    val fakeSheetState = CharacterSheetUiState(
         isLoading = isLoading,
         characterSheet = FakeCharacterSheet.shadowmere,
-        races = FakeRace.all,
-        backgrounds = FakeBackground.all,
+    )
+    val fakeClassesState = ClassUiState(
+        isLoading = isLoading,
         classes = FakePlayerClass.all,
-
-        classFeatures = FakeFeatures.allClass,
-        raceFeatures = FakeFeatures.allRace,
-        backgroundFeature = FakeFeatures.rusticHospitality,
-        feats = FakeFeats.all,
-        weapons = FakeWeapons.all,
-        inventory = FakeItem.all,
+    )
+    val fakeRaceState = RaceUiState(
+        isLoading = isLoading,
+        races = FakeRace.all
+    )
+    val fakeBackgroundState = BackgroundUiState(
+        isLoading = isLoading,
+        backgrounds = FakeBackground.all
+    )
+    val fakeSpellsState = SpellsUiState(
+        isLoading = isLoading,
         spells = FakeSpells.all
     )
+    val fakeInventoryState = InventoryUiState(
+        isLoading = isLoading,
+        characterInventory = FakeItem.all
+    )
+    val fakeWeaponsState = WeaponUiState(
+        isLoading = isLoading,
+        characterWeapons = FakeWeapons.all
+    )
+
     _5eSheetManagerTheme(){
         CharacterSheetContent(
-            state = fakeState,
+            characterState = fakeSheetState,
+            spellsState = fakeSpellsState,
+            racesState = fakeRaceState,
+            classesState = fakeClassesState,
+            backgroundsState = fakeBackgroundState,
+            inventoryState = fakeInventoryState,
+            weaponsState = fakeWeaponsState,
             onBack = {}
         )
     }

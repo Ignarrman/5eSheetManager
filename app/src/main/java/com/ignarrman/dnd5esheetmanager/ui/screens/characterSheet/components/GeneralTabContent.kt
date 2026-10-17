@@ -258,7 +258,7 @@ fun GeneralTabContentPreview() {
 
     val character = FakeCharacterSheet.thorin
     val race = FakeRace.dragonborn
-    val background = FakeBackground.noble
+    val background = FakeBackground.criminal
     val playerClass = FakePlayerClass.fighter
 
     _5eSheetManagerTheme() {

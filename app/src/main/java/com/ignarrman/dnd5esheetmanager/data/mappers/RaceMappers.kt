@@ -1,6 +1,5 @@
 package com.ignarrman.dnd5esheetmanager.data.mappers
 
-import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceEntity
 import com.ignarrman.dnd5esheetmanager.data.local.entities.referenceData.races.RaceWithFeatures
 import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
 import com.ignarrman.dnd5esheetmanager.domain.model.races.Size
@@ -23,7 +22,7 @@ fun RaceWithFeatures.toDomain(
             climb = raceEntity.climbSpeed,
             fly = raceEntity.flySpeed
         ),
-        featuresIds = features.map { it.toDomain() },
+        features = features.map { it.toDomain() },
         source = raceEntity.source
     )
 }

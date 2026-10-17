@@ -12,7 +12,7 @@ data class WeaponUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 
-    val weapons: List<Weapon> = emptyList(),
+    val characterWeapons: List<Weapon> = emptyList(),
 )
 
 @ViewModelScoped

@@ -42,45 +42,79 @@ data class CharacterSheetScreenData(
 
 @HiltViewModel
 class CharacterSheetViewModel @Inject constructor(
-    characterSheetHolder: CharacterSheetStateHolder,
-    classStateHolder: ClassStateHolder,
-    spellStateHolder: SpellStateHolder,
-    inventoryStateHolder: InventoryStateHolder,
-    raceStateHolder: RaceStateHolder,
-    weaponStateHolder: WeaponStateHolder,
-    backgroundStateHolder: BackgroundStateHolder
+    private val characterSheetHolder: CharacterSheetStateHolder,
+    private val classStateHolder: ClassStateHolder,
+    private val raceStateHolder: RaceStateHolder,
+    private val backgroundStateHolder: BackgroundStateHolder,
+    private val spellStateHolder: SpellStateHolder,
+    private val inventoryStateHolder: InventoryStateHolder,
+    private val weaponStateHolder: WeaponStateHolder
 ) : ViewModel() {
 
-    val screenData: StateFlow<CharacterSheetScreenData> =
-        combine(
-            characterSheetHolder.state,
-            classStateHolder.state,
-            spellStateHolder.state,
-            inventoryStateHolder.state,
-            raceStateHolder.state,
-            weaponStateHolder.state,
-            backgroundStateHolder.state
-        ) { character, classes, spells, inventory, races, weapons, backgrounds ->
-            CharacterSheetScreenData(
-                characterSheet = character,
-                classes = classes,
-                races = races,
-                backgrounds = backgrounds,
-                spells = spells,
-                inventory = inventory,
-                weapons = weapons
-            )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = CharacterSheetScreenData(
-                characterSheet = characterSheetHolder.state.value.characterSheet,
-                classes = classStateHolder.state.value.classes,
-                races = raceStateHolder.state.value.races,
-                spells = spellStateHolder.state.value.spells,
-                backgrounds = backgroundStateHolder.state.value.backgrounds,
-                inventory = inventoryStateHolder.state.value.inventory,
-                weapons = weaponStateHolder.state.value.weapons
-            )
-        )
+    val characterState = characterSheetHolder.state
+    val classesState = classStateHolder.state
+    val spellsState = spellStateHolder.state
+    val inventoryState = inventoryStateHolder.state
+    val racesState = raceStateHolder.state
+    val weaponsState = weaponStateHolder.state
+    val backgroundsState = backgroundStateHolder.state
+
+    fun handleIntent(
+        intent: CharacterSheetIntents
+    ) {
+        when(intent) {
+
+            is CharacterSheetIntents.LoadCharacter -> {
+                viewModelScope.launch {
+                    characterSheetHolder.loadCharacter(
+                        intent.id
+                    )
+                }
+            }
+
+            is CharacterSheetIntents.LoadAllCharacters-> {
+
+            }
+
+            is CharacterSheetIntents.SaveCharacter -> {
+
+            }
+
+            is CharacterSheetIntents.UpdateCharacter -> {
+
+            }
+
+            is CharacterSheetIntents.DeleteCharacter -> {
+
+            }
+
+            is CharacterSheetIntents.LoadClasses -> {
+
+            }
+
+            is CharacterSheetIntents.LoadRaces -> {
+
+            }
+
+            is CharacterSheetIntents.LoadSpells -> {
+
+            }
+
+            is CharacterSheetIntents.LoadBackgrounds -> {
+
+            }
+
+            is CharacterSheetIntents.LoadFeats -> {
+
+            }
+
+            is CharacterSheetIntents.LoadItems -> {
+
+            }
+
+            is CharacterSheetIntents.LoadWeapons -> {
+
+            }
+        }
+    }
 }

@@ -12,7 +12,7 @@ data class InventoryUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 
-    val inventory: List<Item> = emptyList(),
+    val characterInventory: List<Item> = emptyList(),
 )
 
 @ViewModelScoped
