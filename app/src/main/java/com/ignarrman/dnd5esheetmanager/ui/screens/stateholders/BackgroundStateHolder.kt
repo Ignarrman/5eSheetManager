@@ -26,11 +26,13 @@ data class BackgroundUiState(
 @ViewModelScoped
 class BackgroundStateHolder @Inject constructor(
     private val backgroundRepository: BackgroundRepository,
-    private val featureRepository: FeatureRepository
 ) {
     private val _state = MutableStateFlow(BackgroundUiState())
     val state: StateFlow<BackgroundUiState> = _state.asStateFlow()
 
-    private val backgroundsMap = mutableMapOf<Long, Background>()
+    suspend fun loadAllBackgrounds() {
+       val backgrounds = backgroundRepository.getAll()
 
+        _state.value = _state.value.copy(backgrounds = backgrounds)
+    }
 }

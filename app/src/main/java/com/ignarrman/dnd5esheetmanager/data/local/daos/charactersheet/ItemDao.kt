@@ -16,20 +16,11 @@ interface ItemDao {
         item: ItemEntity
     ): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(
-        items: List<ItemEntity>
-    )
-
-    @Update
-    suspend fun update(
-        item: ItemEntity
-    )
-
-    @Delete
-    suspend fun delete(
-        item: ItemEntity
-    )
+    @Query("""
+        DELETE FROM items
+        WHERE id = :id
+    """)
+    suspend fun deleteById(id: Long)
 
     @Query("""
         SELECT *
@@ -40,15 +31,6 @@ interface ItemDao {
     suspend fun getByCharacterId(
         characterId: Long
     ): List<ItemEntity>
-
-    @Query("""
-        SELECT *
-        FROM items
-        WHERE id = :id
-    """)
-    suspend fun getById(
-        id: Long
-    ): ItemEntity?
 
     @Query("""
         DELETE FROM items

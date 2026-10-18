@@ -24,6 +24,17 @@ class SpellStateHolder @Inject constructor(
     private val _state = MutableStateFlow(SpellsUiState())
     val state: StateFlow<SpellsUiState> = _state.asStateFlow()
 
-    private val spellsMap = mutableMapOf<Long, Spell>()
-    private val featuresById = mutableMapOf<Long, Feature>()
+    suspend fun loadAllSpells() {
+        val spells = spellRepository.getAll()
+
+        _state.value = _state.value.copy(spells = spells)
+    }
+
+    suspend fun insertSpell(characterId: Long, spell: Spell) {
+        spellRepository.insertCharacterSpell(spell, characterId)
+    }
+
+    suspend fun deleteSpell(characterId: Long, spellId: Long) {
+        spellRepository.deleteCharacterSpell(spellId = spellId, characterId = characterId)
+    }
 }

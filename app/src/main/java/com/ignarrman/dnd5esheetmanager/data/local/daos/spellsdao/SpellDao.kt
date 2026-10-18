@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface SpellDao {
 
     @Query("SELECT * FROM spells")
-    fun getAll(): List<SpellEntity>
+    suspend fun getAll(): List<SpellEntity>
 
     @Query("SELECT * FROM spells WHERE id = :id")
     suspend fun getById(id: Long): SpellEntity?
@@ -38,12 +38,26 @@ interface SpellDao {
         refs: List<CharacterSpellCrossRef>
     )
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCharacterSpell(
+        characterSpell: CharacterSpellCrossRef
+    ): Long
+
     @Query("""
     DELETE FROM character_spells
     WHERE characterId = :characterId
 """)
     suspend fun deleteByCharacterId(
         characterId: Long
+    )
+
+    @Query("""
+    DELETE FROM character_spells
+    WHERE characterId = :characterId AND spellId = :spellId
+""")
+    suspend fun deleteByCharacterIdAndSpellId(
+        characterId: Long,
+        spellId: Long
     )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

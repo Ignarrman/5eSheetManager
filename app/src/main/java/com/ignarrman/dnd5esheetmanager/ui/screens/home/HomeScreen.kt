@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,22 +25,29 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ignarrman.dnd5esheetmanager.R
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
+import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.CharacterSheetIntents
 import com.ignarrman.dnd5esheetmanager.ui.screens.home.components.CharacterDialog
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.CharacterSheetUiState
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun HomeScreen(
-    onCreateCharacter: () -> Unit,
     onLoadCharacter: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val characterState by viewModel.characterState.collectAsStateWithLifecycle()
 
     HomeContent(
-        state = state,
-        onCreateCharacter = onCreateCharacter,
-        onLoadCharacter = onLoadCharacter
+        state = characterState,
+        loadCharacters = { viewModel.handleIntent(HomeIntent.LoadCharacters) },
+        createCharacter = { viewModel.handleIntent(HomeIntent.CreateNewCharacter) },
+        onLoadCharacter = onLoadCharacter,
+        onLoadCharacterClicked = { id -> viewModel.handleIntent(HomeIntent.LoadCharacter(id)) },
+        onDelete = { characterId ->
+            viewModel.handleIntent(HomeIntent.DeleteCharacter(characterId))
+        }
     )
 
 }
@@ -47,12 +55,25 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
-    state: HomeUiState,
-    onCreateCharacter: () -> Unit,
+    state: CharacterSheetUiState,
+    loadCharacters: () -> Unit,
+    createCharacter: () -> Unit,
     onLoadCharacter: (Long) -> Unit,
+    onLoadCharacterClicked: (Long) -> Unit,
+    onDelete: (Long) -> Unit
 ) {
 
     val showDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        loadCharacters()
+    }
+
+    LaunchedEffect(state.characterSheet) {
+        if (state.characterSheet != CharacterSheet.Empty) {
+            onLoadCharacter(state.characterSheet.id!!)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -70,11 +91,12 @@ fun HomeContent(
         )
 
         Button(
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(size = 8.dp),
             enabled = !state.isLoading,
-            onClick = onCreateCharacter
+            onClick = {
+                createCharacter()
+            }
         ) {
             Text("Create Character")
         }
@@ -82,8 +104,7 @@ fun HomeContent(
         Spacer(Modifier.size(12.dp))
 
         Button(
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(size = 8.dp),
             enabled = !state.isLoading,
             onClick = { showDialog.value = true }
@@ -94,9 +115,10 @@ fun HomeContent(
 
     if (showDialog.value) {
         CharacterDialog(
-            savedCharacters = state.savedCharacters,
+            savedCharacters = state.characters,
             onDismiss = { showDialog.value = false },
-            onLoadClick = onLoadCharacter
+            onLoadClick = onLoadCharacterClicked,
+            onDelete = onDelete
         )
     }
 }
@@ -104,15 +126,18 @@ fun HomeContent(
 @Preview(showSystemUi = true)
 @Composable
 fun HomeContentPreview(isLoading: Boolean = false) {
-    val fakeState = HomeUiState(
+    val fakeState = CharacterSheetUiState(
         isLoading = isLoading,
-        savedCharacters = FakeCharacterSheet.all
+        characters = FakeCharacterSheet.all
     )
     _5eSheetManagerTheme(){
         HomeContent(
             state = fakeState,
-            onCreateCharacter = {},
-            onLoadCharacter = {}
+            loadCharacters = {},
+            createCharacter = {},
+            onLoadCharacter = {},
+            onLoadCharacterClicked = {},
+            onDelete = {}
         )
     }
 }

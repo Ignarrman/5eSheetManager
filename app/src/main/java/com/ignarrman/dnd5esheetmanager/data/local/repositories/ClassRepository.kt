@@ -41,6 +41,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.classes.Druid
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Fighter
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Monk
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Paladin
+import com.ignarrman.dnd5esheetmanager.domain.model.classes.PlayerClass
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Ranger
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Rogue
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.Sorcerer
@@ -68,9 +69,24 @@ class ClassRepository @Inject constructor(
     private val eldritchInvocationsProgressionDao: EldritchInvocationsProgressionDao,
     private val spellcastingDao: SpellcastingDao,
 ) {
+    suspend fun getAllClasses(): List<PlayerClass> {
 
-    suspend fun getIdByName(name: String): Long? {
-        return classDao.getClassIdByName(name)
+        val artificer = getArtificer()
+        val barbarian = getBarbarian()
+        val bard = getBard()
+        val cleric = getCleric()
+        val druid = getDruid()
+        val fighter = getFighter()
+        val monk = getMonk()
+        val paladin = getPaladin()
+        val ranger = getRanger()
+        val rogue = getRogue()
+        val sorcerer = getSorcerer()
+        val warlock = getWarlock()
+        val wizard = getWizard()
+
+        return listOf(artificer, barbarian, bard, cleric, druid, fighter, monk, paladin, ranger, rogue, sorcerer, warlock, wizard)
+
     }
 
     suspend fun getBarbarian(): Barbarian {

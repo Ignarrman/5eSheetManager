@@ -20,10 +20,13 @@ data class RaceUiState(
 @ViewModelScoped
 class RaceStateHolder @Inject constructor(
     private val raceRepository: RaceRepository,
-    private val featureRepository: FeatureRepository
 ) {
     private val _state = MutableStateFlow(RaceUiState())
     val state: StateFlow<RaceUiState> = _state.asStateFlow()
 
-    private val racesMap = mutableMapOf<Long, Race>()
+    suspend fun loadAllRaces() {
+        val races = raceRepository.getAll()
+
+        _state.value = _state.value.copy(races = races)
+    }
 }

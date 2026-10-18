@@ -20,21 +20,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +54,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,20 +69,28 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ignarrman.dnd5esheetmanager.R
+import com.ignarrman.dnd5esheetmanager.domain.model.DamageType
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
+import com.ignarrman.dnd5esheetmanager.domain.model.backgrounds.Background
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.MasteryType
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.RangeType
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Skill
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.WeaponProperty
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getAttributes
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getScoreBonus
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.getScoreProficiencyBonus
+import com.ignarrman.dnd5esheetmanager.domain.model.classes.PlayerClass
 import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
+import com.ignarrman.dnd5esheetmanager.domain.model.races.Race
 import com.ignarrman.dnd5esheetmanager.domain.model.races.Speed
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellComponents
@@ -81,6 +98,7 @@ import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSchool
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpellSlotProgression
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.SpentSpellSlots
 import com.ignarrman.dnd5esheetmanager.domain.model.spells.getDifficultyClass
+import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.CharacterSheetIntents
 
 private val FrameColor = Color(0xFF526575)
 private val PanelColor = Color(0xFF263440)
@@ -198,13 +216,6 @@ fun AbilityScoreCard(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "$score",
-                color = TextColor,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-
             AppTextField(
                 modifier = modifier,
                 value = "$score",
@@ -534,34 +545,32 @@ fun HitPointsCard(
                 )
             }
 
-            if (temporaryHp > 0) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Row(
+                    modifier = modifier,
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+
                 ) {
-                    Row(
-                        modifier = modifier,
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    Text(
+                        text = "+",
+                        fontSize = 20.sp,
+                    )
 
-                    ) {
-                        Text(
-                            text = "+",
-                            fontSize = 20.sp,
-                        )
+                    AppTextField(
+                        modifier = Modifier.size(width = 40.dp, height = 35.dp),
+                        value = temporaryHp.toString(),
+                        onValueChange = onTHPChange,
+                        placeholder = "—",
+                        fontSize = 24.sp,
+                    )
 
-                        AppTextField(
-                            modifier = Modifier.size(width = 40.dp, height = 35.dp),
-                            value = temporaryHp.toString(),
-                            onValueChange = onTHPChange,
-                            placeholder = "—",
-                            fontSize = 24.sp,
-                        )
-
-                        Text(
-                            text = "THP",
-                            fontSize = 20.sp,
-                        )
-                    }
+                    Text(
+                        text = "THP",
+                        fontSize = 20.sp,
+                    )
                 }
             }
         }
@@ -571,7 +580,7 @@ fun HitPointsCard(
 @Composable
 fun HitDiceCard(
     modifier: Modifier = Modifier,
-    dieType: String?,
+    dieType: Int?,
     available: Int,
     total: Int,
     onValueChange: (String) -> Unit
@@ -612,7 +621,7 @@ fun HitDiceCard(
             )
 
             Text(
-                text = "/ ${total}d${dieType ?: "(No_dice)"}",
+                text = "/ ${total}d${dieType ?: "—"}",
                 color = textColor,
                 modifier = Modifier.padding(top = 8.dp),
                 fontSize = 20.sp
@@ -626,12 +635,8 @@ fun DeathSavesCard(
     modifier: Modifier,
     successDeathSaves: Int,
     failureDeathSaves: Int,
-    onSetToOneSuccess: () -> Unit,
-    onSetToTwoSuccess: () -> Unit,
-    onSetToThreeSuccess: () -> Unit,
-    onSetToOneFailed: () -> Unit,
-    onSetToTwoFailed: () -> Unit,
-    onSetToThreeFailed: () -> Unit
+    onSuccessDST: (Int) -> Unit,
+    onFailedDST: (Int) -> Unit
 ) {
     val textColor = Color(0xFFF1F4F7)
 
@@ -665,25 +670,25 @@ fun DeathSavesCard(
             ) {
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToOneSuccess() }
+                        .clickable() { onSuccessDST(1) }
                         .size(32.dp),
-                    painter = painterResource(if(successDeathSaves >= 1) filled else empty),
+                    painter = painterResource(if (successDeathSaves >= 1) filled else empty),
                     contentDescription = "",
                 )
 
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToTwoSuccess() }
+                        .clickable() { onSuccessDST(2) }
                         .size(32.dp),
-                    painter = painterResource(if(successDeathSaves >= 2) filled else empty),
+                    painter = painterResource(if (successDeathSaves >= 2) filled else empty),
                     contentDescription = "",
                 )
 
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToThreeSuccess() }
+                        .clickable() { onSuccessDST(3) }
                         .size(32.dp),
-                    painter = painterResource(if(successDeathSaves >= 3) filled else empty),
+                    painter = painterResource(if (successDeathSaves >= 3) filled else empty),
                     contentDescription = "",
                 )
             }
@@ -694,25 +699,25 @@ fun DeathSavesCard(
             ) {
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToOneFailed() }
+                        .clickable() { onFailedDST(1) }
                         .size(32.dp),
-                    painter = painterResource(if(failureDeathSaves >= 1) filled else empty),
+                    painter = painterResource(if (failureDeathSaves >= 1) filled else empty),
                     contentDescription = "",
                 )
 
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToTwoFailed() }
+                        .clickable() { onFailedDST(2) }
                         .size(32.dp),
-                    painter = painterResource(if(failureDeathSaves >= 2) filled else empty),
+                    painter = painterResource(if (failureDeathSaves >= 2) filled else empty),
                     contentDescription = "",
                 )
 
                 Icon(
                     modifier = Modifier
-                        .clickable() { onSetToThreeFailed() }
+                        .clickable() { onFailedDST(3) }
                         .size(32.dp),
-                    painter = painterResource(if(failureDeathSaves >= 3) filled else empty),
+                    painter = painterResource(if (failureDeathSaves >= 3) filled else empty),
                     contentDescription = "",
                 )
             }
@@ -763,7 +768,7 @@ fun ArmorClassCard(
     modifier: Modifier,
     armorClass: Int?,
     onValueChange: (String) -> Unit
-){
+) {
     val textColor = Color(0xFFF1F4F7)
 
     Column(
@@ -793,7 +798,7 @@ fun ArmorClassCard(
 
         AppTextField(
             modifier = Modifier,
-            value = "$armorClass",
+            value = "${armorClass ?: ""}",
             onValueChange = onValueChange,
             placeholder = "—",
             fontSize = 24.sp,
@@ -809,7 +814,7 @@ fun ClassFeatureDropdown(
     feature: Feature,
     initiallyExpanded: Boolean = false
 ) {
-    var expanded by remember (feature.id, feature.name) {
+    var expanded by remember(feature.id, feature.name) {
         mutableStateOf(initiallyExpanded)
     }
 
@@ -928,7 +933,7 @@ fun FeatureDropdown(
     feature: Feature,
     initiallyExpanded: Boolean = false
 ) {
-    var expanded by remember (feature.id, feature.name) {
+    var expanded by remember(feature.id, feature.name) {
         mutableStateOf(initiallyExpanded)
     }
 
@@ -1032,9 +1037,11 @@ fun FeatureSection(
 
 @Composable
 fun FeatDropdown(
-    feat: Feat,
     modifier: Modifier = Modifier,
-    initiallyExpanded: Boolean = false
+    feat: Feat,
+    removable: Boolean = true,
+    initiallyExpanded: Boolean = false,
+    onRemoveFeat: (Long) -> Unit
 ) {
     var expanded by remember(feat.id, feat.name) {
         mutableStateOf(initiallyExpanded)
@@ -1073,6 +1080,15 @@ fun FeatDropdown(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
+
+            if (removable) {
+                Icon(
+                    modifier = Modifier.clickable(onClick = { onRemoveFeat(feat.id!!) } ),
+                    painter = painterResource(R.drawable.trash),
+                    contentDescription = "Delete feat",
+                    tint = textColor
+                )
+            }
 
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
@@ -1145,44 +1161,19 @@ private fun FeatDetail(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeatSection(
-    feats: List<Feat>,
     modifier: Modifier = Modifier,
-    title: String = "Feats"
+    title: String = "Feats",
+    feats: List<Feat>,
+    featsCharacter: List<Feat>,
+    onAddFeat: (Feat) -> Unit,
+    onRemoveFeat: (Long) -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+    val showDialog = remember { mutableStateOf(false) }
+    val selectedFeat = remember { mutableStateOf<Feat?>(null) }
 
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.outline
-        )
-
-        feats.forEach { feat ->
-            FeatDropdown(
-                feat = feat
-            )
-        }
-    }
-}
-
-@Composable
-fun WeaponsSection(
-    modifier: Modifier,
-    weapons: List<Weapon>,
-    proficiencyBonus: Int?,
-    title: String = "Weapons",
-    onProficiencyChange: (Long) -> Unit,
-    onAddWeapon: () -> Unit
-) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -1191,7 +1182,7 @@ fun WeaponsSection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
@@ -1201,7 +1192,117 @@ fun WeaponsSection(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            AddButton(modifier = Modifier, onAdd = onAddWeapon)
+            AddButton(modifier = Modifier, onAdd = { showDialog.value = true })
+        }
+
+        BasicAlertDialog(
+            onDismissRequest = { showDialog.value = false }
+        ) {
+            Card() {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    state = rememberLazyListState(),
+                ) {
+                    items(
+                        items = feats.filterNot { featsCharacter.contains(it) }
+                    ) { feat ->
+
+                        val selected = selectedFeat.value == feat
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(if (selected) Color.LightGray else Color.Transparent)
+                                .clickable { selectedFeat.value = feat }
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FeatDropdown(
+                                feat = feat,
+                                removable = false,
+                                onRemoveFeat = {}
+                            )
+                        }
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.height(8.dp),
+                    color = Color.Black,
+                    thickness = 2.dp
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f),
+                    shape = RoundedCornerShape(size = 8.dp),
+                    enabled = selectedFeat.value != null,
+                    onClick = {
+                        onAddFeat(selectedFeat.value!!)
+                    }
+                ) {
+                    Text(
+                        text = "Add Feat",
+                    )
+                }
+            }
+        }
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline
+        )
+
+        featsCharacter.forEach { feat ->
+            FeatDropdown(
+                feat = feat,
+                onRemoveFeat = onRemoveFeat
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeaponsSection(
+    modifier: Modifier,
+    weapons: List<Weapon>,
+    proficiencyBonus: Int?,
+    title: String = "Weapons",
+    onProficiencyChange: (Weapon) -> Unit,
+    onAddWeapon: (Weapon) -> Unit,
+    onRemoveWeapon: (Long) -> Unit
+) {
+
+    val showDialog = remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            AddButton(modifier = Modifier, onAdd = { showDialog.value = true })
+        }
+
+        BasicAlertDialog(
+            onDismissRequest = { showDialog.value = false }
+        ) {
+            WeaponForm(
+                onAddWeapon = onAddWeapon
+            )
         }
 
         HorizontalDivider(
@@ -1213,20 +1314,395 @@ fun WeaponsSection(
                 modifier = Modifier,
                 weapon = weapon,
                 proficiencyBonus = proficiencyBonus ?: 0,
-                onProficiencyChange = onProficiencyChange
+                onProficiencyChange = onProficiencyChange,
+                onRemoveWeapon = onRemoveWeapon
             )
         }
     }
 }
+
+
+@Composable
+fun WeaponForm(
+    modifier: Modifier = Modifier,
+    onAddWeapon: (Weapon) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("0") }
+    var quantity by remember { mutableStateOf("1") }
+
+    // Damage stays String intentionally.
+    var damage by remember { mutableStateOf("") }
+
+    var rangeType by remember { mutableStateOf<RangeType?>(null) }
+    var masteryType by remember { mutableStateOf<MasteryType?>(null) }
+    var damageType by remember { mutableStateOf<DamageType?>(null) }
+
+    var normalRange by remember { mutableStateOf("0") }
+    var longRange by remember { mutableStateOf("0") }
+    var proficient by remember { mutableStateOf(false) }
+    var attackBonus by remember { mutableStateOf("0") }
+    var damageBonus by remember { mutableStateOf("0") }
+
+    var properties by remember {
+        mutableStateOf<Set<WeaponProperty>>(emptySet())
+    }
+
+    val parsedPrice = price.toIntOrNull()
+    val parsedQuantity = quantity.toIntOrNull()
+    val parsedNormalRange = normalRange.toIntOrNull()
+    val parsedLongRange = longRange.toIntOrNull()
+    val parsedAttackBonus = attackBonus.toIntOrNull()
+    val parsedDamageBonus = damageBonus.toIntOrNull()
+
+    val canCreate = name.isNotBlank() &&
+            damage.isNotBlank() &&
+            rangeType != null &&
+            masteryType != null &&
+            damageType != null &&
+            parsedPrice != null && parsedPrice >= 0 &&
+            parsedQuantity != null && parsedQuantity >= 1 &&
+            parsedNormalRange != null && parsedNormalRange >= 0 &&
+            parsedLongRange != null && parsedLongRange >= 0 &&
+            parsedAttackBonus != null &&
+            parsedDamageBonus != null
+
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 600.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Create Weapon",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF1F4F7)
+            )
+
+            WeaponFormSection("General")
+
+            WeaponFormTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Name"
+            )
+
+            WeaponFormTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = "Description",
+                singleLine = false
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = price,
+                    onValueChange = { price = it },
+                    label = "Price",
+                    keyboardType = KeyboardType.Number
+                )
+
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = quantity,
+                    onValueChange = { quantity = it },
+                    label = "Quantity",
+                    keyboardType = KeyboardType.Number
+                )
+            }
+
+            HorizontalDivider(
+                color = Color.Black,
+                thickness = 2.dp
+            )
+
+            WeaponFormSection("Combat")
+
+            WeaponFormTextField(
+                value = damage,
+                onValueChange = { damage = it },
+                label = "Damage (e.g. 1d8)"
+            )
+
+            WeaponFormDropdown(
+                label = "Range type",
+                options = enumValues<RangeType>().toList(),
+                selected = rangeType,
+                onSelected = { rangeType = it }
+            )
+
+            WeaponFormDropdown(
+                label = "Mastery",
+                options = enumValues<MasteryType>().toList(),
+                selected = masteryType,
+                onSelected = { masteryType = it }
+            )
+
+            WeaponFormDropdown(
+                label = "Damage type",
+                options = enumValues<DamageType>().toList(),
+                selected = damageType,
+                onSelected = { damageType = it }
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = normalRange,
+                    onValueChange = { normalRange = it },
+                    label = "Normal range",
+                    keyboardType = KeyboardType.Number
+                )
+
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = longRange,
+                    onValueChange = { longRange = it },
+                    label = "Long range",
+                    keyboardType = KeyboardType.Number
+                )
+            }
+
+            WeaponFormTextField(
+                value = attackBonus,
+                onValueChange = { attackBonus = it },
+                label = "Attack bonus",
+                keyboardType = KeyboardType.Number
+            )
+
+            WeaponFormTextField(
+                value = damageBonus,
+                onValueChange = { damageBonus = it },
+                label = "Damage bonus",
+                keyboardType = KeyboardType.Number
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = proficient,
+                    onCheckedChange = { proficient = it }
+                )
+                Text(
+                    text = "Proficient",
+                    color = Color(0xFFF1F4F7)
+                )
+            }
+
+            HorizontalDivider(
+                color = Color.Black,
+                thickness = 2.dp
+            )
+
+            WeaponFormSection("Properties")
+
+            Column {
+                enumValues<WeaponProperty>().forEach { property ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = property in properties,
+                            onCheckedChange = { checked ->
+                                properties = if (checked) {
+                                    properties + property
+                                } else {
+                                    properties - property
+                                }
+                            }
+                        )
+
+                        Text(
+                            text = property.toString(),
+                            color = Color(0xFFF1F4F7)
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = Color.Black,
+                thickness = 2.dp
+            )
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = canCreate,
+                shape = RoundedCornerShape(8.dp),
+                onClick = {
+                    onAddWeapon(
+                        Weapon(
+                            name = name.trim(),
+                            description = description.trim(),
+                            price = parsedPrice!!,
+                            quantity = parsedQuantity!!,
+                            damage = damage.trim(),
+                            rangeType = rangeType!!,
+                            masteryType = masteryType!!,
+                            damageType = damageType!!,
+                            normalRange = parsedNormalRange!!,
+                            longRange = parsedLongRange!!,
+                            proficient = proficient,
+                            attackBonus = parsedAttackBonus!!,
+                            damageBonus = parsedDamageBonus!!,
+                            properties = properties.toList()
+                        )
+                    )
+                }
+            ) {
+                Text("Create Weapon")
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun WeaponFormSection(title: String) {
+    Text(
+        text = title,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = Color(0xFFF1F4F7)
+    )
+}
+
+@Composable
+private fun WeaponFormTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    singleLine: Boolean = true,
+    keyboardType: KeyboardType = KeyboardType.Text
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = label,
+            color = Color(0xFFF1F4F7),
+            fontSize = 13.sp
+        )
+
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 40.dp)
+                .padding(vertical = 8.dp),
+            singleLine = singleLine,
+            textStyle = TextStyle(
+                color = Color(0xFFF1F4F7),
+                fontSize = 16.sp
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType
+            ),
+            decorationBox = { innerTextField ->
+                Box {
+                    if (value.isEmpty()) {
+                        Text(
+                            text = label,
+                            color = Color.Gray,
+                            fontSize = 16.sp
+                        )
+                    }
+                    innerTextField()
+                }
+            }
+        )
+
+        HorizontalDivider(
+            color = Color.Gray,
+            thickness = 1.dp
+        )
+    }
+}
+
+@Composable
+private fun <T : Enum<T>> WeaponFormDropdown(
+    label: String,
+    options: List<T>,
+    selected: T?,
+    onSelected: (T) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = label,
+            color = Color(0xFFF1F4F7),
+            fontSize = 13.sp
+        )
+
+        Box {
+            TextButton(
+                onClick = { expanded = true }
+            ) {
+                Text(
+                    text = selected?.toString() ?: "Select $label",
+                    color = Color(0xFFF1F4F7)
+                )
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Select $label"
+                )
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(option.toString()) },
+                        onClick = {
+                            onSelected(option)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+        HorizontalDivider(
+            color = Color.Gray,
+            thickness = 1.dp
+        )
+    }
+}
+
 
 @Composable
 fun WeaponDropdown(
     modifier: Modifier,
     weapon: Weapon,
     proficiencyBonus: Int,
-    onProficiencyChange: (Long) -> Unit
+    onProficiencyChange: (Weapon) -> Unit,
+    onRemoveWeapon: (Long) -> Unit
 ) {
-    var expanded by remember (weapon.id) {
+    var expanded by remember(weapon.id) {
         mutableStateOf(false)
     }
 
@@ -1257,7 +1733,7 @@ fun WeaponDropdown(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProficiencyIndicator(
-                modifier = Modifier.clickable(onClick = { onProficiencyChange(weapon.id!!) }),
+                modifier = Modifier.clickable(onClick = { onProficiencyChange(weapon.copy(proficient = !weapon.proficient)) }),
                 proficient = weapon.proficient
             )
 
@@ -1272,7 +1748,8 @@ fun WeaponDropdown(
                 maxLines = 1
             )
 
-            val finalAttackBonus = if (weapon.proficient) weapon.attackBonus + proficiencyBonus else weapon.attackBonus
+            val finalAttackBonus =
+                if (weapon.proficient) weapon.attackBonus + proficiencyBonus else weapon.attackBonus
 
             Text(
                 text = "+${finalAttackBonus}",
@@ -1288,6 +1765,13 @@ fun WeaponDropdown(
                 color = textColor,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
+            )
+
+            Icon(
+                modifier = Modifier.clickable(onClick = { onRemoveWeapon(weapon.id!!) } ),
+                painter = painterResource(R.drawable.trash),
+                contentDescription = "Delete weapon",
+                tint = textColor
             )
 
             Icon(
@@ -1328,7 +1812,7 @@ fun WeaponDropdown(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                if (weapon.normalRange != null && weapon.longRange != null){
+                if (weapon.normalRange != null && weapon.longRange != null) {
                     Text(
                         text = "Range: ${weapon.normalRange}/${weapon.longRange}",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -1362,18 +1846,23 @@ fun WeaponDropdown(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemsSection(
     modifier: Modifier,
     inventory: List<Item>,
     title: String = "Items",
-    onAddItem: () -> Unit
+    onAddItem: (Item) -> Unit,
+    onRemoveItem: (Long) -> Unit
 ) {
+
+    val showDialog = remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(){
+        Row() {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
@@ -1383,7 +1872,16 @@ fun ItemsSection(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            AddButton(modifier = Modifier, onAdd = onAddItem)
+            AddButton(modifier = Modifier, onAdd = { showDialog.value = true })
+        }
+
+        BasicAlertDialog(
+            onDismissRequest = { showDialog.value = false }
+        ) {
+            ItemForm(
+                modifier = Modifier,
+                onAddItem = onAddItem
+            )
         }
 
         HorizontalDivider(
@@ -1393,8 +1891,107 @@ fun ItemsSection(
         inventory.forEach { item ->
             ItemDropdown(
                 modifier = Modifier,
-                item = item
+                item = item,
+                onRemoveItem = onRemoveItem
             )
+        }
+    }
+}
+
+@Composable
+fun ItemForm(
+    modifier: Modifier = Modifier,
+    onAddItem: (Item) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("0") }
+    var quantity by remember { mutableStateOf("1") }
+
+    val parsedPrice = price.toIntOrNull()
+    val parsedQuantity = quantity.toIntOrNull()
+
+    val canCreate = name.isNotBlank() &&
+            parsedPrice != null && parsedPrice >= 0 &&
+            parsedQuantity != null && parsedQuantity >= 1
+
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 600.dp)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Create Weapon",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFF1F4F7)
+            )
+
+            WeaponFormSection("General")
+
+            WeaponFormTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Name"
+            )
+
+            WeaponFormTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = "Description",
+                singleLine = false
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = price,
+                    onValueChange = { price = it },
+                    label = "Price",
+                    keyboardType = KeyboardType.Number
+                )
+
+                WeaponFormTextField(
+                    modifier = Modifier.weight(1f),
+                    value = quantity,
+                    onValueChange = { quantity = it },
+                    label = "Quantity",
+                    keyboardType = KeyboardType.Number
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 4.dp),
+                color = Color.Black,
+                thickness = 2.dp
+            )
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = canCreate,
+                shape = RoundedCornerShape(8.dp),
+                onClick = {
+                    onAddItem(
+                        Item(
+                            name = name.trim(),
+                            description = description.trim(),
+                            price = parsedPrice!!,
+                            quantity = parsedQuantity!!,
+                        )
+                    )
+                }
+            ) {
+                Text("Create Weapon")
+            }
         }
     }
 }
@@ -1402,7 +1999,8 @@ fun ItemsSection(
 @Composable
 fun ItemDropdown(
     modifier: Modifier = Modifier,
-    item: Item
+    item: Item,
+    onRemoveItem: (Long) -> Unit
 ) {
     var expanded by remember(item.id) {
         mutableStateOf(false)
@@ -1452,6 +2050,13 @@ fun ItemDropdown(
             )
 
             Spacer(modifier = Modifier.width(8.dp))
+
+            Icon(
+                modifier = Modifier.clickable(onClick = { onRemoveItem(item.id!!) } ),
+                painter = painterResource(R.drawable.trash),
+                contentDescription = "Delete item",
+                tint = textColor
+            )
 
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
@@ -1815,18 +2420,25 @@ private fun SpellSlotRow(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpellSection(
     modifier: Modifier,
     spells: List<Spell>,
+    characterSpells: List<Spell>,
     title: String = "Spells",
-    onAddSpell: (Long) -> Unit
+    onAddSpell: (Spell) -> Unit,
+    onRemoveSpell: (Long) -> Unit
 ) {
+
+    val showDialog = remember { mutableStateOf(false) }
+    val selectedSpell = remember { mutableStateOf<Spell?>(null) }
+
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(){
+        Row() {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
@@ -1836,25 +2448,79 @@ fun SpellSection(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            AddButton(modifier = Modifier,
-                onAdd = {
-                    // TODO This function opens the dialog, the add spells will come on the dialog
-                }
+            AddButton(
+                modifier = Modifier,
+                onAdd = { showDialog.value = true }
             )
+        }
+
+        BasicAlertDialog(
+            onDismissRequest = { showDialog.value = false }
+        ) {
+            Card() {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    state = rememberLazyListState(),
+                ) {
+                    items(
+                        items = spells.filterNot { characterSpells.contains(it) }
+                    ) { spell ->
+
+                        val selected = selectedSpell.value == spell
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(if (selected) Color.LightGray else Color.Transparent)
+                                .clickable { selectedSpell.value = spell }
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SpellDropdown(
+                                spell = spell,
+                                removable = false,
+                                onRemoveSpell = {}
+                            )
+                        }
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.height(8.dp),
+                    color = Color.Black,
+                    thickness = 2.dp
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f),
+                    shape = RoundedCornerShape(size = 8.dp),
+                    enabled = selectedSpell.value != null,
+                    onClick = {
+                        onAddSpell(selectedSpell.value!!)
+                    }
+                ) {
+                    Text(
+                        text = "Add Feat",
+                    )
+                }
+            }
         }
 
         HorizontalDivider(
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.outline
         )
-        val sortedSpells = spells.sortedWith(
+        val sortedSpells = characterSpells.sortedWith(
             compareBy<Spell> { it.level }
                 .thenBy { it.name.lowercase() }
         )
         sortedSpells.forEach { spell ->
             SpellDropdown(
                 modifier = Modifier,
-                spell = spell
+                spell = spell,
+                onRemoveSpell = onRemoveSpell
             )
         }
     }
@@ -1863,7 +2529,9 @@ fun SpellSection(
 @Composable
 fun SpellDropdown(
     modifier: Modifier = Modifier,
-    spell: Spell
+    spell: Spell,
+    removable: Boolean = true,
+    onRemoveSpell: (Long) -> Unit
 ) {
     var expanded by remember(spell.id) {
         mutableStateOf(false)
@@ -1949,6 +2617,15 @@ fun SpellDropdown(
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
+
+            if (removable) {
+                Icon(
+                    modifier = Modifier.clickable(onClick = { onRemoveSpell(spell.id!!) }),
+                    painter = painterResource(R.drawable.trash),
+                    contentDescription = "Delete item",
+                    tint = textColor
+                )
+            }
 
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
@@ -2083,15 +2760,13 @@ private fun DetailRow(
     }
 }
 
-private fun SpellComponents
-        .toAbbreviation(): String = buildList {
+private fun SpellComponents.toAbbreviation(): String = buildList {
     if (verbal) add("V")
     if (somatic) add("S")
     if (material != null) add("M")
 }.joinToString(",").ifEmpty { "—" }
 
-private fun SpellComponents
-        .toFullDescription(): String = buildList {
+private fun SpellComponents.toFullDescription(): String = buildList {
     if (verbal) add("V (Verbal)")
     if (somatic) add("S (Somatic)")
     if (material != null) add("M (Material: $material)")
@@ -2272,16 +2947,15 @@ fun ProfileBox(
     backgroundName: String,
     className: String,
 
-    races: List<String>,
-    classes: List<String>,
-    backgrounds: List<String>,
+    races: List<Race>,
+    classes: List<PlayerClass>,
+    backgrounds: List<Background>,
 
     onNameChange: (String) -> Unit,
-    onRaceChange: (String) -> Unit,
-    onClassChange: (String) -> Unit,
-    onBackgroundChange: (String) -> Unit,
+    onRaceChange: (Race) -> Unit,
+    onClassChange: (Long) -> Unit,
+    onBackgroundChange: (Background) -> Unit,
 ) {
-    val textColor = Color(0xFFF1F4F7)
 
     Column(
         modifier = Modifier
@@ -2293,46 +2967,66 @@ fun ProfileBox(
             modifier = Modifier.fillMaxWidth(),
             value = characterName,
             onValueChange = onNameChange,
-            label = { Text("Character Name") }
+            label = { Text("Character Name") },
+            singleLine = true
         )
         AutocompleteOutlinedTextField(
-            value = raceName,
-            onValueChange = onRaceChange,
+            initialValue = raceName,
+            label = "Race",
             options = races,
-            label = "Race"
+            optionLabel = { it.name },
+            onOptionSelected = { race ->
+                onRaceChange(race)
+            }
         )
         AutocompleteOutlinedTextField(
-            value = backgroundName,
-            onValueChange = onClassChange,
+            initialValue = backgroundName,
+            label = "Background",
             options = backgrounds,
-            label = "Background"
+            optionLabel = { it.name },
+            onOptionSelected = { background ->
+                onBackgroundChange(background)
+            }
         )
         AutocompleteOutlinedTextField(
-            value = className,
-            onValueChange = onBackgroundChange,
+            initialValue = className,
+            label = "Cleric",
             options = classes,
-            label = "Cleric"
+            optionLabel = { it.name },
+            onOptionSelected = { playerClass ->
+                onClassChange(playerClass.id!!)
+            }
         )
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AutocompleteOutlinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    options: List<String>,
-    label: String,
-    modifier: Modifier = Modifier
+fun <T> AutocompleteOutlinedTextField(
+    modifier: Modifier = Modifier,
+    initialValue: String = "",
+    options: List<T>,
+    optionLabel: (T) -> String,
+    onOptionSelected: (T) -> Unit,
+    label: String
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var value by remember {
+        mutableStateOf(initialValue)
+    }
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
-    val filteredOptions = remember(value, options) {
+    val filteredOptions = remember(value, options, optionLabel) {
         if (value.isBlank()) {
             options
         } else {
             options.filter {
-                it.contains(value, ignoreCase = true)
+                optionLabel(it).contains(
+                    value,
+                    ignoreCase = true
+                )
             }
         }
     }
@@ -2347,7 +3041,7 @@ fun AutocompleteOutlinedTextField(
         OutlinedTextField(
             value = value,
             onValueChange = {
-                onValueChange(it)
+                value = it
                 expanded = true
             },
             modifier = Modifier
@@ -2373,10 +3067,10 @@ fun AutocompleteOutlinedTextField(
             filteredOptions.forEach { option ->
                 DropdownMenuItem(
                     text = {
-                        Text(option)
+                        Text(optionLabel(option))
                     },
                     onClick = {
-                        onValueChange(option)
+                        onOptionSelected(option)
                         expanded = false
                     }
                 )
@@ -2385,10 +3079,12 @@ fun AutocompleteOutlinedTextField(
     }
 }
 
+
 @Composable
 fun ProfileLevelBox(
     level: Int,
-    onValueChange: (String) -> Unit
+    onLevelChange: (String) -> Unit,
+    onImageChange: (String) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -2404,7 +3100,10 @@ fun ProfileLevelBox(
                     width = 2.dp,
                     color = MaterialTheme.colorScheme.outline,
                     shape = CircleShape
-                ),
+                )
+                .clickable() {
+//                    onImageChange()
+                },
             painter = painterResource(R.drawable.dnd_logo),
             contentDescription = null,
         )
@@ -2426,7 +3125,7 @@ fun ProfileLevelBox(
                 AppTextField(
                     modifier = Modifier.size(width = 40.dp, height = 35.dp),
                     value = "$level",
-                    onValueChange = onValueChange,
+                    onValueChange = onLevelChange,
                     placeholder = "—",
                     fontSize = 32.sp,
                     addBorder = false,

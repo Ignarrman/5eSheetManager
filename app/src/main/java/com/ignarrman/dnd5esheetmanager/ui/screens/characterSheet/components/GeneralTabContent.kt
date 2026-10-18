@@ -43,10 +43,32 @@ fun GeneralTabContent(
     classes: List<PlayerClass>,
     backgrounds: List<Background>,
 
+    onLevelChange: (Int) -> Unit,
+    onImageChange: (String) -> Unit = {},
     onNameChange: (String) -> Unit,
-    onRaceChange: (String) -> Unit,
-    onClassChange: (String) -> Unit,
-    onBackgroundChange: (String) -> Unit,
+    onRaceChange: (Race) -> Unit,
+    onClassChange: (Long) -> Unit,
+    onBackgroundChange: (Background) -> Unit,
+
+    onProficiencyBonusChange: (Int) -> Unit,
+    onArmorClassChange: (Int) -> Unit,
+    onInitiativeChange: (Int) -> Unit,
+
+    onSTRChange: (Int) -> Unit,
+    onDEXChange: (Int) -> Unit,
+    onCONChange: (Int) -> Unit,
+    onINTChange: (Int) -> Unit,
+    onWISChange: (Int) -> Unit,
+    onCHAChange: (Int) -> Unit,
+
+    onCurrentHPChange: (Int) -> Unit,
+    onMaxHPChange: (Int) -> Unit,
+    onTHPChange: (Int) -> Unit,
+
+    onCurrentHitDiceChange: (Int) -> Unit,
+
+    onSuccessDST: (Int) -> Unit,
+    onFailedDST: (Int) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
@@ -67,9 +89,10 @@ fun GeneralTabContent(
                 Spacer(Modifier.width(60.dp))
                 ProfileLevelBox(
                     level = characterSheet.level,
-                    onValueChange = {
-                        // TODO
-                    }
+                    onLevelChange = { level ->
+                        onLevelChange(level.toInt())
+                    },
+                    onImageChange = onImageChange
                 )
             }
 
@@ -79,9 +102,9 @@ fun GeneralTabContent(
                 backgroundName = background?.name ?: "No Background",
                 className = playerClass?.name ?: "No Class",
 
-                races = races.map { it.name },
-                classes = classes.map { it.name },
-                backgrounds = backgrounds.map { it.name },
+                races = races,
+                classes = classes,
+                backgrounds = backgrounds,
 
                 onNameChange = onNameChange,
                 onRaceChange = onRaceChange,
@@ -103,23 +126,23 @@ fun GeneralTabContent(
                         .weight(0.4f)
                         .size(height = 120.dp, width = 120.dp),
                     proficiencyBonus = characterSheet.proficiencyBonus,
-                    onValueChange = {
-                        // TODO
+                    onValueChange = { pb ->
+                        onProficiencyBonusChange(pb.toInt())
                     }
                 )
                 ArmorClassCard(
                     modifier = Modifier.size(height = 120.dp, width = 110.dp),
                     armorClass = characterSheet.armorClass,
-                    onValueChange = {
-                        // TODO
+                    onValueChange = { ac ->
+                        onArmorClassChange(ac.toInt())
                     }
                 )
 
                 InitiativeCard(
                     modifier = Modifier.size(height = 120.dp, width = 100.dp),
                     initiative = characterSheet.proficiencyBonus,
-                    onValueChange = {
-                        // TODO
+                    onValueChange = { initiative ->
+                        onInitiativeChange(initiative.toInt())
                     }
                 )
             }
@@ -148,12 +171,31 @@ fun GeneralTabContent(
                 maxItemsInEachRow = 3,
                 maxLines = 2
             ) {
-                AbilityScores.entries.forEach { it ->
+                AbilityScores.entries.forEach { entry ->
                     AbilityScoreCard(
-                        score = characterSheet.stats[it] ?: 10,
-                        scoreName = it.statName,
-                        onValueChange = {
-                            // TODO
+                        score = characterSheet.stats[entry] ?: 10,
+                        scoreName = entry.statName,
+                        onValueChange = { score ->
+                            when(entry) {
+                                AbilityScores.STR -> {
+                                    onSTRChange(score.toInt())
+                                }
+                                AbilityScores.DEX -> {
+                                    onDEXChange(score.toInt())
+                                }
+                                AbilityScores.CON -> {
+                                    onCONChange(score.toInt())
+                                }
+                                AbilityScores.INT -> {
+                                    onINTChange(score.toInt())
+                                }
+                                AbilityScores.WIS -> {
+                                    onWISChange(score.toInt())
+                                }
+                                AbilityScores.CHA -> {
+                                    onCHAChange(score.toInt())
+                                }
+                            }
                         }
                     )
                 }
@@ -169,7 +211,7 @@ fun GeneralTabContent(
                 maxItemsInEachRow = 2,
                 maxLines = 3
             ) {
-                AbilityScores.entries.forEach { it ->
+                AbilityScores.entries.forEach {
                     SavingThrowCard(
                         score = characterSheet.stats[it] ?: 10,
                         scoreName = it.statName,
@@ -188,14 +230,14 @@ fun GeneralTabContent(
                 currentHp = characterSheet.currentHp ?: 0,
                 maxHp = characterSheet.maxHp ?: 0,
                 temporaryHp = characterSheet.temporaryHp,
-                onCurrentHPChange = {
-                    // TODO
+                onCurrentHPChange = { hp ->
+                    onCurrentHPChange(hp.toInt())
                 },
-                onMaxHPChange = {
-                    // TODO
+                onMaxHPChange = { hp ->
+                    onMaxHPChange(hp.toInt())
                 },
-                onTHPChange = {
-                    // TODO
+                onTHPChange = { thp ->
+                    onTHPChange(thp.toInt())
                 }
             )
 
@@ -208,11 +250,11 @@ fun GeneralTabContent(
                     modifier = Modifier
                         .weight(1f)
                         .height(80.dp),
-                    dieType = playerClass?.hitDice.toString(),
+                    dieType = playerClass?.hitDice,
                     available = characterSheet.currentHitDice,
                     total = characterSheet.level,
-                    onValueChange = {
-                        // TODO
+                    onValueChange = { die ->
+                        onCurrentHitDiceChange(die.toInt())
                     }
                 )
                 PassivePerceptionCard(
@@ -229,24 +271,8 @@ fun GeneralTabContent(
                 modifier = Modifier,
                 successDeathSaves = characterSheet.deathSaveSuccesses,
                 failureDeathSaves = characterSheet.deathSaveFailures,
-                onSetToOneSuccess = {
-                    // TODO Set to 1
-                },
-                onSetToTwoSuccess = {
-                    // TODO Set to 2
-                },
-                onSetToThreeSuccess = {
-                    // TODO Set to 3
-                },
-                onSetToOneFailed = {
-                    // TODO Set to 1
-                },
-                onSetToTwoFailed = {
-                    // TODO Set to 2
-                },
-                onSetToThreeFailed = {
-                    // TODO Set to 3
-                }
+                onSuccessDST = { onSuccessDST(it) },
+                onFailedDST = { onFailedDST(it) }
             )
         }
     }
@@ -271,11 +297,28 @@ fun GeneralTabContentPreview() {
             races = emptyList(),
             classes = emptyList(),
             backgrounds = emptyList(),
+            onLevelChange = {},
+            onImageChange = {},
 
+            onBackgroundChange = {},
             onNameChange = {},
             onRaceChange = {},
             onClassChange = {},
-            onBackgroundChange = {}
+            onProficiencyBonusChange = {},
+            onArmorClassChange = {},
+            onInitiativeChange = {},
+            onCurrentHPChange = {},
+            onMaxHPChange = {},
+            onTHPChange = {},
+            onCurrentHitDiceChange = {},
+            onSuccessDST = {},
+            onFailedDST = {},
+            onSTRChange = {},
+            onDEXChange = {},
+            onCONChange = {},
+            onINTChange = {},
+            onWISChange = {},
+            onCHAChange = {},
         )
     }
 }

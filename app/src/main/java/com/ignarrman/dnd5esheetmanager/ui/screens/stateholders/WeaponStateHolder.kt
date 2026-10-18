@@ -1,6 +1,7 @@
 package com.ignarrman.dnd5esheetmanager.ui.screens.stateholders
 
 import com.ignarrman.dnd5esheetmanager.data.local.repositories.WeaponRepository
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,5 +24,23 @@ class WeaponStateHolder @Inject constructor(
     private val _state = MutableStateFlow(WeaponUiState())
     val state: StateFlow<WeaponUiState> = _state.asStateFlow()
 
-    private val weaponsMap = mutableMapOf<Long, Weapon>()
+    suspend fun loadAllWeapons(characterId: Long) {
+       val weapons =  weaponRepository.getByCharacterId(characterId)
+
+        _state.value = _state.value.copy(characterWeapons = weapons)
+    }
+
+    suspend fun insertWeapon(characterId: Long, weapon: Weapon) {
+        weaponRepository.insert(weapon, characterId)
+        loadAllWeapons(characterId)
+    }
+
+    suspend fun deleteWeapon(characterId: Long, weaponId: Long) {
+        weaponRepository.deleteById(weaponId)
+        loadAllWeapons(characterId)
+    }
+
+    suspend fun updateWeapon(characterId: Long, weapon: Weapon) {
+        weaponRepository.update(characterId, weapon)
+    }
 }

@@ -1,5 +1,6 @@
 package com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,15 +27,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.AbilityScores
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Item
+import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeBackground
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeats
-import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeItem
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakePlayerClass
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeRace
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeSpells
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeWeapons
+import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
+import com.ignarrman.dnd5esheetmanager.domain.model.spells.Spell
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.CharacterSheetTab
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.FeaturesTabContent
 import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.components.GeneralTabContent
@@ -46,6 +52,7 @@ import com.ignarrman.dnd5esheetmanager.ui.screens.components.AppTopBar
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.BackgroundUiState
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.CharacterSheetUiState
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.ClassUiState
+import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.FeatUiState
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.InventoryUiState
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.RaceUiState
 import com.ignarrman.dnd5esheetmanager.ui.screens.stateholders.SpellsUiState
@@ -54,7 +61,6 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun CharacterSheetScreen(
-    characterId: Long?,
     onBack: () -> Unit,
     viewModel: CharacterSheetViewModel = hiltViewModel()
 ){
@@ -66,6 +72,7 @@ fun CharacterSheetScreen(
     val backgroundsState by viewModel.backgroundsState.collectAsStateWithLifecycle()
     val inventoryState by viewModel.inventoryState.collectAsStateWithLifecycle()
     val weaponsState by viewModel.weaponsState.collectAsStateWithLifecycle()
+    val featState by viewModel.featState.collectAsStateWithLifecycle()
 
     CharacterSheetContent(
         characterState = characterState,
@@ -75,7 +82,32 @@ fun CharacterSheetScreen(
         backgroundsState = backgroundsState,
         inventoryState = inventoryState,
         weaponsState = weaponsState,
-        onBack = onBack
+        featState = featState,
+        onBack = onBack,
+
+        onLoadCharacter = { characterId -> viewModel.handleIntent(CharacterSheetIntents.LoadCharacter(characterId)) },
+        onUpdateCharacter = { characterSheet -> viewModel.handleIntent(CharacterSheetIntents.UpdateCharacter(characterSheet)) },
+
+        onLoadRaces = {  viewModel.handleIntent(CharacterSheetIntents.LoadRaces) },
+        onLoadClasses = { viewModel.handleIntent(CharacterSheetIntents.LoadClasses) } ,
+        onLoadBackgrounds = { viewModel.handleIntent(CharacterSheetIntents.LoadBackgrounds) },
+
+        onLoadSpells = { viewModel.handleIntent(CharacterSheetIntents.LoadSpells) },
+        onAddSpell = { characterId, spell -> viewModel.handleIntent(CharacterSheetIntents.AddSpell(characterId, spell)) },
+        onRemoveSpell = { characterId, spellId -> viewModel.handleIntent(CharacterSheetIntents.RemoveSpell(characterId, spellId)) },
+
+        onLoadItems = { characterId -> viewModel.handleIntent(CharacterSheetIntents.LoadItems(characterId)) },
+        onCreateItem = { characterId, item -> viewModel.handleIntent(CharacterSheetIntents.AddItem(characterId, item)) },
+        onRemoveItem = { characterId, itemId -> viewModel.handleIntent(CharacterSheetIntents.RemoveItem(characterId, itemId)) },
+
+        onLoadFeats = {viewModel.handleIntent(CharacterSheetIntents.LoadFeats)},
+        onAddFeat = { characterId, feat -> viewModel.handleIntent(CharacterSheetIntents.AddFeat(characterId, feat)) },
+        onRemoveFeat = { characterId, featId -> viewModel.handleIntent(CharacterSheetIntents.RemoveFeat(characterId, featId))},
+
+        onLoadWeapons = { characterId -> viewModel.handleIntent(CharacterSheetIntents.LoadWeapons(characterId)) },
+        onUpdateWeapon = { characterId, weaponId -> viewModel.handleIntent(CharacterSheetIntents.UpdateWeapon(characterId, weaponId)) },
+        onCreateWeapon = { characterId, weapon -> viewModel.handleIntent(CharacterSheetIntents.AddWeapon(characterId, weapon)) },
+        onRemoveWeapon = { characterId, weaponId -> viewModel.handleIntent(CharacterSheetIntents.RemoveWeapon(characterId, weaponId)) }
     )
 
 }
@@ -89,7 +121,33 @@ fun CharacterSheetContent(
     backgroundsState: BackgroundUiState,
     inventoryState: InventoryUiState,
     weaponsState: WeaponUiState,
+    featState: FeatUiState,
     onBack: () -> Unit,
+
+    onLoadCharacter: (Long) -> Unit,
+    onUpdateCharacter: (CharacterSheet) -> Unit,
+
+    onLoadRaces: () -> Unit,
+    onLoadClasses: () -> Unit,
+    onLoadBackgrounds: () -> Unit,
+
+    onLoadSpells: () -> Unit,
+    onAddSpell: (Long, Spell) -> Unit,
+    onRemoveSpell: (Long, Long) -> Unit,
+
+    onLoadItems: (Long) -> Unit,
+    onCreateItem: (Long, Item) -> Unit,
+    onRemoveItem: (Long, Long) -> Unit,
+
+    onLoadWeapons: (Long) -> Unit,
+    onCreateWeapon: (Long, Weapon) -> Unit,
+    onUpdateWeapon: (Long, Weapon) -> Unit,
+    onRemoveWeapon: (Long, Long) -> Unit,
+
+    onLoadFeats: () -> Unit,
+    onAddFeat: (Long, Feat) -> Unit,
+    onRemoveFeat: (Long, Long) -> Unit
+
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = CharacterSheetTab.entries
@@ -97,6 +155,17 @@ fun CharacterSheetContent(
     val characterSheet = characterState.characterSheet
     val characterClass = classesState.classes.firstOrNull { it.id == characterSheet.playerClassId }
 
+    LaunchedEffect(Unit) {
+        Log.d("CharacterState Data", "${characterState.characterId}")
+        onLoadCharacter(characterState.characterId)
+        onLoadClasses()
+        onLoadRaces()
+        onLoadBackgrounds()
+        onLoadFeats()
+        onLoadItems(characterState.characterId)
+        onLoadWeapons(characterState.characterId)
+        onLoadSpells()
+    }
 
     Scaffold(
         topBar = {
@@ -180,54 +249,122 @@ fun CharacterSheetContent(
                     classes = classesState.classes,
                     backgrounds = backgroundsState.backgrounds,
 
-                    onNameChange = {
-                        // TODO
+                    onLevelChange = { level ->
+                        onUpdateCharacter(characterSheet.copy(level = level))
                     },
-                    onRaceChange = {
-                        // TODO
+                    onNameChange = { name ->
+                        onUpdateCharacter(characterSheet.copy(name = name))
                     },
-                    onClassChange = {
-                        // TODO
+                    onRaceChange = { race ->
+                        onUpdateCharacter(characterSheet.copy(race = race))
                     },
-                    onBackgroundChange = {
-                        // TODO
+                    onClassChange = { playerClass ->
+                        onUpdateCharacter(characterSheet.copy(playerClassId = playerClass))
+                    },
+                    onBackgroundChange = { background ->
+                        onUpdateCharacter(characterSheet.copy(background = background))
+                    },
+                    onImageChange = {},
+                    onProficiencyBonusChange = { pb ->
+                        onUpdateCharacter(characterSheet.copy(proficiencyBonus = pb))
+                    },
+                    onArmorClassChange = { ac ->
+                        onUpdateCharacter(characterSheet.copy(armorClass = ac))
+                    },
+                    onInitiativeChange = { initiative ->
+                        onUpdateCharacter(characterSheet.copy(initiative = initiative))
+                    },
+                    onSTRChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.STR to score)))
+                    },
+                    onDEXChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.DEX to score)))
+                    },
+                    onCONChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.CON to score)))
+                    },
+                    onINTChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.INT to score)))
+                    },
+                    onWISChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.WIS to score)))
+                    },
+                    onCHAChange = { score ->
+                        onUpdateCharacter(characterSheet.copy( stats = characterSheet.stats + (AbilityScores.CHA to score)))
+                    },
+                    onCurrentHPChange = { hp ->
+                        onUpdateCharacter(characterSheet.copy(currentHp = hp))
+                    },
+                    onMaxHPChange = { hp ->
+                        onUpdateCharacter(characterSheet.copy(maxHp = hp))
+                    },
+                    onTHPChange = { thp ->
+                        onUpdateCharacter(characterSheet.copy(temporaryHp = thp))
+                    },
+                    onCurrentHitDiceChange = { die ->
+                        onUpdateCharacter(characterSheet.copy(currentHitDice = die))
+                    },
+                    onSuccessDST = { dt ->
+                        onUpdateCharacter(characterSheet.copy(deathSaveSuccesses = dt))
+                    },
+                    onFailedDST = { dt ->
+                        onUpdateCharacter(characterSheet.copy(deathSaveFailures = dt))
                     },
                 )
                 CharacterSheetTab.FEATURES -> FeaturesTabContent(
+                    characterId = characterState.characterSheet.id!!,
                     classFeatures = characterClass?.features?.filterKeys { it in 1..characterSheet.level } ?: emptyMap(),
                     raceFeatures = characterSheet.race?.features ?: emptyList(),
                     backgroundFeatures = characterSheet.background?.feature,
-                    featList = characterSheet.feats
+                    featList = featState.feats,
+                    featCharacter = characterSheet.feats,
+                    onAddFeat = { feat ->
+                        onAddFeat(characterState.characterId, feat)
+                    },
+                    onRemoveFeat = { id ->
+                        onRemoveFeat( characterState.characterId, id)
+                    }
                 )
                 CharacterSheetTab.WEAPONS -> WeaponsTabContent(
                     weapons = weaponsState.characterWeapons,
                     proficiencyBonus = characterSheet.proficiencyBonus,
-                    onAddWeapon = {
-                        // TODO
+                    onAddWeapon = { weapon ->
+                        onCreateWeapon(characterState.characterId, weapon)
                     },
-                    onProficiencyChange = {
-                        // TODO
+                    onProficiencyChange = { weapon ->
+                        onUpdateWeapon(characterState.characterId, weapon)
+                    },
+                    onRemoveWeapon = { weaponId ->
+                        onRemoveWeapon(characterState.characterId, weaponId)
                     }
                 )
                 CharacterSheetTab.INVENTORY -> InventoryTabContent(
                     inventory = inventoryState.characterInventory,
-                    onAddItem = {
-                        // TODO
+                    onAddItem = { item ->
+                        onCreateItem(characterState.characterId, item)
+                    },
+                    onRemoveItem = { itemId ->
+                        onRemoveItem(characterState.characterId, itemId)
                     }
                 )
                 CharacterSheetTab.SPELLS -> SpellsTabContent(
+                    spells = spellsState.spells,
                     characterSpells = characterSheet.spells,
                     castingScore = characterClass?.spellcasting?.spellcastingAbility ?: AbilityScores.INT,
                     castingScoreValue = characterSheet.stats[characterClass?.spellcasting?.spellcastingAbility] ?: 0,
                     spellSlots = characterClass?.spellcasting?.spellSlotProgression[characterSheet.level],
                     proficiencyBonus = characterSheet.proficiencyBonus,
                     spentSpellSlots = characterSheet.spellSlotUsed,
-                    onSpentSpellSlotsChange = {
-                        // TODO
+                    onSpentSpellSlotsChange = { slots ->
+                        onUpdateCharacter(characterSheet.copy(spellSlotUsed = slots))
                     },
-                    onAddSpell = {
-                        // TODO
+                    onAddSpell = { spell ->
+                        onAddSpell( characterState.characterId, spell)
+                    },
+                    onRemoveSpell = { id ->
+                        onRemoveSpell( characterState.characterId, id)
                     }
+
                 )
                 CharacterSheetTab.SKILLS -> SkillsTabContent(
                     stats = characterSheet.stats,
@@ -237,7 +374,9 @@ fun CharacterSheetContent(
                 )
                 CharacterSheetTab.NOTES -> NotesTabContent(
                     notes = characterSheet.notes,
-                    onNotesChange = {}
+                    onNotesChange = { notes ->
+                        onUpdateCharacter(characterSheet.copy(notes = notes))
+                    }
                 )
             }
         }
@@ -275,6 +414,10 @@ fun CharacterSheetContentPreview(isLoading: Boolean = false) {
         isLoading = isLoading,
         characterWeapons = FakeWeapons.all
     )
+    val fakeFeatState = FeatUiState(
+        isLoading = isLoading,
+        feats = FakeFeats.all
+    )
 
     _5eSheetManagerTheme(){
         CharacterSheetContent(
@@ -285,7 +428,26 @@ fun CharacterSheetContentPreview(isLoading: Boolean = false) {
             backgroundsState = fakeBackgroundState,
             inventoryState = fakeInventoryState,
             weaponsState = fakeWeaponsState,
-            onBack = {}
+            featState = fakeFeatState,
+            onBack = {},
+            onLoadCharacter = {},
+            onLoadRaces = {},
+            onLoadClasses = {},
+            onLoadBackgrounds = {},
+            onLoadItems = {},
+            onLoadWeapons = {},
+            onLoadSpells = {},
+            onUpdateCharacter = {},
+            onCreateItem = { _, _ -> },
+            onCreateWeapon = { _, _ ->  },
+            onUpdateWeapon = {_, _ ->},
+            onAddSpell = { _, _ ->  },
+            onAddFeat = { _, _ ->  },
+            onLoadFeats = {},
+            onRemoveSpell = { _, _ ->  },
+            onRemoveItem = { _, _-> },
+            onRemoveWeapon = { _, _->  },
+            onRemoveFeat = { _, _ ->  }
         )
     }
 }

@@ -16,11 +16,26 @@ data class InventoryUiState(
 )
 
 @ViewModelScoped
-class InventoryStateHolder @Inject constructor(
+class
+InventoryStateHolder @Inject constructor(
     private val itemRepository: ItemRepository
 ) {
     private val _state = MutableStateFlow(InventoryUiState())
     val state: StateFlow<InventoryUiState> = _state.asStateFlow()
 
-    private val itemsMap = mutableMapOf<Long, Item>()
+    suspend fun loadAllItems(characterId: Long) {
+        val items = itemRepository.getByCharacterId(characterId = characterId)
+
+        _state.value = _state.value.copy(characterInventory = items)
+    }
+
+    suspend fun insertItem(characterId: Long, item: Item) {
+        itemRepository.insert(item, characterId)
+        loadAllItems(characterId)
+    }
+
+    suspend fun deleteItem(characterId: Long, itemId: Long) {
+        itemRepository.deleteById(itemId)
+        loadAllItems(characterId)
+    }
 }

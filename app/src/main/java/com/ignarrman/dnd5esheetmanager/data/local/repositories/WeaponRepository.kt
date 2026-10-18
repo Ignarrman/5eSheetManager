@@ -36,21 +36,18 @@ class WeaponRepository @Inject constructor(
     }
 
     suspend fun update(
-        weapon: Weapon,
-        characterId: Long
+        characterId: Long,
+        weapon: Weapon
     ) {
         weaponDao.update(
             weapon.toEntity(characterId)
         )
     }
 
-    suspend fun delete(
-        weapon: Weapon,
-        characterId: Long
+    suspend fun deleteById(
+        weaponId: Long
     ) {
-        weaponDao.delete(
-            weapon.toEntity(characterId)
-        )
+        weaponDao.deleteById(weaponId)
     }
 
     suspend fun deleteByCharacterId(

@@ -29,11 +29,7 @@ fun AppNavigation() {
         entryProvider = entryProvider {
             entry<Home> {
                 HomeScreen(
-                    onCreateCharacter = {
-                        backStack.add(
-                            CharacterSheet(characterId = null)
-                        )
-                    },
+
                     onLoadCharacter = { characterId ->
                         backStack.add(
                             CharacterSheet(characterId = characterId)
@@ -42,9 +38,8 @@ fun AppNavigation() {
                 )
             }
 
-            entry<CharacterSheet> { route ->
+            entry<CharacterSheet> { _ ->
                 CharacterSheetScreen(
-                    characterId = route.characterId,
                     onBack = {
                         if (backStack.size > 1) {
                             backStack.removeLastOrNull()

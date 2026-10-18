@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ignarrman.dnd5esheetmanager.R
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.CharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.classes.getClassName
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
@@ -40,10 +43,10 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 fun CharacterDialog(
     savedCharacters: List<CharacterSheet>,
     onDismiss: () -> Unit,
-    onLoadClick: (Long) -> Unit
+    onLoadClick: (Long) -> Unit,
+    onDelete: (Long) -> Unit
 ) {
     val selectedCharacter = remember { mutableStateOf<Long?>(null) }
-
 
     BasicAlertDialog(
         onDismissRequest = onDismiss
@@ -90,7 +93,7 @@ fun CharacterDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 4.dp),
-                        state = rememberLazyListState()
+                        state = rememberLazyListState(),
                     ) {
                         items(
                             items = savedCharacters,
@@ -129,6 +132,15 @@ fun CharacterDialog(
                                     text = "Level ${character.level}",
                                     maxLines = 1
                                 )
+
+                                Icon(
+                                    modifier = Modifier.clickable(){
+                                        onDelete(character.id!!)
+                                    },
+                                    painter = painterResource(R.drawable.trash),
+                                    contentDescription = "",
+                                    tint = Color.Red
+                                )
                             }
                         }
                     }
@@ -144,7 +156,9 @@ fun CharacterDialog(
                         .fillMaxWidth(0.8f),
                     shape = RoundedCornerShape(size = 8.dp),
                     enabled = selectedCharacter.value != null,
-                    onClick = { onLoadClick(selectedCharacter.value!!) }
+                    onClick = {
+                        onLoadClick(selectedCharacter.value!!)
+                    }
                 ) {
                     Text(
                         text = "Load",
@@ -162,7 +176,8 @@ fun CharacterDialogPreview() {
         CharacterDialog(
             savedCharacters = FakeCharacterSheet.all,
             onDismiss = {},
-            onLoadClick = {}
+            onLoadClick = {},
+            onDelete = {}
         )
     }
 }

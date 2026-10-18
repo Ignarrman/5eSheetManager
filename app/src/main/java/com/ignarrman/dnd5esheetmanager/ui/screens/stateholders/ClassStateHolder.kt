@@ -15,15 +15,19 @@ data class ClassUiState(
     val errorMessage: String? = null,
 
     val classes: List<PlayerClass> = emptyList(),
+    val characterClass: PlayerClass? = null
 )
 
 @ViewModelScoped
 class ClassStateHolder @Inject constructor(
     private val classRepository: ClassRepository,
-    private val featureRepository: FeatureRepository
 ) {
     private val _state = MutableStateFlow(ClassUiState())
     val state: StateFlow<ClassUiState> = _state.asStateFlow()
 
-    private val classesMap = mutableMapOf<Long, PlayerClass>()
+    suspend fun loadAllClasses() {
+        val classes = classRepository.getAllClasses()
+
+        _state.value = _state.value.copy(classes = classes)
+    }
 }

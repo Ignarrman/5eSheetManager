@@ -39,6 +39,10 @@ interface FeatDao {
     suspend fun insertAllCharacterRef(
         refs: List<CharacterFeatCrossRef>
     )
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCharacterFeat(
+        characterFeat: CharacterFeatCrossRef
+    ): Long
 
     @Query("""
     DELETE FROM character_feats
@@ -46,6 +50,14 @@ interface FeatDao {
 """)
     suspend fun deleteByCharacterId(
         characterId: Long
+    )
+    @Query("""
+    DELETE FROM character_feats
+    WHERE characterId = :characterId AND featId = :featId
+""")
+    suspend fun deleteByCharacterIdAndFeatId(
+        characterId: Long,
+        featId: Long
     )
 
     @Query("DELETE FROM feats")

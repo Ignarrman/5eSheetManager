@@ -25,6 +25,7 @@ import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun SpellsTabContent(
+    spells: List<Spell>,
     characterSpells: List<Spell> = emptyList(),
     proficiencyBonus: Int? = null,
     castingScore: AbilityScores,
@@ -32,7 +33,8 @@ fun SpellsTabContent(
     spellSlots: SpellSlotProgression? = null,
     spentSpellSlots: SpentSpellSlots? = null,
     onSpentSpellSlotsChange: (SpentSpellSlots) -> Unit,
-    onAddSpell: (Long) -> Unit
+    onAddSpell: (Spell) -> Unit,
+    onRemoveSpell: (Long) -> Unit
 ){
 
     val scrollState = rememberScrollState()
@@ -58,8 +60,10 @@ fun SpellsTabContent(
         )
         SpellSection(
             modifier = Modifier,
-            spells = characterSpells,
-            onAddSpell = onAddSpell
+            spells = spells,
+            characterSpells = characterSpells,
+            onAddSpell = onAddSpell,
+            onRemoveSpell = onRemoveSpell
         )
     }
 }
@@ -77,6 +81,7 @@ fun SpellsTabContentPreview() {
 
     _5eSheetManagerTheme(){
         SpellsTabContent(
+            spells = spells,
             characterSpells = spells,
             castingScore = castingScore,
             castingScoreValue = castingScoreValue,
@@ -84,7 +89,8 @@ fun SpellsTabContentPreview() {
             proficiencyBonus = proficiencyBonus,
             spentSpellSlots = spentSpellSlots,
             onSpentSpellSlotsChange = {},
-            onAddSpell = {}
+            onAddSpell = {},
+            onRemoveSpell = {}
         )
     }
 }

@@ -11,17 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ignarrman.dnd5esheetmanager.domain.model.Feature
+import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeats
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeFeatures
 import com.ignarrman.dnd5esheetmanager.domain.model.feat.Feat
+import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.CharacterSheetIntents
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun FeaturesTabContent(
+    characterId: Long,
     classFeatures: Map<Int, List<Feature>>,
     raceFeatures: List<Feature>,
     backgroundFeatures: Feature?,
-    featList: List<Feat>
+    featList: List<Feat>,
+    featCharacter: List<Feat>,
+    onAddFeat: (Feat) -> Unit,
+    onRemoveFeat: (Long) -> Unit
 ){
 
     val scrollState = rememberScrollState()
@@ -49,7 +55,10 @@ fun FeaturesTabContent(
         )
 
         FeatSection(
-            feats = featList
+            feats = featList,
+            featsCharacter = featCharacter,
+            onAddFeat = onAddFeat,
+            onRemoveFeat = onRemoveFeat
         )
     }
 }
@@ -68,7 +77,11 @@ fun FeaturesTabContentPreview() {
             classFeatures =fakeClassFeature,
             raceFeatures = fakeRaceFeatures,
             backgroundFeatures = fakeBackgroundFeature,
-            featList = fakeFeats
+            featList = fakeFeats,
+            featCharacter = fakeFeats.subList(0,1),
+            characterId = FakeCharacterSheet.shadowmere.id!!,
+            onAddFeat = {_ -> },
+            onRemoveFeat = { }
         )
     }
 }

@@ -65,6 +65,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui.text)
     ksp(libs.androidx.room.compiler)
 
     // Serialization

@@ -19,14 +19,6 @@ class ItemRepository @Inject constructor(
             .map { it.toDomain() }
     }
 
-    suspend fun getById(
-        id: Long
-    ): Item? {
-        return itemDao
-            .getById(id)
-            ?.toDomain()
-    }
-
     suspend fun insert(
         item: Item,
         characterId: Long
@@ -36,22 +28,10 @@ class ItemRepository @Inject constructor(
         )
     }
 
-    suspend fun update(
-        item: Item,
-        characterId: Long
+    suspend fun deleteById(
+        itemId: Long
     ) {
-        itemDao.update(
-            item.toEntity(characterId)
-        )
-    }
-
-    suspend fun delete(
-        item: Item,
-        characterId: Long
-    ) {
-        itemDao.delete(
-            item.toEntity(characterId)
-        )
+        itemDao.deleteById( itemId)
     }
 
     suspend fun deleteByCharacterId(

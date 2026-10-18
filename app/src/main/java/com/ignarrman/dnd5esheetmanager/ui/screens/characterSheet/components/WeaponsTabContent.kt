@@ -16,14 +16,16 @@ import androidx.compose.ui.unit.dp
 import com.ignarrman.dnd5esheetmanager.domain.model.characterSheet.Weapon
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeCharacterSheet
 import com.ignarrman.dnd5esheetmanager.domain.model.fakes.FakeWeapons
+import com.ignarrman.dnd5esheetmanager.ui.screens.characterSheet.CharacterSheetIntents
 import com.ignarrman.dnd5esheetmanager.ui.theme._5eSheetManagerTheme
 
 @Composable
 fun WeaponsTabContent(
     weapons: List<Weapon>,
     proficiencyBonus: Int?,
-    onAddWeapon: () -> Unit,
-    onProficiencyChange: (Long) -> Unit
+    onAddWeapon: (Weapon) -> Unit,
+    onProficiencyChange: (Weapon) -> Unit,
+    onRemoveWeapon: (Long) -> Unit
 ){
     val scrollState = rememberScrollState()
 
@@ -39,7 +41,8 @@ fun WeaponsTabContent(
             proficiencyBonus = proficiencyBonus,
             weapons = weapons,
             onAddWeapon = onAddWeapon,
-            onProficiencyChange = onProficiencyChange
+            onProficiencyChange = onProficiencyChange,
+            onRemoveWeapon = onRemoveWeapon
         )
     }
 }
@@ -56,7 +59,8 @@ fun WeaponsTabContentPreview() {
             weapons = weapons,
             proficiencyBonus = proficiencyBonus,
             onAddWeapon = {},
-            onProficiencyChange = {}
+            onProficiencyChange = {},
+            onRemoveWeapon = {}
         )
     }
 }

@@ -26,10 +26,11 @@ interface WeaponDao {
         weapon: WeaponEntity
     )
 
-    @Delete
-    suspend fun delete(
-        weapon: WeaponEntity
-    )
+    @Query("""
+        DELETE FROM weapons
+        WHERE id = :id
+    """)
+    suspend fun deleteById(id: Long)
 
     @Query("""
         SELECT *
